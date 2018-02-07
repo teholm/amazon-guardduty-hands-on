@@ -1,0 +1,1012 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: This is an AWS CloudFormation Template to configure an environment to replicate AWS GuardDuty findings. It also includes Lambda functions to showcase how to auto remediate the findings. ** This template will only run in US regions due to the AMI mappings.
+
+Parameters:
+  
+  ResourceName:
+    Type: String
+    Default: GuardDuty-Example
+    AllowedValues: 
+      - GuardDuty-Example
+    Description: Name of Resources created for this lab.
+
+  AdminIP:
+    Type: String
+    AllowedPattern: '((\d{1,3})\.){3}\d{1,3}/\d{1,2}'
+    Description: "Administrative IP Address (your IP) in CIDR notation. Format: x.x.x.x/32.  If you are behind a proxy you may need to add a larger range (e.g. /24)."
+  
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+    Description: 'Name of an existing EC2 KeyPair to enable SSH access to your servers.'
+  
+  EmailAddress:
+    Description: Email Address for receiving remedation alerts.
+    Type: String
+
+  GuardDutyEnabled:
+   Type: String
+   Default: false
+   AllowedValues: 
+     - true
+     - false
+   Description: GuardDuty is already enabled in this region.
+
+Metadata: {}
+
+Mappings:
+  
+  RegionMap: 
+    us-east-1: 
+      "64": "ami-2452275e"
+    us-east-2: 
+      "64": "ami-e97c548c"
+    us-west-1: 
+      "64": "ami-ee03078e"
+    us-west-2: 
+      "64": "ami-7707a10f"
+    ap-south-1:
+      "64": "ami-79c78f16"
+    ap-northeast-1:
+      "64": "ami-2a34b64c"
+    ap-northeast-2:
+      "64": "ami-1559ff7b"
+    ap-southeast-1:
+      "64": "ami-b45030c8"
+    ap-southeast-2:
+      "64": "ami-71867013"
+    ca-central-1:
+      "64": "ami-9ab802fe"
+    eu-central-1:
+      "64": "ami-29ae2546"
+    eu-west-1:
+      "64": "ami-b09e1ac9"
+    eu-west-2:
+      "64": "ami-424c5526"
+    eu-west-3:
+      "64": "ami-185fe865"
+    sa-east-1:
+      "64": "ami-bd87c1d1"
+
+Conditions:
+
+  # GuardDuty is already enabled
+  CreateDetector:
+    !Equals [!Ref GuardDutyEnabled, false]
+
+Resources:
+
+  # GuardDuty Detector
+  GDDetector:
+    Condition: CreateDetector
+    Type: "AWS::GuardDuty::Detector"
+    Properties:
+      Enable: true
+  GDThreatListBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: 
+        Fn::Join:
+        - '-'
+        - ['guardduty-example', !Ref "AWS::AccountId", !Ref "AWS::Region"]
+
+  # VPC & EC2 Creation
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/24
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Ref ResourceName
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value: !Ref ResourceName
+  GatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId:
+        Ref: InternetGateway
+      VpcId: !Ref VPC
+  RouteTable:
+    DependsOn:
+      - VPC
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Ref ResourceName
+      VpcId: !Ref VPC
+  PublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+      RouteTableId: !Ref RouteTable
+  Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.0/26
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Ref ResourceName
+      VpcId: !Ref VPC
+  SubnetAssoc:
+    DependsOn:
+      - Subnet
+      - RouteTable
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RouteTable
+      SubnetId: !Ref Subnet
+  PublicNACL:
+    Type: AWS::EC2::NetworkAcl
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        -
+          Key: Name
+          Value: !Ref ResourceName
+        -
+          Key: Network
+          Value: Public
+  InboundPublicNACLEntry:
+    Type: AWS::EC2::NetworkAclEntry
+    Properties:
+      NetworkAclId: !Ref PublicNACL
+      RuleNumber: 100
+      Protocol: -1
+      RuleAction: allow
+      Egress: false
+      CidrBlock: '0.0.0.0/0'
+      PortRange:
+        From: 0
+        To: 65535
+  OutboundPublicNACLEntry:
+    Type: AWS::EC2::NetworkAclEntry
+    Properties:
+      NetworkAclId: !Ref PublicNACL
+      RuleNumber: 100
+      Protocol: -1
+      RuleAction: allow
+      Egress: true
+      CidrBlock: 0.0.0.0/0
+      PortRange:
+        From: 0
+        To: 65535
+  SubnetNACLAssociation:
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+    Properties:
+      SubnetId: !Ref Subnet
+      NetworkAclId: !Ref PublicNACL
+  TargetSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Ref ResourceName
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: !Ref AdminIP
+      - IpProtocol: icmp
+        FromPort: '-1'
+        ToPort: '-1'
+        CidrIp: 0.0.0.0/0
+  ForensicSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: 
+        Fn::Join:
+        - '-'
+        - [!Ref ResourceName,'Forensics']
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+      - IpProtocol: icmp
+        FromPort: '-1'
+        ToPort: '-1'
+        CidrIp: 10.0.0.0/24
+      SecurityGroupEgress:
+      - IpProtocol: icmp
+        FromPort: '-1'
+        ToPort: '-1'
+        CidrIp: 10.0.0.0/24
+  
+  # Malicious Instance IAM Role - For GuardDuty Finding: UnauthorizedAccess:EC2/MaliciousIPCaller.Custom
+  MaliciousInstanceRole: 
+    Type: AWS::IAM::Role
+    Properties: 
+      RoleName: 
+        Fn::Join:
+          - '-'
+          - ['GD', 'MaliciousInstanceRole', !Ref "AWS::StackName"]
+      AssumeRolePolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+          - 
+            Effect: Allow
+            Principal: 
+              Service: 
+                - ec2.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Path: /
+      Policies: 
+        - 
+          PolicyName: GuardDutyMaliciousInstancePolicy
+          PolicyDocument: 
+            Version: 2012-10-17
+            Statement: 
+              - 
+                Effect: Allow
+                Action:
+                  - guardduty:GetDetector
+                  - guardduty:ListDetectors
+                  - guardduty:CreateThreatIntelSet
+                  - guardduty:UpdateThreatIntelSet
+                  - dynamodb:ListTables
+                Resource: '*'
+              - 
+                Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                  - ssm:DescribeParameters
+                Resource: 
+                  Fn::Join:
+                  - ':'
+                  - ["arn:aws:ssm", !Ref "AWS::Region", !Ref "AWS::AccountId", "*"]
+              - 
+                Effect: Allow
+                Action:
+                  - iam:PutRolePolicy
+                Resource: 
+                  Fn::Join:
+                    - ':'
+                    - ["arn:aws:iam:",!Ref "AWS::AccountId", "role/aws-service-role/guardduty.amazonaws.com/*"]
+              - 
+                Effect: Allow
+                Action: 's3:PutObject'
+                Resource: !Sub 'arn:aws:s3:::${GDThreatListBucket}/*'
+  MaliciousInstanceProfile: 
+    Type: AWS::IAM::InstanceProfile
+    Properties: 
+      InstanceProfileName: 
+        Fn::Join:
+          - '-'
+          - ['GD', 'MaliciousInstanceProfile', !Ref "AWS::StackName"]
+      Path: /
+      Roles: 
+        - !Ref MaliciousInstanceRole
+  
+  # Malicious Instance - For GuardDuty Finding: UnauthorizedAccess:EC2/MaliciousIPCaller.Custom
+  MaliciousIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref MaliciousInstance
+  MaliciousInstance: 
+    DependsOn:
+      - GDThreatListBucket
+    Type: AWS::EC2::Instance
+    Properties: 
+      IamInstanceProfile: !Ref MaliciousInstanceProfile
+      InstanceType: t2.micro
+      ImageId: 
+        Fn::FindInMap: 
+          - RegionMap
+          - !Ref AWS::Region
+          - '64'
+      KeyName: !Ref KeyName
+      NetworkInterfaces: 
+        - AssociatePublicIpAddress: 'false'
+          DeviceIndex: '0'
+          GroupSet:
+            - !Ref TargetSecurityGroup
+          SubnetId: 
+            Ref: Subnet
+      Tags:
+        - Key: Name
+          Value: 
+            Fn::Join:
+              - ': '
+              - [!Ref ResourceName, 'Malicious Instance']
+        - Key: GD-Finding
+          Value: 'UnauthorizedAccess:EC2/MaliciousIPCaller.Custom'
+      UserData:
+        Fn::Base64: !Sub 
+          - |
+            #!/bin/bash -ex
+
+            # Run Updates
+            sudo yum update -y
+
+            # Set Variables
+            aws configure set default.region ${Region}
+            uuid=$(uuidgen)
+            list="gd-threat-list-example-$uuid.txt"
+            maliciousip=`curl http://169.254.169.254/latest/meta-data/public-ipv4`
+
+            # Create Threatlist
+            # echo ${AIP} >> $list
+            echo $maliciousip >> $list
+
+            # Upload list to S3
+            aws s3 cp $list s3://${Bucket}/$list
+            sleep 5
+
+            # Create GuardDuty Threat List
+            id=`aws guardduty list-detectors --query 'DetectorIds[0]' --output text`
+            aws guardduty create-threat-intel-set --activate --detector-id $id --format TXT --location https://s3.amazonaws.com/${Bucket}/$list --name Example-Threat-List
+
+            cat <<EOT >> /home/ec2-user/gd-findings.sh
+            #!/bin/bash
+            aws configure set default.region ${Region}
+            aws iam get-user
+            aws iam create-user --user-name Sarah
+            aws dynamodb list-tables
+            aws s3api list-buckets
+            aws ssm describe-parameters
+            aws ssm get-parameters --names "prod_dbpwd_gd_sample"
+            EOT
+
+            chmod 744 /home/ec2-user/gd-findings.sh
+            chown ec2-user /home/ec2-user/gd-findings.sh
+
+            echo "* * * * * /home/ec2-user/gd-findings.sh" | tee -a /var/spool/cron/ec2-user
+          - 
+            Region:
+              !Ref "AWS::Region"
+            AIP:
+              !Ref AdminIP
+            Bucket:
+              !Ref GDThreatListBucket
+  
+  # Compromised Instance - For GuardDuty Finding: UnauthorizedAccess:EC2/MaliciousIPCaller.Custom
+  CompromisedInstance: 
+    Type: AWS::EC2::Instance
+    DependsOn: MaliciousIP
+    Properties: 
+      InstanceType: t2.micro
+      ImageId: 
+        Fn::FindInMap: 
+          - RegionMap
+          - !Ref AWS::Region
+          - '64'
+      KeyName: !Ref KeyName
+      NetworkInterfaces: 
+        - AssociatePublicIpAddress: 'true'
+          DeviceIndex: '0'
+          GroupSet:
+            - !Ref TargetSecurityGroup
+          SubnetId: 
+            Ref: Subnet
+      Tags:
+          - Key: Name
+            Value: 
+              Fn::Join:
+              - ': '
+              - [!Ref ResourceName, 'Compromised Instance']
+          - Key: GD-Finding
+            Value: 'UnauthorizedAccess:EC2/MaliciousIPCaller.Custom'
+      UserData:
+        Fn::Base64: !Sub |
+            #!/bin/bash -ex
+            exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+            echo BEGIN
+            echo "* * * * * ping -c 6 -i 10 ${MaliciousIP}" | tee -a /var/spool/cron/ec2-user
+
+  # Compromised Instance IAM Role - For GuardDuty Finding: UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration
+  CompromisedRole: 
+    Type: AWS::IAM::Role
+    Properties: 
+      RoleName: 
+        Fn::Join:
+        - '-'
+        - ['GD', !Ref "AWS::StackName"]
+      AssumeRolePolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+          - 
+            Effect: Allow
+            Principal: 
+              Service: 
+                - ec2.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Path: /
+      Policies: 
+        - 
+          PolicyName: GuardDutyCompromisedPolicy
+          PolicyDocument: 
+            Version: 2012-10-17
+            Statement: 
+              - 
+                Effect: Allow
+                Action:
+                  - ssm:PutParameter
+                  - ssm:DescribeParameters
+                  - ssm:GetParameters
+                  - ssm:DeleteParameter
+                Resource: 
+                  Fn::Join:
+                  - ':'
+                  - ["arn:aws:ssm", !Ref "AWS::Region", !Ref "AWS::AccountId", "parameter/*"]
+              - 
+                Effect: Allow
+                Action:
+                  - ssm:DescribeParameters
+                Resource: "*"
+              - 
+                Effect: Allow
+                Action:
+                  - dynamodb:*
+                Resource:
+                  Fn::GetAtt: 
+                    - "CustDynamoDBTable"
+                    - "Arn"
+              - 
+                Effect: Allow
+                Action:
+                  - dynamodb:ListTables
+                  - dynamodb:DescribeTable
+                Resource: '*'
+        - 
+          PolicyName: RevokeOldSessions
+          PolicyDocument: 
+            Version: 2012-10-17
+            Statement: 
+              - 
+                Effect: Allow
+                Action:
+                  - dynamodb:ListTables
+                Resource: '*'
+  CompromisedInstanceProfile: 
+    Type: AWS::IAM::InstanceProfile
+    Properties: 
+      InstanceProfileName: 
+        Fn::Join:
+        - '-'
+        - ['GD', !Ref "AWS::StackName"]
+      Path: /
+      Roles: 
+        - !Ref CompromisedRole
+  AccessKeyParameter:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      Name: "gd_access_key_id"
+      Type: "StringList"
+      Value: "NA"
+      Description: "Access Key ID from compromised EC2 IAM Role."
+  SecretKeyParameter:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      Name: "gd_secret_key"
+      Type: "StringList"
+      Value: "NA"
+      Description: "Secret Key from compromised EC2 IAM Role."
+  SessionTokenParameter:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      Name: "gd_session_token"
+      Type: "StringList"
+      Value: "NA"
+      Description: "Session Token from compromised EC2 IAM Role."
+  ExpirationParameter:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      Name: "gd_expiration"
+      Type: "StringList"
+      Value: "NA"
+      Description: "Expiration of Session Token from compromised EC2 IAM Role."
+  DBPWDParameter:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      Name: "prod_dbpwd_gd_sample"
+      Type: "StringList"
+      Value: "NA"
+      Description: "Sample secret for generating GuardDuty findings."
+  
+  # Compromised Instance - For GuardDuty Finding: UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration
+  CompromisedInstance2: 
+    Type: AWS::EC2::Instance
+    Properties: 
+      InstanceType: t2.micro
+      IamInstanceProfile: !Ref CompromisedInstanceProfile
+      KeyName: !Ref KeyName
+      ImageId: 
+        Fn::FindInMap: 
+          - RegionMap
+          - !Ref "AWS::Region"
+          - '64'
+      NetworkInterfaces: 
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          GroupSet:
+            - !Ref TargetSecurityGroup
+          SubnetId: 
+            Ref: Subnet
+      Tags:
+          - Key: Name
+            Value: 
+              Fn::Join:
+              - ': '
+              - [!Ref ResourceName, 'Compromised Instance']
+          - Key: GD-Finding
+            Value: 'UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration'
+      UserData:
+        Fn::Base64: !Sub 
+          - |
+            #!/bin/bash
+
+            # Set Variables
+            aws configure set default.region ${Region}
+            access_key_id=`curl http://169.254.169.254/latest/meta-data/iam/security-credentials/${Profile} | grep AccessKeyId | cut -d':' -f2 | sed 's/[^0-9A-Z]*//g'`
+            secret_key=`curl http://169.254.169.254/latest/meta-data/iam/security-credentials/${Profile} | grep SecretAccessKey | cut -d':' -f2 | sed 's/[^0-9A-Za-z/+=]*//g'`
+            token=`curl http://169.254.169.254/latest/meta-data/iam/security-credentials/${Profile} | grep Token | cut -d':' -f2 | sed 's/[^0-9A-Za-z/+=]*//g'`
+            expiration=`curl http://169.254.169.254/latest/meta-data/iam/security-credentials/${Profile} | grep Expiration | cut -d':' -f2 | sed 's/[^0-9A-Za-z/+=]*//g'`
+          
+            # Set Parameters in SSM
+            aws ssm put-parameter --name 'gd_access_key_id' --type "SecureString" --value $access_key_id --overwrite
+            aws ssm put-parameter --name 'gd_secret_key' --type "SecureString" --value $secret_key --overwrite
+            aws ssm put-parameter --name 'gd_session_token' --type "SecureString" --value $token --overwrite
+            aws ssm put-parameter --name 'gd_expiration' --type "SecureString" --value $expiration --overwrite
+            aws ssm put-parameter --name 'prod_dbpwd_gd_sample' --type "SecureString" --value 'Password123' --overwrite
+
+            # Add Item to Customer DB
+            aws dynamodb put-item --table-name ${DB} --item '{ "name": { "S": "Joshua Tree" }, "state": {"S": "California"}, "website":{"S": "https://www.nps.gov/jotr/index.htm"} }'
+
+          - 
+            Profile:
+              !Ref CompromisedInstanceProfile
+            Region:
+              !Ref "AWS::Region"
+            DB: 
+              !Ref CustDynamoDBTable
+
+  # Mock Customer Database
+  CustDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions: 
+        - 
+          AttributeName: "name"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "name"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      TableName: 'GuardDuty-Example-Customer-DB'
+
+  ############################ IF YOU WOULD LIKE TO CREATE YOUR OWN REMEDATION WORKFLOWS YOU CAN REMOVE ALL RESOURCES BELOW ############################
+
+  # Remediation Lambda Role - Instance Credential Exfiltration (ICE)
+  RemediationLambdaICERole: 
+    Type: AWS::IAM::Role
+    Properties: 
+      RoleName: 
+        Fn::Join:
+        - '-'
+        - ['GD', 'Lambda', 'InstanceCredentialExfiltration', !Ref "AWS::StackName"]
+      AssumeRolePolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+          - 
+            Effect: Allow
+            Principal: 
+              Service: 
+                - lambda.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Path: /
+      Policies: 
+        - 
+          PolicyName: 
+            Fn::Join:
+            - '-'
+            - [!Ref ResourceName, 'InstanceCredentialExfiltration']
+          PolicyDocument: 
+            Version: 2012-10-17
+            Statement: 
+              - 
+                Effect: Allow
+                Action:
+                  - ssm:DescribeParameters
+                Resource: '*'
+              - 
+                Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                Resource: '*'
+              - 
+                Effect: Allow
+                Action:
+                  - ec2:ReplaceIamInstanceProfileAssociation
+                Resource: '*'
+              - 
+                Effect: Allow
+                Action:
+                  - ec2:DescribeIamInstanceProfileAssociations
+                Resource: '*'
+              - 
+                Effect: Allow
+                Action:
+                  - iam:CreateInstanceProfile
+                Resource: '*'
+              - 
+                Effect: Allow
+                Action:
+                  - iam:AddRoleToInstanceProfile
+                  - iam:RemoveRoleFromInstanceProfile
+                  - iam:ListInstanceProfilesForRole
+                Resource: '*'
+              - 
+                Effect: Allow
+                Action:
+                  - iam:DeleteInstanceProfile
+                Resource: 
+                  Fn::GetAtt: 
+                    - "CompromisedInstanceProfile"
+                    - "Arn"
+              - 
+                Effect: Allow
+                Action:
+                  - iam:PassRole
+                Resource: 
+                  Fn::GetAtt: 
+                    - "CompromisedRole"
+                    - "Arn"
+              - 
+                Effect: Allow
+                Action:
+                  - iam:PutRolePolicy
+                Resource: 
+                  Fn::GetAtt: 
+                    - "CompromisedRole"
+                    - "Arn"
+              - 
+                Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource: !Ref GuardDutySNSTopic
+              - 
+                Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: '*'
+
+  # Remediation Lambda - Instance Credential Exfiltration (ICE)
+  RemediationLambdaICE: 
+    Type: "AWS::Lambda::Function"
+    Properties: 
+      FunctionName: 
+        Fn::Join:
+        - '-'
+        - [!Ref ResourceName, 'Remediation', 'InstanceCredentialExfiltration']
+      Handler: "index.handler"
+      Environment:
+        Variables:
+          TOPIC_ARN: !Ref GuardDutySNSTopic
+      Role: 
+        Fn::GetAtt: 
+          - "RemediationLambdaICERole"
+          - "Arn"
+      Code: 
+        ZipFile: |
+          from __future__ import print_function
+          from botocore.exceptions import ClientError
+          import json
+          import time
+          import datetime
+          import os
+          import uuid
+          import boto3
+
+          def handler(event, context):
+  
+            # Log out event
+            print("log -- Event: %s " % json.dumps(event))
+            
+            # Create generic function response
+            response = "Other Finding: Skipping auto-remediation."
+
+            try:
+              
+              # Set Clients
+              iam = boto3.client('iam')
+              ec2 = boto3.client('ec2')
+
+              # Set Role Variable
+              role = event['detail']['resource']['accessKeyDetails']['userName']
+
+              # Current Time
+              time = datetime.datetime.utcnow().isoformat()
+
+              # Set Revoke Policy
+              policy = """
+                {
+                  "Version": "2012-10-17",
+                  "Statement": {
+                    "Effect": "Deny",
+                    "Action": "*",
+                    "Resource": "*",
+                    "Condition": {"DateLessThan": {"aws:TokenIssueTime": "%s"}}
+                  }
+                }
+              """ % time
+
+              # Add policy to Role to Revoke all Current Sessions
+              iam.put_role_policy(
+                RoleName=role,
+                PolicyName='RevokeOldSessions',
+                PolicyDocument=policy.replace('\n', '').replace(' ', '')
+              )
+
+              # Send Response Email
+              response = "GuardDuty Remediation | ID:%s: GuardDuty discovered EC2 IAM credentials (Role: %s) being used outside of the EC2 service.  All sessions have been revoked.  Please follow up with any additional remediation actions." % (event['detail']['id'], role)               
+              sns = boto3.client('sns')
+              sns.publish(
+                TopicArn=os.environ['TOPIC_ARN'],    
+                Message=response
+              )
+            except ClientError as e:
+              print(e)
+            print("log -- Response: %s " % response)
+            return response
+      Runtime: "python2.7"
+      Timeout: "35"
+  RemediationLambdaICEInvokePermissions: 
+    DependsOn:
+      - RemediationLambdaICE
+    Type: "AWS::Lambda::Permission"
+    Properties: 
+      FunctionName: !Ref "RemediationLambdaICE"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+
+  # Remediation Lambda Role - EC2/MaliciousIPCaller
+  RemediationLambdaEC2Role: 
+    Type: AWS::IAM::Role
+    Properties: 
+      RoleName: 
+        Fn::Join:
+        - '-'
+        - ['GD', 'Lambda', 'EC2MaliciousIPCaller', !Ref "AWS::StackName"]
+      AssumeRolePolicyDocument: 
+        Version: '2012-10-17'
+        Statement: 
+          - Effect: Allow
+            Principal: 
+              Service: 
+                - lambda.amazonaws.com
+            Action: 
+            - sts:AssumeRole
+      Path: '/'
+      Policies: 
+        - 
+          PolicyName: 
+            Fn::Join:
+            - '-'
+            - [!Ref ResourceName, 'EC2MaliciousIPCaller']
+          PolicyDocument: 
+            Version: '2012-10-17'
+            Statement:
+              - 
+                Effect: Allow
+                Action:
+                  - ssm:PutParameter
+                  - ec2:AuthorizeSecurityGroupEgress
+                  - ec2:AuthorizeSecurityGroupIngress
+                  - ec2:CreateSecurityGroup
+                  - ec2:DescribeSecurityGroups
+                  - ec2:RevokeSecurityGroupEgress
+                  - ec2:RevokeSecurityGroupIngress
+                  - ec2:UpdateSecurityGroupRuleDescriptionsEgress
+                  - ec2:UpdateSecurityGroupRuleDescriptionsIngress
+                  - ec2:DescribeInstances
+                  - ec2:UpdateSecurityGroupRuleDescriptionsIngress
+                  - ec2:DescribeVpcs
+                  - ec2:ModifyInstanceAttribute
+                  - lambda:InvokeFunction
+                  - cloudwatch:PutMetricData
+                  - xray:PutTraceSegments
+                  - xray:PutTelemetryRecords
+                Resource: '*'
+              - 
+                Effect: Allow
+                Action:
+                  - logs:*
+                Resource: arn:aws:logs:*:*:*
+              - 
+                Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource: !Ref GuardDutySNSTopic
+
+  # Remediation Lambda - EC2MaliciousIPCaller
+  RemediationLambdaEC2: 
+    Type: "AWS::Lambda::Function"
+    Properties: 
+      FunctionName: 
+        Fn::Join:
+        - '-'
+        - [!Ref ResourceName, 'Remediation', 'EC2MaliciousIPCaller']
+      Handler: "index.handler"
+      Environment:
+        Variables:
+          TOPIC_ARN: !Ref GuardDutySNSTopic
+          FORENSICS_SG: !Ref ForensicSecurityGroup
+      Role: 
+        Fn::GetAtt: 
+          - "RemediationLambdaEC2Role"
+          - "Arn"
+      Code: 
+        ZipFile: |
+          from __future__ import print_function
+          import boto3
+          from botocore.exceptions import ClientError
+          import json
+          import os
+  
+          def handler(event, context):
+            
+            # Log out event
+            print("log -- Event: %s " % json.dumps(event))
+            
+            # Create generic function response
+            response = "Other Finding: Skipping auto-remediation."
+            
+            try:
+              # Create Isolation Security Group
+              ec2 = boto3.client('ec2')
+              name = 'Forensics-%s' % event["detail"]["id"]
+              vpc_id = event["detail"]["resource"]["instanceDetails"]["networkInterfaces"][0]["vpcId"]
+              instanceID = event["detail"]["resource"]["instanceDetails"]["instanceId"]
+            
+              security_group_id = os.environ['FORENSICS_SG']
+              print("log -- Security Group Created %s in vpc %s." % (security_group_id, vpc_id))
+             
+              # Remove existing Security Groups and Attach the Isolation Security Group
+              ec2 = boto3.resource('ec2')
+              instance = ec2.Instance(instanceID)
+              print("log -- %s, %s" % (instance.id, instance.instance_type))
+              all_sg_ids = [sg['GroupId'] for sg in instance.security_groups]  # Get a list of ids of all securify groups attached to the instance
+              for sg_id in all_sg_ids:                                          # Check the SG to be removed is in the list
+                  all_sg_ids.remove(sg_id)                                       # Remove the SG from the list
+                  instance.modify_attribute(Groups=[security_group_id])                   # Attach the remaining SGs to the instance
+              
+              # Send Response Email
+              response = "GuardDuty Remediation | ID:%s: GuardDuty discovered an EC2 instance (Instance ID: %s) that is communicating outbound with an IP Address on a threat list that you uploaded.  All security groups have been removed and it has been isolated. Please follow up with any additional remediation actions." % (event['detail']['id'], event['detail']['resource']['instanceDetails']['instanceId'])
+              sns = boto3.client('sns')
+              sns.publish(
+                TopicArn=os.environ['TOPIC_ARN'],    
+                Message=response
+              )
+              print("log -- Response: %s " % response)
+            except ClientError as e:
+              print(e)
+            
+            return response
+      Runtime: "python2.7"
+      Timeout: "35"
+  RemediationLambdaEC2InvokePermissions: 
+    DependsOn:
+      - RemediationLambdaEC2
+    Type: "AWS::Lambda::Permission"
+    Properties: 
+      FunctionName: !Ref "RemediationLambdaEC2"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+
+  # Findings SNS Topic
+  GuardDutySNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Ref ResourceName
+      Subscription:
+      - Endpoint: !Ref EmailAddress
+        Protocol: email
+  GuardDutySNSTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Id: ID-GD-Lab2
+        Version: '2012-10-17'
+        Statement:
+        - Sid: SID-GD-Example
+          Effect: Allow
+          Principal:
+            Service: events.amazonaws.com
+          Action: sns:Publish
+          Resource: !Ref GuardDutySNSTopic
+      Topics: 
+      - !Ref GuardDutySNSTopic
+
+  # GuardDuty CloudWatch Event - For GuardDuty Finding: UnauthorizedAccess:EC2/MaliciousIPCaller.Custom
+  GuardDutyEvent: 
+    Type: AWS::Events::Rule
+    Properties: 
+      Name: GuardDuty-Event-EC2-MaliciousIPCaller
+      Description: "GuardDuty Event: UnauthorizedAccess:EC2/MaliciousIPCaller.Custom"
+      EventPattern: 
+        source:
+        - aws.guardduty
+        detail:
+          type:
+          - UnauthorizedAccess:EC2/MaliciousIPCaller.Custom
+      State: ENABLED
+      Targets: 
+        - 
+          Arn: !GetAtt RemediationLambdaEC2.Arn
+          Id: "GuardDutyEvent-Lambda-Trigger"
+        - 
+          Arn: !Ref GuardDutySNSTopic
+          Id: "GuardDutySNSTopic-EC2-ThreatList"
+          InputTransformer:
+            InputTemplate: '"The EC2 instance <instanceid> may be compromised and should be investigated. Go to https://console.aws.amazon.com/guardduty"'
+            InputPathsMap:
+              instanceid: $.detail.resource.instanceDetails.instanceId
+
+  # GuardDuty CloudWatch Event - For GuardDuty Finding: UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration
+  GuardDutyEventIAM: 
+    Type: "AWS::Events::Rule"
+    Properties: 
+      Name: GuardDuty-Event-IAMUser-InstanceCredentialExfiltration
+      Description: "GuardDuty Event: UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration"
+      EventPattern: 
+        source:
+        - aws.guardduty
+        detail:
+          type:
+          - "UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration"
+      State: "ENABLED"
+      Targets: 
+        - 
+          Arn: !GetAtt RemediationLambdaICE.Arn
+          Id: "GuardDutyEvent-Lambda-Trigger"
+        - 
+          Arn: 
+            Ref: "GuardDutySNSTopic"
+          Id: "GuardDutySNSTopic-EC2-IAM"
+          InputTransformer:
+            InputTemplate: '"GuardDuty Finding ID:<gdid>: An EC2 instance IAM credentials (Role: <userName>) may be compromised and should be investigated. Go to https://console.aws.amazon.com/guardduty"'
+            InputPathsMap:
+              userName: "$.detail.resource.accessKeyDetails.userName"
+              gdid: "$.detail.id"
+
+  # GuardDuty CloudWatch Event - For GuardDuty Finding: UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom
+  GuardDutyEventIAM2: 
+    Type: "AWS::Events::Rule"
+    Properties: 
+      Name: GuardDuty-Event-IAMUser-MaliciousIPCaller
+      Description: "GuardDuty Event: UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom"
+      EventPattern: 
+        source:
+        - aws.guardduty
+        detail:
+          type:
+          - "UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom"
+      State: "ENABLED"
+      Targets: 
+        - 
+          Arn: 
+            Ref: "GuardDutySNSTopic"
+          Id: "GuardDutySNSTopic-IAM-ThreatList"
+          InputTransformer:
+            InputTemplate: '"GuardDuty Finding ID:<gdid>: An AWS API operation was invoked (userName: <userName>) from an IP address that is included on your threat list and should be investigated. Go to https://console.aws.amazon.com/guardduty"'
+            InputPathsMap:
+              userName: "$.detail.resource.accessKeyDetails.userName"
+              gdid: "$.detail.id"
+
+Outputs: {}
