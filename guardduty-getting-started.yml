@@ -9,7 +9,7 @@ Parameters:
     Default: GuardDuty-Example
     AllowedValues: 
       - GuardDuty-Example
-    Description: Name of Resources created for this lab.
+    Description: Prefix of the resources that are created.
 
   AdminIP:
     Type: String
@@ -359,7 +359,7 @@ Resources:
             chown ec2-user /home/ec2-user/gd-findings.sh
 
             echo "* * * * * /home/ec2-user/gd-findings.sh" | tee -a /var/spool/cron/ec2-user
-            
+
           - 
             Region:
               !Ref "AWS::Region"
@@ -922,7 +922,7 @@ Resources:
     Type: AWS::SNS::TopicPolicy
     Properties:
       PolicyDocument:
-        Id: ID-GD-Lab2
+        Id: ID-GD-Topic-Policy
         Version: '2012-10-17'
         Statement:
         - Sid: SID-GD-Example
