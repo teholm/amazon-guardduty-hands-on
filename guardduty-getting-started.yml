@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: This is an AWS CloudFormation Template to configure an environment to replicate AWS GuardDuty findings. It also includes Lambda functions to showcase how to auto remediate the findings. ** This template will only run in US regions due to the AMI mappings.
+Description: This CloudFormation Template can be used to quickly get started with AWS GuardDuty by configuring an environment to generate and remediate AWS GuardDuty findings.
 
 Parameters:
   
@@ -9,20 +9,20 @@ Parameters:
     Default: GuardDuty-Example
     AllowedValues: 
       - GuardDuty-Example
-    Description: Prefix of the resources that are created.
+    Description: Prefix for the resources that are created.
 
   AdminIP:
     Type: String
     AllowedPattern: '((\d{1,3})\.){3}\d{1,3}/\d{1,2}'
-    Description: "Administrative IP Address (your IP) in CIDR notation. Format: x.x.x.x/32.  If you are behind a proxy you may need to add a larger range (e.g. /24)."
+    Description: 'Administrative IP Address (your IP) in CIDR notation (x.x.x.x/32).'
   
   KeyName:
     Type: AWS::EC2::KeyPair::KeyName
-    ConstraintDescription: must be the name of an existing EC2 KeyPair.
-    Description: 'Name of an existing EC2 KeyPair to enable SSH access to your servers.'
+    ConstraintDescription: This must be the name of an existing EC2 KeyPair.
+    Description: 'Name of an existing EC2 KeyPair.'
   
   EmailAddress:
-    Description: Email Address for receiving remedation alerts.
+    Description: Email address for receiving remediation alerts.
     Type: String
 
   GuardDutyEnabled:
@@ -457,16 +457,7 @@ Resources:
                   - dynamodb:ListTables
                   - dynamodb:DescribeTable
                 Resource: '*'
-        - 
-          PolicyName: RevokeOldSessions
-          PolicyDocument: 
-            Version: 2012-10-17
-            Statement: 
-              - 
-                Effect: Allow
-                Action:
-                  - dynamodb:ListTables
-                Resource: '*'
+
   CompromisedInstanceProfile: 
     Type: AWS::IAM::InstanceProfile
     Properties: 
@@ -477,6 +468,8 @@ Resources:
       Path: /
       Roles: 
         - !Ref CompromisedRole
+
+  # IAM Credential Parameter Placeholders
   AccessKeyParameter:
     Type: "AWS::SSM::Parameter"
     Properties:
@@ -586,8 +579,6 @@ Resources:
         ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
       TableName: 'GuardDuty-Example-Customer-DB'
-
-  ############################ IF YOU WOULD LIKE TO CREATE YOUR OWN REMEDATION WORKFLOWS YOU CAN REMOVE ALL RESOURCES BELOW ############################
 
   # Remediation Lambda Role - Instance Credential Exfiltration (ICE)
   RemediationLambdaICERole: 
@@ -708,11 +699,9 @@ Resources:
           from __future__ import print_function
           from botocore.exceptions import ClientError
           import json
-          import time
           import datetime
-          import os
-          import uuid
           import boto3
+          import os
 
           def handler(event, context):
   
@@ -720,7 +709,7 @@ Resources:
             print("log -- Event: %s " % json.dumps(event))
             
             # Create generic function response
-            response = "Other Finding: Skipping auto-remediation."
+            response = "Error auto-remediating the finding."
 
             try:
               
@@ -763,6 +752,7 @@ Resources:
               )
             except ClientError as e:
               print(e)
+
             print("log -- Response: %s " % response)
             return response
       Runtime: "python2.7"
@@ -855,8 +845,8 @@ Resources:
       Code: 
         ZipFile: |
           from __future__ import print_function
-          import boto3
           from botocore.exceptions import ClientError
+          import boto3
           import json
           import os
   
@@ -866,26 +856,23 @@ Resources:
             print("log -- Event: %s " % json.dumps(event))
             
             # Create generic function response
-            response = "Other Finding: Skipping auto-remediation."
+            response = "Error auto-remediating the finding."
             
             try:
-              # Create Isolation Security Group
               ec2 = boto3.client('ec2')
-              name = 'Forensics-%s' % event["detail"]["id"]
+              
+              # Set Variables
               vpc_id = event["detail"]["resource"]["instanceDetails"]["networkInterfaces"][0]["vpcId"]
               instanceID = event["detail"]["resource"]["instanceDetails"]["instanceId"]
-            
               security_group_id = os.environ['FORENSICS_SG']
+              
               print("log -- Security Group Created %s in vpc %s." % (security_group_id, vpc_id))
              
-              # Remove existing Security Groups and Attach the Isolation Security Group
+              # Isolate Instance
               ec2 = boto3.resource('ec2')
               instance = ec2.Instance(instanceID)
               print("log -- %s, %s" % (instance.id, instance.instance_type))
-              all_sg_ids = [sg['GroupId'] for sg in instance.security_groups]  # Get a list of ids of all securify groups attached to the instance
-              for sg_id in all_sg_ids:                                          # Check the SG to be removed is in the list
-                  all_sg_ids.remove(sg_id)                                       # Remove the SG from the list
-                  instance.modify_attribute(Groups=[security_group_id])                   # Attach the remaining SGs to the instance
+              instance.modify_attribute(Groups=[security_group_id])
               
               # Send Response Email
               response = "GuardDuty Remediation | ID:%s: GuardDuty discovered an EC2 instance (Instance ID: %s) that is communicating outbound with an IP Address on a threat list that you uploaded.  All security groups have been removed and it has been isolated. Please follow up with any additional remediation actions." % (event['detail']['id'], event['detail']['resource']['instanceDetails']['instanceId'])
@@ -897,7 +884,8 @@ Resources:
               print("log -- Response: %s " % response)
             except ClientError as e:
               print(e)
-            
+
+            print("log -- Response: %s " % response)
             return response
       Runtime: "python2.7"
       Timeout: "35"
