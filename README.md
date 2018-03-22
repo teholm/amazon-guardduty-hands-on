@@ -242,7 +242,7 @@ You should eventually see alerts sent to your email and findings show up in the 
 
 Go to the [Lambda console](https://console.aws.amazon.com/lambda) and review the function named **GuardDuty-Example-Remediation-InstanceCredentialExfiltration**.
 
-To verify that the **InstanceCredentialExfiltration** finding was remediated you can run one of the CLI commands you ran earlier (e.g. *aws dynamodb list-tables --profile attacker*). You should see a response that states that there is an explicit deny for that action. This is because the remediation Lambda Function attaches a policy to the EC2 IAM Role that revokes all active sessions. You can view this policy within IAM under the Role.
+To verify that the **InstanceCredentialExfiltration** finding was remediated you can run one of the CLI commands you ran earlier (e.g. *aws dynamodb list-tables --profile attacker*). You should see a response that states that there is an explicit deny for that action. This is because the remediation Lambda Function attaches a policy to the EC2 IAM Role that revokes all active sessions. You can view this policy within IAM under the Role.  You should also receive a follow email saying the Role credentials have been revoked.
 
 ## Cleanup <a name="cleanup"/>
 
