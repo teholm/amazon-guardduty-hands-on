@@ -34,6 +34,10 @@ Follow these steps to enable GuardDuty
 
 ![Get Started](images/screenshot1.png "Get Started")
 
+2. *Second Click*: On the next screen click **Enable GuardDuty**.
+
+![Enable GuardDuty](images/screenshot2.png "Enable GuardDuty")
+
 
 ## License Summary
 
