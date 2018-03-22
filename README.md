@@ -103,7 +103,7 @@ Although you can view the GuardDuty findings in the console, most customers will
 1.	Navigate to the [CloudWatch console](https://us-east-2.console.aws.amazon.com/cloudwatch/home?) and click on **Rules** under the **Events** section of the left. 
 2.	You will see three Rules in the list that were created by the CloudFormation template. All of these begin with the phrase “*GuardDuty-Event*” (you may see other rules depending on if any other rules were created for other purposes in this account)
 
-![CloudWatch Event Rules](images/screenshot5.png "CloudWatch Event Rules")
+![CloudWatch Event Rules](images/screenshot6.png "CloudWatch Event Rules")
 
 
 ## License Summary
