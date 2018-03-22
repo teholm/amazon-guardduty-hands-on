@@ -105,6 +105,18 @@ Although you can view the GuardDuty findings in the console, most customers will
 
 ![CloudWatch Event Rules](images/screenshot6.png "CloudWatch Event Rules")
 
+3.	The rule that Alice configured for this “*compromised instance*” scenario is called “GuardDuty-Event-EC2-MaliciousIPCaller”. **Click on that rule**. 
+4.	Under the Targets section you will see two entries, one for a Lambda function and one for an SNS Topic.
+
+![CloudWatch Event Rule](images/screenshot7.png "CloudWatch Event Rule")
+
+5.	The SNS topic entry will send an email to the e-mail address you entered in the parameters for the CloudFormation template. In the Input section you can see that an **input transformer** has been configured. This is to make the e-mail that is sent a little friendlier then a dump of the full JSON from the GuardDuty finding.
+6.	The Lambda function is what handle this remediation for this finding. The Lambda function will remove the “compromised instance” from its current security group and add it to one with no ingress or egress rules so that the instance is isolated from the network. If you click on the **Resource name** for the Lambda function, this will take you into the Lambda console for that function.
+
+![Lambda Function](images/screenshot8.png "Lambda Function")
+
+
+
 
 ## License Summary
 
