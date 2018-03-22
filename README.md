@@ -53,6 +53,12 @@ To initiate the scenario and begin generating GuardDuty findings you need to run
 
 ![Parameters](images/screenshot4.png "Parameters")
 
+3.	Once you have entered your parameters click **Next**, then **Next** again (leave everything on this page at the default), then click **Create**.
+4.	The CloudFormation stack creation will take about 5 minutes to complete.
+
+**Note**: The initial findings will begin to show up in GuardDuty about 15 minutes after the CloudFormation stack creation completes. One housekeeping item that needs to be done after you launch the CloudFormation template is to confirm the SNS AWS Notification Subscription. You will receive an e-mail to the e-mail address you entered in the parameters when you ran the CloudFormation script. By confirming the subscription, you will receive e-mails when GuardDuty generates findings.
+
+
 ## License Summary
 
 This sample code is made available under a modified MIT license. See the LICENSE file.
