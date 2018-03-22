@@ -64,11 +64,11 @@ We are simulating an attack scenario here so let’s set the scene. After an une
 
 The first e-mail you received from GuardDuty indicates that one of your EC2 instances may be compromised:
 
-![GuardDuty Alert](images/screenshot4.png "GuardDuty Alert")
+![GuardDuty Alert](images/screenshot5.png "GuardDuty Alert")
 
 ### Diagram of the attack and remediation
 
-![Attack Senario 1](images/screenshot4.png "Attack Scenario 1")
+![Attack Senario 1](images/attack1.png "Attack Scenario 1")
 
 ## License Summary
 
