@@ -30,14 +30,19 @@ The CloudFormation template works whether GuardDuty is enabled or not (you just 
 It's extremely easy to enable GuardDuty and get stared so it won't take very long to enable it. Also there are no pre-requisites for turning it on and nothing else you need to do. 
 
 Follow these steps to enable GuardDuty
-1. *First Click*: Navigate to the GuardDuty console in the region you want to run this scenario in and then click **Get Started**.
+1. First Click: Navigate to the GuardDuty console in the region you want to run this scenario in and then click **Get Started**.
 
 ![Get Started](images/screenshot1.png "Get Started")
 
-2. *Second Click*: On the next screen click **Enable GuardDuty**.
+2. Second Click: On the next screen click **Enable GuardDuty**.
 
 ![Enable GuardDuty](images/screenshot2.png "Enable GuardDuty")
 
+3. That is all you need to do. There are no prerequisites you need to set up, no agents to install, and no hardware to configure. From the moment you enable GuardDuty it is analyzing all of the VPC Flow Logs, CloudTrail logs, and DNS Logs in that region. There are some findings that require that a baseline is established but most findings will be available from the moment you enable GuardDuty. Also, it can take a few minutes from the time the information about a threat is entered into one of the log files and the time GuardDuty is able to display the finding. Regardless of the number of VPCs, IAM users, or other AWS resources there is no impact to your resources since all of the processing is being done outside of your account. 
+
+![GuardDuty Enabled](images/screenshot3.png "GuardDuty Enabled")
+
+Once GuardDuty is enabled you can easily suspend or disable the service with one click. Suspending will pause the service, which stops the billing but keeps your current findings and current baseline analysis. Disabling stops the billing and removes all the existing findings and baseline data.
 
 ## License Summary
 
