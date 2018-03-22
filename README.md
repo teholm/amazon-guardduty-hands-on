@@ -7,9 +7,10 @@ This GitHub repository walks you through a scenario covering threat detection an
 * [What is Created](#created)  
 * [Getting Started](#started) 
 * [Deploy the Scenario](#deploy) 
-* [Attack scenario 1 – Compromised EC2 Instance](#attack1) 
+* [Attack Scenario 1 – Compromised EC2 Instance](#attack1) 
 * [Attack Scenario 2 – Compromised IAM Credentials](#attack2)
 * [Attack Scenario 3 – IAM Role Credential Exfiltration](#attack3)
+* [Clean Up](#cleanup)
 
 ## What is Created? <a name="created"/>
 The CloudFormation template will create the following resources:
@@ -67,7 +68,7 @@ To initiate the scenario and begin generating GuardDuty findings you need to run
 
 **Note**: The initial findings will begin to show up in GuardDuty about 15 minutes after the CloudFormation stack creation completes. One housekeeping item that needs to be done after you launch the CloudFormation template is to confirm the SNS AWS Notification Subscription. You will receive an e-mail to the e-mail address you entered in the parameters when you ran the CloudFormation script. By confirming the subscription, you will receive e-mails when GuardDuty generates findings.
 
-## Attack scenario 1 – Compromised EC2 Instance <a name="attack1"/>
+## Attack Scenario 1 – Compromised EC2 Instance <a name="attack1"/>
 
 We are simulating an attack scenario so let’s set the scene: After an uneventful yet unnecessarily long commute to work, you have arrived at the office this morning. You have grabbed a cup of coffee, sat down in your cube, opened up your laptop and begin to go through your emails. Soon after you begin though you start receiving emails indicating that GuardDuty has detected new threats. You don’t yet know the extent of the threats but you quickly begin to investigate. Now the good news is that your coworker Alice has already set up some hooks for specific findings so that they will be automatically remediated. 
 
@@ -160,7 +161,7 @@ To view the findings:
 4.	Under the Targets section you will see one for an SNS Topic. The SNS topic entry was responsible for sending an email to the e-mail address you entered in the parameters for the CloudFormation template. You can see this SNS Topic Trigger also has a transformation filter to modify the email to make it more user friendly.
 5.	Alice did not set up a Lambda function to remediate this threat but there are many options that can be employed for dealing with this potential compromise. There could be an investigative phase before and action is taken including disabling the IAM Credential or the revoking the IAM Role session. This is also where a third-party solution could be examined. In many of the customer use cases we have seen CloudWatch Events are used to send findings to an existing customer’s SIEM. Many [Amazon GuardDuty partners](https://aws.amazon.com/guardduty/resources/partners/) already have solutions for GuardDuty to make ingestion simple, help with analysis of findings and also to help set up remediations. Some of these remediation options use Lambda so instead of a CloudWatch Event Rule triggering Lambda, the solution itself could trigger a workflow which would include Lambda to take action.
 
-## Attack scenario 3 – IAM Role Credential Exfiltration <a name="attack3"/>
+## Attack Scenario 3 – IAM Role Credential Exfiltration <a name="attack3"/>
 
 We will look at one final threat that Alice anticipated. For the previous attack we mentioned that the EC2 Instance was making API calls using the temp credentials from an IAM Role for EC2. Alice wanted to monitor for and remediate the situation where IAM temporary security credentials are copied (stolen) from an EC2 instance and used from a system external to the AWS network. She has already created the CloudWatch Events rule and Lambda function for this remediation. This vector will require you to take some manual steps in order to trigger it though (which of course will mildly reduce the illusion that this is an actual attack scenario.) The manual action you take will result in GuardDuty generating a High Severity finding and is an interesting threat because it indicates that an unusual and potentially serious event is occurring. 
 
@@ -208,7 +209,7 @@ aws iam create-user --user-name Chuck --profile attacker
 ```
 aws dynamodb list-tables --profile attacker
 
-aws dynamodb describe-table --table-name GuardDuty-BlogPost --profile attacker
+aws dynamodb describe-table --table-name GuardDuty-Example-Customer-DB --profile attacker
 ```
 
 **Can we query the data?**
@@ -239,13 +240,17 @@ Feel free to make other calls to see what you have access to with those credenti
 
 ### View the Lambda function designed to remediate this finding
 
-You should eventually see alerts sent to your email and findings show up in the GuardDuty console for UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration. The alert for this threat will have a high severity. In addition, Alice set up a remediation for this threat that we will now examine.
+You should eventually see alerts sent to your email and findings show up in the [GuardDuty console](https://console.aws.amazon.com/guardduty) for [UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration](http://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#unauthorized11). The alert for this threat will have a high severity. In addition, Alice set up a remediation for this threat that we will now examine.
 
-Go to the Lambda console and review the function named GuardDuty-Example-Remediation-InstanceCredentialExfiltration.
+Go to the [Lambda console](https://console.aws.amazon.com/lambda) and review the function named **GuardDuty-Example-Remediation-InstanceCredentialExfiltration**.
 
-To verify that the InstanceCredentialExfiltration finding was remediated you can run one of the CLI commands you ran earlier (e.g. aws dynamodb list-tables --profile attacker). You should see a response that states that there is an explicit deny for that action. This is because the remediation Lambda Function attaches a policy to the EC2 IAM Role that revokes all active sessions. You can view this policy within IAM under the Role.
+To verify that the **InstanceCredentialExfiltration** finding was remediated you can run one of the CLI commands you ran earlier (e.g. *aws dynamodb list-tables --profile attacker*). You should see a response that states that there is an explicit deny for that action. This is because the remediation Lambda Function attaches a policy to the EC2 IAM Role that revokes all active sessions. You can view this policy within IAM under the Role.
 
+## Cleanup <a name="cleanup"/>
 
+In order to remove the assets created by the CloudFormation 
+1. Delete the S3 bucket that was created by the CloudFormation template (should have a name that begins with “*guardduty-example*”)
+2. Delete the CloudFormation Stack created for this blogpost. If you see any errors it means you didn't delete the S3 Bucket in the previous step. 
 
 ## License Summary
 
