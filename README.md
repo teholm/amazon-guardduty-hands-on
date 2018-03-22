@@ -42,7 +42,7 @@ Follow these steps to enable GuardDuty
 
 ![GuardDuty Enabled](images/screenshot3.png "GuardDuty Enabled")
 
-Once GuardDuty is enabled you can easily suspend or disable the service with one click. Suspending will pause the service, which stops the billing but keeps your current findings and current baseline analysis. Disabling stops the billing and removes all the existing findings and baseline data.
+Once GuardDuty is enabled you can easily suspend or disable the service with one click under **Settings** -> **General**. Suspending will pause the service, which stops the billing but keeps your current findings and current baseline analysis. Disabling stops the billing and removes all the existing findings and baseline data.
 
 ## License Summary
 
