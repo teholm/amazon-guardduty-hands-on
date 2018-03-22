@@ -30,8 +30,9 @@ The CloudFormation template works whether GuardDuty is enabled or not (you just 
 It's extremely easy to enable GuardDuty and get stared so it won't take very long to enable it. Also there are no pre-requisites for turning it on and nothing else you need to do. 
 
 Follow these steps to enable GuardDuty
-1. **First Click**: Navigate to the GuardDuty console in the region you want to run this scenario in and then click **Get Started**.
-![Get Started][./images/screenshot1.png]
+1. *First Click*: Navigate to the GuardDuty console in the region you want to run this scenario in and then click **Get Started**.
+
+![Get Started][https://github.com/aws-samples/amazon-guardduty-getting-started/blob/master/images/screenshot1.png]
 
 
 
