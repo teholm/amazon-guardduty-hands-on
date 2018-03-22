@@ -60,11 +60,11 @@ To initiate the scenario and begin generating GuardDuty findings you need to run
 
 ## Attack scenario 1 – Compromised EC2 Instance
 
-We are simulating an attack scenario here so let’s set the scene. After an uneventful yet unnecessarily long commute to work, you have arrived at the office this morning. You have grabbed a cup of coffee, sat down in your cube, opened up your laptop and begin to go through your emails. Soon after you begin though you start receiving emails indicating that GuardDuty has detected new threats. You don’t yet know the extent of the threats but you quickly begin to investigate. Now the good news is that since Alice has already set things some of threats the threats will be automatically remediated. 
+We are simulating an attack scenario so let’s set the scene: After an uneventful yet unnecessarily long commute to work, you have arrived at the office this morning. You have grabbed a cup of coffee, sat down in your cube, opened up your laptop and begin to go through your emails. Soon after you begin though you start receiving emails indicating that GuardDuty has detected new threats. You don’t yet know the extent of the threats but you quickly begin to investigate. Now the good news is that your coworker Alice has already set up some hooks for specific findings so that they will be automatically remediated. 
 
-The first e-mail you received from GuardDuty indicates that one of your EC2 instances may be compromised:
+The first e-mail you receive from GuardDuty indicates that one of your EC2 instances may be compromised:
 
-![GuardDuty Alert](images/screenshot5.png "GuardDuty Alert")
+*"The EC2 instance i-xxxxxxxxx may be compromised and should be investigated.*
 
 ### Diagram of the attack and remediation
 
