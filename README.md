@@ -201,7 +201,6 @@ Now that you have your named profile you can use it to make API calls. Use the c
 aws iam get-user --profile attacker
 
 aws iam create-user --user-name Chuck --profile attacker
-
 ```
 
 **What about DynamoDB:**
