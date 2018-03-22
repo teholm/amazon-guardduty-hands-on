@@ -31,7 +31,7 @@ It's extremely easy to enable GuardDuty and get stared so it won't take very lon
 
 Follow these steps to enable GuardDuty
 1. **First Click**: Navigate to the GuardDuty console in the region you want to run this scenario in and then click **Get Started**.
-![Get Started][images/screenshot1.png]
+![Get Started][./images/screenshot1.png]
 
 
 
