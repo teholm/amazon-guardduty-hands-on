@@ -79,6 +79,8 @@ The first e-mail you receive from GuardDuty indicates that one of your EC2 insta
 
 ### Browse to the GuardDuty console to investigate
 
+When using CloudWatch Events to send a finding from GuardDuty to SNS and then to your e-mail address, the default behavior is to send the entire JSON containing all of the threat data. It is also possible to put a transformation on the data before it is sent to SNS to produce a more user-friendly e-mail. That is what was done in this case so in order to get the complete information about the finding you need to check the GuardDuty console. You browse to the GuardDuty console to investigate further.
+
 To view the GuardDuty findings:
 
 1. Navigate to the [GuardDuty console](https://console.aws.amazon.com/guardduty) and choose Current in the navigation pane on the left. 
@@ -88,7 +90,21 @@ To view the GuardDuty findings:
 
 ![GuardDuty Finding](images/screenshot5.png "GuardDuty Finding")
 
-4. This finding means that one of your EC2 instances is communicating with an IP address that is in a custom threat list (GuardDuty comes with three threat lists and you can add custom threat lists or trusted IP lists yourself) and may indicate that this instance is compromised. Alice has set up a CloudWatch Event Rule for this type of finding. The rule will notify you via SNS and run a Lambda function to isolate instances that GuardDuty indicates may be compromised according to the particular finding type. The Lambda function removes the instance from its current security group and adds it to a security group with no ingress or egress rules. This isolates the instance so no inbound or outbound connections can be made. The instance will not be able to impact any resources in your VPC while the security team investigates.
+4. This finding means that one of your EC2 instances is communicating with an IP address that is in a custom threat list (GuardDuty comes with three threat lists and you can add [custom threat lists or trusted IP lists](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload_lists.html) yourself) and may indicate that this instance is compromised. Alice has set up a CloudWatch Event Rule for this type of finding. The rule will notify you via SNS and run a Lambda function to isolate instances that GuardDuty indicates may be compromised according to the particular finding type. The Lambda function removes the instance from its current security group and adds it to a security group with no ingress or egress rules. This isolates the instance so no inbound or outbound connections can be made. The instance will not be able to impact any resources in your VPC while the security team investigates.
+
+**Scenario Notes**: 
+1.	The EC2 instance indicated by this finding is actually just connecting to an EIP on another instance. The EIP is in a custom threat list. 
+2.	An option more suited for a production environment would be to notify the security team and allow them to investigate before any action is taken. A timer could be set to allow investigation before an automated action is taken.  This way a determination as to what action to take could be made based on the results of the investigation of the reported threat.
+
+### View the CloudWatch Event rule for the compromised EC2 instance
+
+Although you can view the GuardDuty findings in the console, most customers will want to receive a notification of new findings and possibly have all of the findings delivered to a central SIEM for analysis and remediation. The recommended process for GuardDuty findings management is to use CloudWatch Events. From there you can trigger SNS to send email, Lambda to take various actions or any number of other steps. This is also the most common pattern for sending the findings to your SIEM. GuardDuty has many partners to help with the centralized management of all your findings from different regions and AWS accounts.  You can use a Master/Member setup for accounts and add up to 1000 members to a central master account. All of the findings for the member accounts will roll up the master account GuardDuty console and the master account CloudWatch Events. Alice used CloudWatch Events to send the e-mail you received about the findings and also to take remediations steps. We will examine the CloudWatch Events console to understand what Alice configured and to make sure the remediation was triggered. 
+
+1.	Navigate to the [CloudWatch console](https://us-east-2.console.aws.amazon.com/cloudwatch/home?) and click on **Rules** under the **Events** section of the left. 
+2.	You will see three Rules in the list that were created by the CloudFormation template. All of these begin with the phrase “*GuardDuty-Event*” (you may see other rules depending on if any other rules were created for other purposes in this account)
+
+![CloudWatch Event Rules](images/screenshot5.png "CloudWatch Event Rules")
+
 
 ## License Summary
 
