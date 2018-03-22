@@ -182,13 +182,12 @@ Finding the Credentials in the Parameter Store:
 
 Now that you have retrieved the IAM temporary security credentials you will need to copy them to your computer (this can be your laptop or any other computer not on the AWS network) and add them to an AWS CLI profile. There are a number of ways to do this but below are some commands to help get you started:
 
-From a command prompt run the following commands:
+From a command prompt run the following commands (replace the variables with your credentials):
 ```
 aws configure set profile.attacker.region <region>
 aws configure set profile.attacker.aws_access_key_id <gd_access_key>
 aws configure set profile.attacker.aws_secret_access_key <gd_secret_key>
 aws configure set profile.attacker.aws_session_token <gd_session_token>
-
 ```
 
 If you view your local aws credentials file you should now see an [attacker] profile with the stolen IAM temporary credentials.
