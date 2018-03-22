@@ -8,6 +8,7 @@ This GitHub repository walks you through a scenario covering threat detection an
 * [Getting Started](#started) 
 * [Deploy the Scenario](#deploy) 
 * [Attack scenario 1 – Compromised EC2 Instance](#attack1) 
+* [Attack Scenario 2 – Compromised IAM Credentials](#attack2) 
 
 ## What is Created? <a name="created"/>
 The CloudFormation template will create the following resources:
@@ -71,7 +72,7 @@ We are simulating an attack scenario so let’s set the scene: After an uneventf
 
 The first e-mail you receive from GuardDuty indicates that one of your EC2 instances may be compromised:
 
-*"The EC2 instance i-xxxxxxxxx may be compromised and should be investigated.*
+*"The EC2 instance i-xxxxxxxxx may be compromised and should be investigated"*
 
 ### Diagram of the attack and remediation
 
@@ -114,6 +115,24 @@ Although you can view the GuardDuty findings in the console, most customers will
 6.	The Lambda function is what handle this remediation for this finding. The Lambda function will remove the “compromised instance” from its current security group and add it to one with no ingress or egress rules so that the instance is isolated from the network. If you click on the **Resource name** for the Lambda function, this will take you into the Lambda console for that function.
 
 ![Lambda Function](images/screenshot8.png "Lambda Function")
+
+7.	You can scroll down to view the code of this function. You can also click on the Monitoring tab and view the invocation of the function. You should see one invocation Count and no Invocation Errors. 
+8.	In order to see that the remediation was applied to the instance, browse to the [EC2 console](https://us-east-2.console.aws.amazon.com/ec2/v2) and click on **Running Instances**. You should see three instances with names that begin with “GuardDuty-Example.” There are two instances named “GuardDuty-Example: Compromised Instance”. Click on each of these and find the one that is in the Security Group with a name that starts with “*GuardDutyBlog-ForensicSecurityGroup-*“. 
+
+![EC2 Instances](images/screenshot9.png "EC2 Instances")
+
+9.	Initially all three of the instances launched by the CloudFormation template were in the Security Group that starts with the name “*GuardDutyBlog-TargetSecurityGroup-*”. The Lambda function removed this one instance from the TargetSecurityGroup and added it to the ForensicsSecurityGroup in order to isolate the instance. 
+10.	If you check back in your email you should see another email that came right after that first email regarding the compromised instance. This second email indicates that the remediation was completed. 
+
+*"GuardDuty discovered an EC2 instance (Instance ID: i-xxxxxxxx) that is communicating outbound with an IP Address on a threat list that you uploaded.  All security groups have been removed and it has been isolated. Please follow up with any additional remediation actions"*
+
+## Attack Scenario 2 – Compromised IAM Credentials <a name="attack2"/>
+
+You have completed the examination of this first attack, confirmed it was properly remediated and then sat back to took your first sip of coffee for the day when you notice additional e-mails about new findings. The first of the new findings indicates that an API call was made using IAM credentials from your AWS account from a malicious IP address. Similar to before with the compromised instance you can browse to the GuardDuty console to view the finding.
+
+**Scenario Note**: None of you IAM credentials have actually been compromised or exposed in any way. The finding is the result of an EC2 instance using an IAM Role for EC2 and with an EIP that is in the custom threat list making API calls on your behalf. 
+
+### Browse to the GuardDuty Console to investigate
 
 
 
