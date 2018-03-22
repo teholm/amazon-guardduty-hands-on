@@ -352,7 +352,7 @@ Resources:
             aws dynamodb list-tables
             aws s3api list-buckets
             aws ssm describe-parameters
-            aws ssm get-parameters --names "prod_dbpwd_gd_sample"
+            aws ssm get-parameters --names "gd_prod_dbpwd_sample"
             EOT
 
             chmod 744 /home/ec2-user/gd-findings.sh
@@ -501,7 +501,7 @@ Resources:
   DBPWDParameter:
     Type: "AWS::SSM::Parameter"
     Properties:
-      Name: "prod_dbpwd_gd_sample"
+      Name: "gd_prod_dbpwd_sample"
       Type: "StringList"
       Value: "NA"
       Description: "Sample secret for generating GuardDuty findings."
@@ -550,7 +550,7 @@ Resources:
             aws ssm put-parameter --name 'gd_secret_key' --type "SecureString" --value $secret_key --overwrite
             aws ssm put-parameter --name 'gd_session_token' --type "SecureString" --value $token --overwrite
             aws ssm put-parameter --name 'gd_expiration' --type "SecureString" --value $expiration --overwrite
-            aws ssm put-parameter --name 'prod_dbpwd_gd_sample' --type "SecureString" --value 'Password123' --overwrite
+            aws ssm put-parameter --name 'gd_prod_dbpwd_sample' --type "SecureString" --value 'Password123' --overwrite
 
             # Add Item to Customer DB
             aws dynamodb put-item --table-name ${DB} --item '{ "name": { "S": "Joshua Tree" }, "state": {"S": "California"}, "website":{"S": "https://www.nps.gov/jotr/index.htm"} }'
