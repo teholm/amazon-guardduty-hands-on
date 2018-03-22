@@ -5,8 +5,7 @@ This GitHub repository walks you through a scenario covering threat detection an
 [What is Created](#created)  
 [Getting Started](#started) 
 
-<a name="created"></>
-## What is Created?
+## What is Created? <a name="created"></>
 The CloudFormation template will create the following resources:
   * Three [Amazon EC2](https://aws.amazon.com/ec2/) Instances (all using a t2.micro instance type):
     * Two Instances that contain the name “*Compromised Instance*” 
@@ -27,8 +26,7 @@ The CloudFormation template will create the following resources:
     * Function named “*GuardDuty-Example-Remediation-InstanceCredentialExfiltration*” to remediate the IAM credential compromise by put a revoke policy on the IAM Role from where the credentials were provided.  
   * [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) values with the IAM temporary security credentials details.
 
-<a name="started"/>
-## Getting started – Just Two Clicks
+## Getting started – Just Two Clicks <a name="started"></>
 
 The CloudFormation template works whether GuardDuty is enabled or not (you just need to indicate the state of GuardDuty in the CloudFormation parameters section). If you would like to enable GuardDuty yourself before running the CloudFormation script then you can follow the instructions below. If you don’t want to enable GuardDuty yourself you can skip to next section titled **Deploy the Solution using AWS CloudFormation**.
 
