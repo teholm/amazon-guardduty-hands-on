@@ -23,7 +23,15 @@ The CloudFormation template will create the following resources:
     * Function named “*GuardDuty-Example-Remediation-InstanceCredentialExfiltration*” to remediate the IAM credential compromise by put a revoke policy on the IAM Role from where the credentials were provided.  
   * [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) values with the IAM temporary security credentials details.
 
+## Getting started – Just Two Clicks
 
+The CloudFormation template works whether GuardDuty is enabled or not (you just need to indicate the state of GuardDuty in the CloudFormation parameters section). If you would like to enable GuardDuty yourself before running the CloudFormation script then you can follow the instructions below. If you don’t want to enable GuardDuty yourself you can skip to next section titled **Deploy the Solution using AWS CloudFormation**.
+
+It's extremely easy to enable GuardDuty and get stared so it won't take very long to enable it. Also there are no pre-requisites for turning it on and nothing else you need to do. 
+
+Follow these steps to enable GuardDuty
+1. **First Click**: Navigate to the GuardDuty console in the region you want to run this scenario in and then click **Get Started**.
+![Get Started][./images/screenshot.png]
 
 
 
