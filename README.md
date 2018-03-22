@@ -86,6 +86,8 @@ To view the GuardDuty findings:
 3. A finding should show up soon with the text “*EC2 instance i-xxxxxxxx communicating with disallowed IP address.*” 
    * If you would like to see the full list of GuardDuty findings and understand the details of each finding you can view this in the [GuardDuty Documentation](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html). 
 
+![GuardDuty Finding](images/screenshot5.png "GuardDuty Finding")
+
 4. This finding means that one of your EC2 instances is communicating with an IP address that is in a custom threat list (GuardDuty comes with three threat lists and you can add custom threat lists or trusted IP lists yourself) and may indicate that this instance is compromised. Alice has set up a CloudWatch Event Rule for this type of finding. The rule will notify you via SNS and run a Lambda function to isolate instances that GuardDuty indicates may be compromised according to the particular finding type. The Lambda function removes the instance from its current security group and adds it to a security group with no ingress or egress rules. This isolates the instance so no inbound or outbound connections can be made. The instance will not be able to impact any resources in your VPC while the security team investigates.
 
 ## License Summary
