@@ -6,6 +6,8 @@ This GitHub repository walks you through a scenario covering threat detection an
 
 * [What is Created](#created)  
 * [Getting Started](#started) 
+* [Deploy the Scenario](#deploy) 
+* [Attack scenario 1 – Compromised EC2 Instance](#attack1) 
 
 ## What is Created? <a name="created"/>
 The CloudFormation template will create the following resources:
@@ -28,7 +30,7 @@ The CloudFormation template will create the following resources:
     * Function named “*GuardDuty-Example-Remediation-InstanceCredentialExfiltration*” to remediate the IAM credential compromise by put a revoke policy on the IAM Role from where the credentials were provided.  
   * [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) values with the IAM temporary security credentials details.
 
-## Getting started – Just Two Clicks <a name="started"></>
+## Getting started – Just Two Clicks <a name="started"/>
 
 The CloudFormation template works whether GuardDuty is enabled or not (you just need to indicate the state of GuardDuty in the CloudFormation parameters section). If you would like to enable GuardDuty yourself before running the CloudFormation script then you can follow the instructions below. If you don’t want to enable GuardDuty yourself you can skip to next section titled **Deploy the Solution using AWS CloudFormation**.
 
@@ -49,7 +51,7 @@ Follow these steps to enable GuardDuty
 
 Once GuardDuty is enabled you can easily suspend or disable the service with one click (under **Settings** -> **General**). Suspending will pause the service, which stops the billing but keeps your current findings and current baseline analysis. Disabling stops the billing and removes all the existing findings and baseline data.
 
-## Deploy the Solution Using AWS CloudFormation
+## Deploy the Senario Using AWS CloudFormation <a name="deploy"/>
 
 To initiate the scenario and begin generating GuardDuty findings you need to run the provided CloudFormation template. Given that we will be simulating attacks and doing remediation, it is recommended that you run this CloudFormation template in a test account. The scenario only impacts the resources that the CloudFormation stack creates but it is still a best practice to run these types of attack scenarios in test accounts with no other resources. It makes sense to create a new AWS account strictly for the purpose of security and threat testing when trying out services like GuardDuty. 
 
@@ -63,7 +65,7 @@ To initiate the scenario and begin generating GuardDuty findings you need to run
 
 **Note**: The initial findings will begin to show up in GuardDuty about 15 minutes after the CloudFormation stack creation completes. One housekeeping item that needs to be done after you launch the CloudFormation template is to confirm the SNS AWS Notification Subscription. You will receive an e-mail to the e-mail address you entered in the parameters when you ran the CloudFormation script. By confirming the subscription, you will receive e-mails when GuardDuty generates findings.
 
-## Attack scenario 1 – Compromised EC2 Instance
+## Attack scenario 1 – Compromised EC2 Instance <a name="attack1"/>
 
 We are simulating an attack scenario so let’s set the scene: After an uneventful yet unnecessarily long commute to work, you have arrived at the office this morning. You have grabbed a cup of coffee, sat down in your cube, opened up your laptop and begin to go through your emails. Soon after you begin though you start receiving emails indicating that GuardDuty has detected new threats. You don’t yet know the extent of the threats but you quickly begin to investigate. Now the good news is that your coworker Alice has already set up some hooks for specific findings so that they will be automatically remediated. 
 
