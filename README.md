@@ -134,7 +134,13 @@ You have completed the examination of this first attack, confirmed it was proper
 
 ### Browse to the GuardDuty Console to investigate
 
+Again you decide to browse to the GuardDuty console to further investigate.
 
+To view the findings:
+1. Navigate to the [GuardDuty console](https://console.aws.amazon.com/guardduty) and choose Current in the navigation pane on the left. 
+2.	Click the  ![Refresh](images/refreshicon.png "Refresh") icon to refresh the GuardDuty console. A finding should be visible right after the prior EC2 one with the text starting with either “API GetParameters” or ““Reconnaissance API” (although the e-mail you received was only reporting that first Recon threat which  refers specifically to the threat “*UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom*.” If you click on one the finding then you can bring up a window showing the full details of this finding. You can also select the finding and click the **Actions** menu, click **Export** and extract the full JSON from the finding. More findings will begin to show up in the GuardDuty console. Below is a screenshot of one example showing a partial view of the finding details. 
+
+![GuardDuty Finding](images/screenshot10.png "GuardDuty Finding")
 
 
 ## License Summary
