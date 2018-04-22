@@ -246,7 +246,7 @@ To remove the assets created by the CloudFormation, follow these steps:
 1. Delete the S3 bucket that was created by the CloudFormation template (it will have a name that begins with “*guardduty-example*”).  This needs to be done because data was put in the bucket and CloudFormation will not allow you to delete a bucket with data in it.
 2. Delete the compromised instance IAM Role (it will have a name that begins with "*GD-*" and ends with the name of your CloudFormation stack). Because one of the Lambda functions added an additional policy to this Role you need to manually delete this.
 3. Delete the custom Threat List within GuardDuty.  Within the GuardDuty console under **Settings** click **Lists**.  From there delete the "*Example-Threat-List*".
-4. Delete the CloudFormation Stack created for this blogpost. If you see any errors, it means you didn't delete the S3 Bucket or IAM role in the previous steps. 
+4. Delete the CloudFormation Stack created for this blogpost. If you see any errors, it means you didn't delete the S3 Bucket or IAM role in the previous steps.   
 
 ## License Summary
 
