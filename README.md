@@ -14,9 +14,7 @@ This repository walks you through a scenario covering threat detection and remed
 
 ## What is Created? <a name="created"/>
 The CloudFormation template will create the following resources:
-  * Three [Amazon EC2](https://aws.amazon.com/ec2/) Instances (all using a t2.micro instance type):
-    * Two Instances that contain the name “*Simulated: Compromised Instance*” 
-    * One instance that contains the name “*Simulated: Malicious Instance*”
+
   * Three [Amazon EC2](https://aws.amazon.com/ec2/) Instances (all using a t2.micro instance type):
     * Two Instances that contain the name “*Simulated: Compromised Instance*” 
     * One instance that contains the name “*Simulated: Malicious Instance*”
