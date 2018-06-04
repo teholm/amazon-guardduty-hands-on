@@ -54,7 +54,7 @@ US West 2 (Oregon) | [![Deploy CFN Template in us-west-2](./images/deploy-to-aws
 
 5.  You will get an email from SNS asking you to confirm the Subscription. Confirm this so you can receive email alerts from GuardDuty.
 
-> The initial findings will begin to show up in GuardDuty about 15 minutes after the CloudFormation stack creation completes.  The reason for the delay has to due with when Guardduty is able to access the data sources from the other AWS services. One housekeeping item that needs to be done after you launch the CloudFormation template is to confirm the SNS AWS Notification Subscription. An email will be sent to the address you provided above and by confirming the subscription, you will receive emails when GuardDuty generates findings.
+> The initial findings will begin to show up in GuardDuty about 15 minutes after the CloudFormation stack creation completes. One housekeeping item that needs to be done after you launch the CloudFormation template is to confirm the SNS AWS Notification Subscription. An email will be sent to the address you provided above and by confirming the subscription, you will receive emails when GuardDuty generates findings.
 
 ## What is Created? <a name="created"/>
 
