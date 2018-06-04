@@ -124,13 +124,15 @@ Now, let's get back to Monday morning.  Alice used CloudWatch Events to send the
 ![Lambda Function](images/screenshot8.png "Lambda Function")
 
 5.	You can scroll down to view the code of this function (walking through the code logic is outside the scope of this scenario). You can also click the **Monitoring** tab and view the invocation of the function. You should see one invocation Count and no Invocation Errors. 
-6.	To see the effects of the remediation applied to the instance, browse to the [EC2 console](https://us-east-2.console.aws.amazon.com/ec2/v2) and click **Running Instances**. You should see three instances with names that begin with “GuardDuty-Example.” Click on the instance named **GuardDuty-Example: Compromised Instance: Scenario 1**.  Under the **Description** tab click on the Security Group with a name that starts with **GuardDutyBlog-ForensicSecurityGroup-**.
+6.	To see the effects of the remediation applied to the instance, browse to the [EC2 console](https://us-east-2.console.aws.amazon.com/ec2/v2) and click **Running Instances**. You should see three instances with names that begin with “GuardDuty-Example.” 
+7.  Click on the instance named **GuardDuty-Example: Compromised Instance: Scenario 1**.  
+8.  Under the **Description** tab click on the Security Group with a name that starts with **GuardDutyBlog-ForensicSecurityGroup-**.
 
     ![EC2 Instances](images/screenshot9.png "EC2 Instances")
 
     Initially, all three of the instances launched by the CloudFormation template were in the Security Group that starts with the name “*GuardDutyBlog-TargetSecurityGroup-*”. The Lambda function removed this one instance from the TargetSecurityGroup and added it to the ForensicsSecurityGroup to isolate the instance. 
 
-8.	If you check back in your email you should see another email that came right after that first email regarding the compromised instance. This second email indicates that the remediation was completed. 
+9.	If you check back in your email you should see another email that came right after that first email regarding the compromised instance. This second email indicates that the remediation was completed. 
 
 *"GuardDuty discovered an EC2 instance (Instance ID: i-xxxxxxxx) that is communicating outbound with an IP Address on a threat list that you uploaded.  All security groups have been removed and it has been isolated. Please follow up with any additional remediation actions"*
 
