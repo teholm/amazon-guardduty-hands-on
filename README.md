@@ -15,10 +15,11 @@ This repository walks you through a scenario covering threat detection and remed
 ## What is Created? <a name="created"/>
 The CloudFormation template will create the following resources:
   * Three [Amazon EC2](https://aws.amazon.com/ec2/) Instances (all using a t2.micro instance type):
-    
-    > Two Instances that contain the name “*Simulated: Compromised Instance*” 
-      One instance that contains the name “*Simulated: Malicious Instance*”
+    * Two Instances that contain the name “*Simulated: Compromised Instance*” 
+    * One instance that contains the name “*Simulated: Malicious Instance*”
   * [AWS IAM Role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html) For EC2 (which will be attached to two of the instances created)
+
+    > These IAM Roles will have permissions to DynamoDB, SSM Parameter Store, modify Security Groups, and Revoke IAM Role sessions.
   * One [Amazon SNS Topic](https://docs.aws.amazon.com/sns/latest/dg/GettingStarted.html) with an subscription for the email address you will enter in the parameters when you run the CloudFormation template
   * Three [AWS CloudWatch Event](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html) rules:
     * Rule named “*GuardDuty-Event-EC2-MaliciousIPCaller*” with two triggers
