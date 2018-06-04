@@ -136,11 +136,13 @@ Now, let's get back to Monday morning.  Alice used CloudWatch Events to send the
 
 *GuardDuty Remediation | ID:xxx: GuardDuty discovered an EC2 instance (Instance ID: i-xxx) that is communicating outbound with an IP Address on a threat list that you uploaded.  All security groups have been removed and it has been isolated. Please follow up with any additional remediation actions.*
 
-## Attack Scenario 2 – Compromised IAM Credentials <a name="attack2"/>
+## Attack Scenario 2 – Compromised IAM Credentials (Simluated) <a name="attack2"/>
 
-You have completed the examination of this first attack, confirmed it was properly remediated, and then sat back to take your first sip of coffee for the day when you notice an additional email about new findings. The first of the new findings indicates that an API call was made using IAM credentials from your AWS account from a malicious IP address. Similar to before with the compromised instance you can browse to the GuardDuty console to view the finding.
+You have completed the examination of this first attack, confirmed it was properly remediated, and then sat back to take your first sip of coffee for the day when you notice an additional email about new findings. The first of the new findings indicates that an API call was made using IAM credentials from your AWS account from a malicious IP address. 
 
-**Scenario Note**: None of your IAM credentials have actually been compromised or exposed in any way. The finding is the result of an EC2 instance using an IAM Role for EC2 and with an EIP that is in the custom threat list making API calls on your behalf. 
+#### Scenario Note
+
+None of your IAM credentials have actually been compromised or exposed in any way. The finding is the result of an EC2 instance using an IAM Role for EC2 and with an EIP that is in the custom threat list making API calls on your behalf. 
 
 ### Browse to the GuardDuty Console to investigate
 
