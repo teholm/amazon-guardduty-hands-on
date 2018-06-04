@@ -1,6 +1,6 @@
 # Getting Started with Amazon GuardDuty
 
-This GitHub repository walks you through a scenario covering threat detection and remediation using Amazon GuardDuty. The scenario covers an attack that simulates a few threat vectors, representing just a small sample of the threats that GuardDuty is able to detect. In addition, we look at how to view the GuardDuty findings, how to send alerts based on the findings, and, finally, how to remediate findings. The CloudFormation template builds out the assets used to simulate the attacks and the instructions are provided about how to analyze and remediate the findings.
+This GitHub repository walks you through a scenario covering threat detection and remediation using Amazon GuardDuty. The scenario simulates an attack that spans a few threat vectors, representing just a small sample of the threats that GuardDuty is able to detect. In addition, we look at how to view the GuardDuty findings, how to send alerts based on the findings, and, finally, how to remediate findings. The [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template builds out the assets used to simulate the attacks and the instructions are provided about how to analyze and remediate the findings.
 
 ### Table of Contents
 
