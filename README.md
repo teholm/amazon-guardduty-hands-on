@@ -15,7 +15,7 @@ This repository walks you through a scenario covering threat detection and remed
 ## What is Created? <a name="created"/>
 
 The CloudFormation template will create the following resources:
-
+  * Test
 
 ## Getting started – Just Two Clicks <a name="started"/>
 
