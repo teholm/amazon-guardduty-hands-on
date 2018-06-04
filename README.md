@@ -125,10 +125,10 @@ Now, let's get back to Monday morning.  Alice used CloudWatch Events to send the
 
 5.	You can scroll down to view the code of this function (walking through the code logic is outside the scope of this scenario). You can also click the **Monitoring** tab and view the invocation of the function. You should see one invocation Count and no Invocation Errors. 
 6.	To see the effects of the remediation applied to the instance, browse to the [EC2 console](https://us-east-2.console.aws.amazon.com/ec2/v2) and click **Running Instances**. You should see three instances with names that begin with “GuardDuty-Example.” 
-7.  Click on the instance named **GuardDuty-Example: Compromised Instance: Scenario 1**.  
-8.  Under the **Description** tab click on the Security Group with a name that starts with **GuardDutyBlog-ForensicSecurityGroup-**.
 
     ![EC2 Instances](images/screenshot9.png "EC2 Instances")
+7.  Click on the instance named **GuardDuty-Example: Compromised Instance: Scenario 1**.  
+8.  Under the **Description** tab click on the Security Group with a name that starts with **GuardDutyBlog-ForensicSecurityGroup**.
 
     Initially, all three of the instances launched by the CloudFormation template were in the Security Group that starts with the name “*GuardDutyBlog-TargetSecurityGroup-*”. The Lambda function removed this one instance from the TargetSecurityGroup and added it to the ForensicsSecurityGroup to isolate the instance. 
 
