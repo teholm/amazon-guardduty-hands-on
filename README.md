@@ -74,7 +74,7 @@ We are simulating an attack scenario so let’s set the scene: After an uneventf
 
 The first email you receive from GuardDuty indicates that one of your EC2 instances might be compromised:
 
-*"The EC2 instance i-xxxxxxxxx might be compromised and should be investigated"*
+*"GuardDuty Finding | ID: xxx: The EC2 instance i-xxxxxxxxx might be compromised and should be investigated"*
 
 ### Diagram of the Attack, Detection, and Remediation
 
@@ -89,17 +89,18 @@ To view the GuardDuty findings:
 1.  Navigate to the [GuardDuty console](https://console.aws.amazon.com/guardduty) and click on **Findings** in the navigation pane on the left. 
     
     > If there is nothing displayed, to refresh the display click the button next to words "*Findings".
-2.  A finding should show up soon with the text “*Recon:IAMUser/MaliciousIPCaller.Custom.*” 
+2.  A finding should show up with the text “*Recon:IAMUser/MaliciousIPCaller.Custom.*” 
     
-    > If you would like to see the full list of GuardDuty findings and understand the details of each finding, you can learn more in the [GuardDuty Documentation](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html). 
+    > If you would like to see the full list of GuardDuty finding types and understand the details of each finding, you can learn more in the [GuardDuty Documentation](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html). 
 
 ![GuardDuty Finding](images/screenshot5.png "GuardDuty Finding")
 
-3. This finding means that one of your EC2 instances is communicating with an IP address that is in a custom threat list (GuardDuty comes with three threat lists and you can add [custom threat lists or trusted IP lists](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload_lists.html) yourself) and might indicate that this instance is compromised. Alice has set up a CloudWatch Event Rule for this type of finding. The rule will notify you via SNS and run a Lambda function to isolate instances--according to the particular finding type--that GuardDuty indicates might be compromised. The Lambda function removes the instance from its current security group and adds it to a security group with no ingress or egress rules. This isolates the instance so no inbound or outbound connections can be made. The instance will not be able to impact any resources in your VPC while the security team investigates.
+3. This finding means that one of your EC2 instances is communicating with an IP address that is on a custom threat list (GuardDuty comes with three managed threat lists and allows you to add your own [custom threat lists or trusted IP lists](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload_lists.html)) and should be investigated. Alice has set up a CloudWatch Event Rule for this type of finding. The rule will notify you via SNS and run a Lambda function to isolate instances--according to the particular finding type--that GuardDuty indicates might be compromised. The Lambda function removes the instance from its current security group and adds it to a security group with no ingress or egress rules. This isolates the instance so no inbound or outbound connections can be made. The instance will not be able to impact any resources in your VPC while the security team investigates.  She put in place this auto-remediation based on the security teams current runbooks for responding to compromised instances.
 
-**Scenario Notes**: 
-1.	The EC2 instance indicated by this finding is actually just connecting to an EIP on another instance. The EIP is in a custom threat list. 
-2.	An option more suited for a production environment would be to notify the security team and allow them to investigate before any action is taken. A timer could be set to allow investigation before an automated action is taken.  This way a determination as to what action to take could be made based on the results of the investigation of the reported threat.
+#### Scenario Notes
+
+1.	The EC2 instance indicated by this finding is actually just connecting to an [Elastic IP](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html) (EIP) on another instance in the same VPC to keep with the scenario localized to your environment. The CloudFormation template automatically created the threat list and added the EIP for the malicious instance to list.  
+2.	Another option, that may better align with your incident response plans, would be to notify the security team and allow them to investigate before any action is taken. A timer could be set to allow investigation before an automated action is taken.  This way a determination as to what action to take could be made based on the results of the investigation of the reported threat.
 
 ### View the CloudWatch Event rule for the compromised EC2 instance
 
