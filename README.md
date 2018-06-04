@@ -13,6 +13,7 @@ This repository walks you through a scenario covering threat detection and remed
 * [Clean Up](#cleanup)
 
 ## What is Created? <a name="created"/>
+
 The CloudFormation template will create the following resources:
 
   * Three [Amazon EC2](https://aws.amazon.com/ec2/) Instances (all using a t2.micro instance type):
