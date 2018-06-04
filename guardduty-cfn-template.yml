@@ -298,7 +298,7 @@ Resources:
           Value: 
             Fn::Join:
               - ': '
-              - [!Ref ResourceName, 'Simulated - Malicious Instance']
+              - [!Ref ResourceName, 'Malicious Instance', 'Scenario 1 & 2']
         - Key: GD-Finding
           Value: 'UnauthorizedAccess:EC2/MaliciousIPCaller.Custom'
       UserData:
@@ -375,7 +375,7 @@ Resources:
             Value: 
               Fn::Join:
               - ': '
-              - [!Ref ResourceName, 'Simulated - Compromised Instance']
+              - [!Ref ResourceName, 'Compromised Instance', 'Scenario 1']
           - Key: GD-Finding
             Value: 'UnauthorizedAccess:EC2/MaliciousIPCaller.Custom'
       UserData:
@@ -513,7 +513,7 @@ Resources:
             Value: 
               Fn::Join:
               - ': '
-              - [!Ref ResourceName, 'Simulated - Compromised Instance']
+              - [!Ref ResourceName, 'Compromised Instance', 'Scenario 3']
           - Key: GD-Finding
             Value: 'UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration'
       UserData:
