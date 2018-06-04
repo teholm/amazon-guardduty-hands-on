@@ -40,17 +40,17 @@ Region| Deploy
 ------|-----
 US West 2 (Oregon) | [![Deploy CFN Template in us-west-2](./images/deploy-to-aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=GuardDuty-Hands-On&templateURL=https://s3-us-west-2.amazonaws.com/sa-security-specialist-workshops-us-west-2/guardduty-hands-on/guardduty-cfn-template.yml)
 
-1. Click the **Deploy to AWS** button above.  This will automatically take you to the AWS Management Console to run the template.  If you prefer, you can also just use the template found in this repo (guardduty-cfn-template.yml).
+1.  Click the **Deploy to AWS** button above.  This will automatically take you to the AWS Management Console to run the template.  If you prefer, you can also just use the template found in this repo (guardduty-cfn-template.yml).
 
-2. On the **Specify Details** section enter the necessary parameters as shown below. 
+2.  On the **Specify Details** section enter the necessary parameters as shown below. 
 
-![Parameters](images/screenshot4.png "Parameters")
+    ![Parameters](images/screenshot4.png "Parameters")
 
-3. Once you have entered your parameters click **Next**, then **Next** again \(leave everything on this page at the default\).
+3.  Once you have entered your parameters click **Next**, then **Next** again \(leave everything on this page at the default\).
 
-4. Finally, acknowledge the template will create IAM roles and click **Create**
+4.  Finally, acknowledge the template will create IAM roles and click **Create**.
 
-This will bring you back to the CloudFormation console. You can refresh the page to see the stack starting to create. Before moving on, make sure the stack is in a **CREATE_COMPLETE** status.
+    This will bring you back to the CloudFormation console. You can refresh the page to see the stack starting to create. Before moving on, make sure the stack is in a **CREATE_COMPLETE** status.
 
 5.  You will get an email from SNS asking you to confirm the Subscription. Confirm this so you can receive email alerts from GuardDuty.
 
