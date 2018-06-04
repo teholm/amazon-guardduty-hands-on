@@ -134,7 +134,7 @@ Now, let's get back to Monday morning.  Alice used CloudWatch Events to send the
 
 9.	If you check back in your email you should see another email that came right after that first email regarding the compromised instance. This second email indicates that the remediation was completed. 
 
-*"GuardDuty discovered an EC2 instance (Instance ID: i-xxxxxxxx) that is communicating outbound with an IP Address on a threat list that you uploaded.  All security groups have been removed and it has been isolated. Please follow up with any additional remediation actions"*
+*GuardDuty Remediation | ID:xxx: GuardDuty discovered an EC2 instance (Instance ID: i-xxx) that is communicating outbound with an IP Address on a threat list that you uploaded.  All security groups have been removed and it has been isolated. Please follow up with any additional remediation actions.*
 
 ## Attack Scenario 2 – Compromised IAM Credentials <a name="attack2"/>
 
