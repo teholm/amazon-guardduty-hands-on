@@ -25,14 +25,6 @@ Parameters:
     Description: Email address for receiving remediation alerts.
     Type: String
 
-  GuardDutyEnabled:
-   Type: String
-   Default: false
-   AllowedValues: 
-     - true
-     - false
-   Description: GuardDuty is already enabled in this region.
-
 Metadata: {}
 
 Mappings:
@@ -69,20 +61,11 @@ Mappings:
     sa-east-1:
       "64": "ami-bd87c1d1"
 
-Conditions:
-
-  # GuardDuty is already enabled
-  CreateDetector:
-    !Equals [!Ref GuardDutyEnabled, false]
+Conditions: {}
 
 Resources:
 
-  # GuardDuty Detector
-  GDDetector:
-    Condition: CreateDetector
-    Type: "AWS::GuardDuty::Detector"
-    Properties:
-      Enable: true
+  # GuardDuty Bucket
   GDThreatListBucket:
     Type: 'AWS::S3::Bucket'
     Properties:

@@ -2,15 +2,48 @@
 
 This repository walks you through a scenario covering threat detection and remediation using Amazon GuardDuty. The scenario simulates an attack that spans a few threat vectors, representing just a small sample of the threats that GuardDuty is able to detect. In addition, we look at how to view the GuardDuty findings, how to send alerts based on the findings, and, finally, how to remediate findings. The [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template used for this scenario builds out the assets used to simulate the attacks and the instructions are provided about how to analyze and remediate the findings.
 
+> Ensure you are using an AWS IAM User with Admin privileges for this scenario
+
 ### Table of Contents
 
-* [What is Created](#created)  
 * [Getting Started](#started) 
-* [Deploy the Scenario](#deploy) 
+* [Deploy the Scenario](#deploy)
+* [What is Created](#created)   
 * [Attack Scenario 1 – Compromised EC2 Instance](#attack1) 
 * [Attack Scenario 2 – Compromised IAM Credentials](#attack2)
 * [Attack Scenario 3 – IAM Role Credential Exfiltration](#attack3)
 * [Clean Up](#cleanup)
+
+## Getting started – Just Two Clicks <a name="started"/>
+
+Follow these steps to enable GuardDuty
+1. First Click: Navigate to the GuardDuty console in the region you want to run this scenario in and then click **Get Started**.
+
+![Get Started](images/screenshot1.png "Get Started")
+
+2. Second Click: On the next screen click **Enable GuardDuty**.
+
+![Enable GuardDuty](images/screenshot2.png "Enable GuardDuty")
+
+That is all you need to do. There are no prerequisites you need to set up, no agents to install, and no hardware to configure. From the moment you enable GuardDuty it begins analyzing all of the VPC Flow Logs, CloudTrail logs, and DNS Query Logs (generated from the default DNS resolver in your VPCs) in that region. There are some findings that require a baseline (7 - 14 days) to be established, such as if an AWS IAM user who has no prior history of invoking an API call related to modifying Route Tables.  But most findings will be available 10 - 15 minutes after you enable GuardDuty. It can take a few minutes from the time the information about a threat appears in one of the log files and the time GuardDuty is able to detect the finding. Regardless of the number of VPCs, IAM users, or other AWS resources there is no impact to your resources because all of the processing is being done within the managed service. 
+
+![GuardDuty Enabled](images/screenshot3.png "GuardDuty Enabled")
+
+Once GuardDuty is enabled, you can suspend or disable the service with one click (under **Settings** -> **General**). Suspending will pause the service, which stops the billing but keeps your current findings and current baseline analysis. Disabling stops the billing and removes all the existing findings and baseline data.
+
+## Deploy the Senario Using AWS CloudFormation <a name="deploy"/>
+
+To initiate the scenario and begin generating GuardDuty findings you need to run the provided CloudFormation template. Given that we will be simulating attacks and doing remediation, it is recommended that you run this CloudFormation template in a test account. The scenario only impacts the resources that the CloudFormation stack creates but it is still a best practice to run these types of attack scenarios in test accounts with no other resources. It makes sense to create a new AWS account strictly for the purpose of security and threat testing when trying out services like GuardDuty. 
+
+1.  Click [this link](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#cstack=sn%7EGuardDutyBlog%7Cturl%7Ehttps://s3-us-west-2.amazonaws.com/lab.gregmcconnel.net/guardduty-blog-cfn-template.yml) to run the CloudFormation template. This will automatically take you to the console to run the template.  You can also just use the template found in this repo (guardduty-blog-cfn-template.yml).
+2.  You will need to enter a number of parameters at the beginning. Below is an example:
+
+![Parameters](images/screenshot4.png "Parameters")
+
+3.  Once you have entered your parameters click **Next**, then **Next** again (leave everything on this page at the default), check the IAM creation acknowledgement, and then click **Create**.
+4.  The CloudFormation stack creation will take about 5 minutes to complete.
+
+**Note**: The initial findings will begin to show up in GuardDuty about 15 minutes after the CloudFormation stack creation completes. One housekeeping item that needs to be done after you launch the CloudFormation template is to confirm the SNS AWS Notification Subscription. You will receive an email to the email address you entered in the parameters when you ran the CloudFormation script. By confirming the subscription, you will receive emails when GuardDuty generates findings.
 
 ## What is Created? <a name="created"/>
 
@@ -23,39 +56,6 @@ The CloudFormation template will create the following resources:
   * Three [AWS CloudWatch Event](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html) rules for triggering the appropriate notification or remediation
   * Two [AWS Lambda](https://aws.amazon.com/lambda/) functions that will be used for remediating findings and will have permissions to modify Security Groups and revoke active IAM Role sessions (on only the IAM Role associated with this scenario)
   * [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) values with the IAM temporary security credentials details (only used to easily retrieve credentials for the purposes of this scenario).
-
-## Getting started – Just Two Clicks <a name="started"/>
-
-The CloudFormation template works whether GuardDuty is enabled or not (you just need to indicate the state of GuardDuty in the CloudFormation parameters section). If you would like to enable GuardDuty yourself before running the CloudFormation script then you can follow the instructions below. If you don’t want to enable GuardDuty yourself you can skip to next section titled **Deploy the Solution using AWS CloudFormation**.
-
-Follow these steps to enable GuardDuty
-1. First Click: Navigate to the GuardDuty console in the region you want to run this scenario in and then click **Get Started**.
-
-![Get Started](images/screenshot1.png "Get Started")
-
-2. Second Click: On the next screen click **Enable GuardDuty**.
-
-![Enable GuardDuty](images/screenshot2.png "Enable GuardDuty")
-
-That is all you need to do. There are no prerequisites you need to set up, no agents to install, and no hardware to configure. From the moment you enable GuardDuty it is analyzing all of the VPC Flow Logs, CloudTrail logs, and DNS Logs in that region. There are some findings that require that a baseline is established but most findings will be available from the moment you enable GuardDuty. Also, it can take a few minutes from the time the information about a threat is entered into one of the log files and the time GuardDuty is able to display the finding. Regardless of the number of VPCs, IAM users, or other AWS resources there is no impact to your resources because all of the processing is being done outside of your account. 
-
-![GuardDuty Enabled](images/screenshot3.png "GuardDuty Enabled")
-
-Once GuardDuty is enabled, you can suspend or disable the service with one click (under **Settings** -> **General**). Suspending will pause the service, which stops the billing but keeps your current findings and current baseline analysis. Disabling stops the billing and removes all the existing findings and baseline data.
-
-## Deploy the Senario Using AWS CloudFormation <a name="deploy"/>
-
-To initiate the scenario and begin generating GuardDuty findings you need to run the provided CloudFormation template. Given that we will be simulating attacks and doing remediation, it is recommended that you run this CloudFormation template in a test account. The scenario only impacts the resources that the CloudFormation stack creates but it is still a best practice to run these types of attack scenarios in test accounts with no other resources. It makes sense to create a new AWS account strictly for the purpose of security and threat testing when trying out services like GuardDuty. 
-
-1.	Click [this link](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#cstack=sn%7EGuardDutyBlog%7Cturl%7Ehttps://s3-us-west-2.amazonaws.com/lab.gregmcconnel.net/guardduty-blog-cfn-template.yml) to run the CloudFormation template. This will automatically take you to the console to run the template.  You can also just use the template found in this repo (guardduty-blog-cfn-template.yml).
-2.	You will need to enter a number of parameters at the beginning. Below is an example:
-
-![Parameters](images/screenshot4.png "Parameters")
-
-3.	Once you have entered your parameters click **Next**, then **Next** again (leave everything on this page at the default), check the IAM creation acknowledgement, and then click **Create**.
-4.	The CloudFormation stack creation will take about 5 minutes to complete.
-
-**Note**: The initial findings will begin to show up in GuardDuty about 15 minutes after the CloudFormation stack creation completes. One housekeeping item that needs to be done after you launch the CloudFormation template is to confirm the SNS AWS Notification Subscription. You will receive an email to the email address you entered in the parameters when you ran the CloudFormation script. By confirming the subscription, you will receive emails when GuardDuty generates findings.
 
 ## Attack Scenario 1 – Compromised EC2 Instance <a name="attack1"/>
 
