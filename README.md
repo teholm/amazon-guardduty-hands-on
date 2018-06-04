@@ -1,9 +1,8 @@
 # Getting Hands On with Amazon GuardDuty
 
-This repository walks you through a scenario covering threat detection and remediation using Amazon GuardDuty. The scenario simulates an attack that spans a few threat vectors, representing just a small sample of the threats that GuardDuty is able to detect. In addition, we look at how to view the GuardDuty findings, how to send alerts based on the findings, and, finally, how to remediate findings. The [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template used for this scenario builds out the assets used to simulate the attacks and the instructions are provided about how to analyze and remediate the findings.
+This repository walks you through a scenario covering threat detection and remediation using Amazon GuardDuty. The scenario simulates an attack that spans a few threat vectors, representing just a small sample of the threats that GuardDuty is able to detect. In addition, we look at how to view the GuardDuty findings, how to send alerts based on the findings, and, finally, how to remediate findings. The [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template used for this scenario builds out the assets used to simulate the attacks and the instructions walk you through how to analyze and remediate the findings.
 
 > Ensure you are using an AWS IAM User with Admin privileges for this scenario.
-
 ### Table of Contents
 
 * [Getting Started](#started) 
@@ -19,11 +18,11 @@ This repository walks you through a scenario covering threat detection and remed
 Follow these steps to enable GuardDuty:
 
 > Please use the **Oregon- us-west-2** region.  Skip this step if you already have GuardDuty in the region.
-1. First Click: Navigate to the GuardDuty console in the region you want to run this scenario in and then click **Get Started**.
+1. **First Click**: Navigate to the GuardDuty console in the region you want to run this scenario in and then click **Get Started**.
 
 ![Get Started](images/screenshot1.png "Get Started")
 
-2. Second Click: On the next screen click **Enable GuardDuty**.
+2. **Second Click**: On the next screen click **Enable GuardDuty**.
 
 ![Enable GuardDuty](images/screenshot2.png "Enable GuardDuty")
 
@@ -31,17 +30,17 @@ That is all you need to do. There are no prerequisites you need to set up, no ag
 
 ![GuardDuty Enabled](images/screenshot3.png "GuardDuty Enabled")
 
-Now that GuardDyty is enabled it is actively monitoring the three data sources mentioned before.  You should be taken directly to the **Findings** tab, which will show finding details as GuardDuty detects them.
+Now that GuardDyty is enabled, it is actively monitoring the three data sources mentioned above.  You should be taken directly to the **Findings** tab, which will show finding details as GuardDuty detects them.
 
 ## Deploy the Senario Using AWS CloudFormation <a name="deploy"/>
 
-To initiate the scenario and begin generating GuardDuty findings you need to run the provided CloudFormation template. Given that we will be simulating attacks and doing remediation, you should run the CloudFormation template in a non-production account. After running through this scenario, you can look at how you can implement GuardDuty and associated remediations in a multi-account structure so you are enable to aggregate findings from other accounts. 
+To initiate the scenario and begin generating GuardDuty findings you need to run the provided CloudFormation template. Given that we will be simulating attacks and doing remediation, you should run the CloudFormation template in a non-production account. After running through this scenario, you can look at how you can implement GuardDuty and associated remediations in a multi-account structure so you are able to aggregate findings from other accounts. 
 
 Region| Deploy
 ------|-----
 US West 2 (Oregon) | [![Deploy CFN Template in us-west-2](./images/deploy-to-aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=GuardDuty-Hands-On&templateURL=https://s3-us-west-2.amazonaws.com/sa-security-specialist-workshops-us-west-2/guardduty-hands-on/guardduty-cfn-template.yml)
 
-1. Click the **Deploy to AWS** button above.  This will automatically take you to the AWS Management Console to run the template.  If you prefer, can also just use the template found in this repo (guardduty-cfn-template.yml).
+1. Click the **Deploy to AWS** button above.  This will automatically take you to the AWS Management Console to run the template.  If you prefer, you can also just use the template found in this repo (guardduty-cfn-template.yml).
 
 2. On the **Specify Details** section enter the necessary parameters as shown below. 
 
@@ -51,9 +50,7 @@ US West 2 (Oregon) | [![Deploy CFN Template in us-west-2](./images/deploy-to-aws
 
 4. Finally, acknowledge the template will create IAM roles and click **Create**
 
-This will bring you back to the CloudFormation console. You can refresh the page to see the stack starting to create. Before moving on, make sure the stack is in a **CREATE_COMPLETE** status as shown below.
-
-![Stack Complete](../images/01-stack-complete.png)
+This will bring you back to the CloudFormation console. You can refresh the page to see the stack starting to create. Before moving on, make sure the stack is in a **CREATE_COMPLETE** status.
 
 5.  You will get an email from SNS asking you to confirm the Subscription. Confirm this so you can receive email alerts from GuardDuty.
 
