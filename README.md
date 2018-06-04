@@ -2,7 +2,7 @@
 
 This repository walks you through a scenario covering threat detection and remediation using Amazon GuardDuty. The scenario simulates an attack that spans a few threat vectors, representing just a small sample of the threats that GuardDuty is able to detect. In addition, we look at how to view the GuardDuty findings, how to send alerts based on the findings, and, finally, how to remediate findings. The [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template used for this scenario builds out the assets used to simulate the attacks and the instructions are provided about how to analyze and remediate the findings.
 
-> Ensure you are using an AWS IAM User with Admin privileges for this scenario
+> Ensure you are using an AWS IAM User with Admin privileges for this scenario.
 
 ### Table of Contents
 
@@ -14,7 +14,7 @@ This repository walks you through a scenario covering threat detection and remed
 * [Attack Scenario 3 – IAM Role Credential Exfiltration](#attack3)
 * [Clean Up](#cleanup)
 
-## Getting started – Just Two Clicks <a name="started"/>
+## Getting Started – Just Two Clicks <a name="started"/>
 
 Follow these steps to enable GuardDuty
 1. First Click: Navigate to the GuardDuty console in the region you want to run this scenario in and then click **Get Started**.
@@ -25,11 +25,11 @@ Follow these steps to enable GuardDuty
 
 ![Enable GuardDuty](images/screenshot2.png "Enable GuardDuty")
 
-That is all you need to do. There are no prerequisites you need to set up, no agents to install, and no hardware to configure. From the moment you enable GuardDuty it begins analyzing all of the VPC Flow Logs, CloudTrail logs, and DNS Query Logs (generated from the default DNS resolver in your VPCs) in that region. There are some findings that require a baseline (7 - 14 days) to be established, such as if an AWS IAM user who has no prior history of invoking an API call related to modifying Route Tables.  But most findings will be available 10 - 15 minutes after you enable GuardDuty. It can take a few minutes from the time the information about a threat appears in one of the log files and the time GuardDuty is able to detect the finding. Regardless of the number of VPCs, IAM users, or other AWS resources there is no impact to your resources because all of the processing is being done within the managed service. 
+That is all you need to do. There are no prerequisites you need to set up, no agents to install, and no hardware to configure. From the moment you enable GuardDuty it begins analyzing all of the VPC Flow Logs, CloudTrail logs, and DNS Query Logs (generated from the default DNS resolver in your VPCs) in that region. There are some findings that require a baseline (7 - 14 days) to be established, such as if an AWS IAM user who has no prior history of invoking an API call related to modifying Route Tables starts making modifications.  But most findings will be available 10 - 15 minutes after you enable GuardDuty. It can take a few minutes from the time the information about a threat appears in one of the log files and the time GuardDuty is able to detect the finding. Regardless of the number of VPCs, IAM users, or other AWS resources there is no impact to your resources because all of the processing is being done within the managed service. 
 
 ![GuardDuty Enabled](images/screenshot3.png "GuardDuty Enabled")
 
-Once GuardDuty is enabled, you can suspend or disable the service with one click (under **Settings** -> **General**). Suspending will pause the service, which stops the billing but keeps your current findings and current baseline analysis. Disabling stops the billing and removes all the existing findings and baseline data.
+Now that GuardDyty is enabled it is actively monitoring the three data sources mentioned before.  You should be taken directly to the **Findings** tab which will show finding details as GuardDuty detects them.
 
 ## Deploy the Senario Using AWS CloudFormation <a name="deploy"/>
 
