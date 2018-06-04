@@ -1,4 +1,4 @@
-# Getting Started with Amazon GuardDuty
+# Getting Hands On with Amazon GuardDuty
 
 This repository walks you through a scenario covering threat detection and remediation using Amazon GuardDuty. The scenario simulates an attack that spans a few threat vectors, representing just a small sample of the threats that GuardDuty is able to detect. In addition, we look at how to view the GuardDuty findings, how to send alerts based on the findings, and, finally, how to remediate findings. The [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template used for this scenario builds out the assets used to simulate the attacks and the instructions are provided about how to analyze and remediate the findings.
 
@@ -14,6 +14,9 @@ This repository walks you through a scenario covering threat detection and remed
 
 ## What is Created? <a name="created"/>
 The CloudFormation template will create the following resources:
+  * Three [Amazon EC2](https://aws.amazon.com/ec2/) Instances (all using a t2.micro instance type):
+    * Two Instances that contain the name “*Simulated: Compromised Instance*” 
+    * One instance that contains the name “*Simulated: Malicious Instance*”
   * Three [Amazon EC2](https://aws.amazon.com/ec2/) Instances (all using a t2.micro instance type):
     * Two Instances that contain the name “*Simulated: Compromised Instance*” 
     * One instance that contains the name “*Simulated: Malicious Instance*”
