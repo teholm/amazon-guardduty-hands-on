@@ -14,15 +14,15 @@ Parameters:
   AdminIP:
     Type: String
     AllowedPattern: '((\d{1,3})\.){3}\d{1,3}/\d{1,2}'
-    Description: 'Administrative IP Address (your IP) in CIDR notation (x.x.x.x/32).'
+    Description: 'Administrative IP Address (your IP) in CIDR notation (x.x.x.x/32).  This is used to allow SSH access to the instances created in this scenario.'
   
   KeyName:
     Type: AWS::EC2::KeyPair::KeyName
     ConstraintDescription: This must be the name of an existing EC2 KeyPair.
-    Description: 'Name of an existing EC2 KeyPair.'
+    Description: 'Name of an existing EC2 KeyPair to enable SSH access to the instances created in this scenario.'
   
   EmailAddress:
-    Description: Email address for receiving remediation alerts.
+    Description: Email address for receiving alerts.
     Type: String
 
 Metadata: {}

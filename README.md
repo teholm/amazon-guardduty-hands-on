@@ -16,7 +16,9 @@ This repository walks you through a scenario covering threat detection and remed
 
 ## Getting Started – Just Two Clicks <a name="started"/>
 
-Follow these steps to enable GuardDuty
+Follow these steps to enable GuardDuty:
+
+> Please use the **Oregon- us-west-2** region.  Skip this step if you already have GuardDuty in the region.
 1. First Click: Navigate to the GuardDuty console in the region you want to run this scenario in and then click **Get Started**.
 
 ![Get Started](images/screenshot1.png "Get Started")
@@ -29,21 +31,33 @@ That is all you need to do. There are no prerequisites you need to set up, no ag
 
 ![GuardDuty Enabled](images/screenshot3.png "GuardDuty Enabled")
 
-Now that GuardDyty is enabled it is actively monitoring the three data sources mentioned before.  You should be taken directly to the **Findings** tab which will show finding details as GuardDuty detects them.
+Now that GuardDyty is enabled it is actively monitoring the three data sources mentioned before.  You should be taken directly to the **Findings** tab, which will show finding details as GuardDuty detects them.
 
 ## Deploy the Senario Using AWS CloudFormation <a name="deploy"/>
 
-To initiate the scenario and begin generating GuardDuty findings you need to run the provided CloudFormation template. Given that we will be simulating attacks and doing remediation, it is recommended that you run this CloudFormation template in a test account. The scenario only impacts the resources that the CloudFormation stack creates but it is still a best practice to run these types of attack scenarios in test accounts with no other resources. It makes sense to create a new AWS account strictly for the purpose of security and threat testing when trying out services like GuardDuty. 
+To initiate the scenario and begin generating GuardDuty findings you need to run the provided CloudFormation template. Given that we will be simulating attacks and doing remediation, you should run the CloudFormation template in a non-production account. After running through this scenario, you can look at how you can implement GuardDuty and associated remediations in a multi-account structure so you are enable to aggregate findings from other accounts. 
 
-1.  Click [this link](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#cstack=sn%7EGuardDutyBlog%7Cturl%7Ehttps://s3-us-west-2.amazonaws.com/lab.gregmcconnel.net/guardduty-blog-cfn-template.yml) to run the CloudFormation template. This will automatically take you to the console to run the template.  You can also just use the template found in this repo (guardduty-blog-cfn-template.yml).
-2.  You will need to enter a number of parameters at the beginning. Below is an example:
+Region| Deploy
+------|-----
+US West 2 (Oregon) | [![Deploy CFN Template in us-west-2](../images/deploy-to-aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=GuardDuty-Hands-On&templateURL=https://s3-us-west-2.amazonaws.com/sa-security-specialist-workshops-us-west-2/guardduty-hands-on/guardduty-cfn-template.yml)
+
+1. Click the **Deploy to AWS** button above.  This will automatically take you to the AWS Management Console to run the template.  If you prefer, can also just use the template found in this repo (guardduty-cfn-template.yml).
+
+2. On the **Specify Details** section enter the necessary parameters as shown below. 
 
 ![Parameters](images/screenshot4.png "Parameters")
 
-3.  Once you have entered your parameters click **Next**, then **Next** again (leave everything on this page at the default), check the IAM creation acknowledgement, and then click **Create**.
-4.  The CloudFormation stack creation will take about 5 minutes to complete.
+3. Once you have entered your parameters click **Next**, then **Next** again \(leave everything on this page at the default\).
 
-**Note**: The initial findings will begin to show up in GuardDuty about 15 minutes after the CloudFormation stack creation completes. One housekeeping item that needs to be done after you launch the CloudFormation template is to confirm the SNS AWS Notification Subscription. You will receive an email to the email address you entered in the parameters when you ran the CloudFormation script. By confirming the subscription, you will receive emails when GuardDuty generates findings.
+4. Finally, acknowledge the template will create IAM roles and click **Create**
+
+This will bring you back to the CloudFormation console. You can refresh the page to see the stack starting to create. Before moving on, make sure the stack is in a **CREATE_COMPLETE** status as shown below.
+
+![Stack Complete](../images/01-stack-complete.png)
+
+5.  You will get an email from SNS asking you to confirm the Subscription. Confirm this so you can receive email alerts from GuardDuty.
+
+> The initial findings will begin to show up in GuardDuty about 15 minutes after the CloudFormation stack creation completes.  The reason for the delay has to due with when Guardduty is able to access the data sources from the other AWS services. One housekeeping item that needs to be done after you launch the CloudFormation template is to confirm the SNS AWS Notification Subscription. An email will be sent to the address you provided above and by confirming the subscription, you will receive emails when GuardDuty generates findings.
 
 ## What is Created? <a name="created"/>
 
