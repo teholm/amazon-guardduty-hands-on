@@ -60,8 +60,8 @@ US West 2 (Oregon) | [![Deploy CFN Template in us-west-2](./images/deploy-to-aws
 
 The CloudFormation template will create the following resources:
   * Three [Amazon EC2](https://aws.amazon.com/ec2/) Instances (all using a t2.micro instance type)
-    * Two Instances that contain the name “*Simulated: Compromised Instance*”
-    * One instance that contains the name “*Simulated: Malicious Instance*”
+    * Two Instances that contain the name “*Simulated - Compromised Instance*”
+    * One instance that contains the name “*Simulated - Malicious Instance*”
   * [AWS IAM Role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html) For EC2 which will have permissions to SSM Parameter Store and DynamoDB
   * One [Amazon SNS Topic](https://docs.aws.amazon.com/sns/latest/dg/GettingStarted.html) so you will be able to receive notifications
   * Three [AWS CloudWatch Event](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html) rules for triggering the appropriate notification or remediation
@@ -86,14 +86,16 @@ When using CloudWatch Events to send a finding from GuardDuty to SNS and then to
 
 To view the GuardDuty findings:
 
-1. Navigate to the [GuardDuty console](https://console.aws.amazon.com/guardduty) and choose **Current** in the navigation pane on the left. 
-2. If there is nothing displayed, to refresh the display click the button next to words "*Current Findings".
-3. A finding should show up soon with the text “*EC2 instance i-xxxxxxxx communicating with disallowed IP address.*” 
-   * If you would like to see the full list of GuardDuty findings and understand the details of each finding, you can learn more in the [GuardDuty Documentation](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html). 
+1.  Navigate to the [GuardDuty console](https://console.aws.amazon.com/guardduty) and click on **Findings** in the navigation pane on the left. 
+    
+    > If there is nothing displayed, to refresh the display click the button next to words "*Findings".
+2.  A finding should show up soon with the text “*Recon:IAMUser/MaliciousIPCaller.Custom.*” 
+    
+    > If you would like to see the full list of GuardDuty findings and understand the details of each finding, you can learn more in the [GuardDuty Documentation](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html). 
 
 ![GuardDuty Finding](images/screenshot5.png "GuardDuty Finding")
 
-4. This finding means that one of your EC2 instances is communicating with an IP address that is in a custom threat list (GuardDuty comes with three threat lists and you can add [custom threat lists or trusted IP lists](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload_lists.html) yourself) and might indicate that this instance is compromised. Alice has set up a CloudWatch Event Rule for this type of finding. The rule will notify you via SNS and run a Lambda function to isolate instances--according to the particular finding type--that GuardDuty indicates might be compromised. The Lambda function removes the instance from its current security group and adds it to a security group with no ingress or egress rules. This isolates the instance so no inbound or outbound connections can be made. The instance will not be able to impact any resources in your VPC while the security team investigates.
+3. This finding means that one of your EC2 instances is communicating with an IP address that is in a custom threat list (GuardDuty comes with three threat lists and you can add [custom threat lists or trusted IP lists](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload_lists.html) yourself) and might indicate that this instance is compromised. Alice has set up a CloudWatch Event Rule for this type of finding. The rule will notify you via SNS and run a Lambda function to isolate instances--according to the particular finding type--that GuardDuty indicates might be compromised. The Lambda function removes the instance from its current security group and adds it to a security group with no ingress or egress rules. This isolates the instance so no inbound or outbound connections can be made. The instance will not be able to impact any resources in your VPC while the security team investigates.
 
 **Scenario Notes**: 
 1.	The EC2 instance indicated by this finding is actually just connecting to an EIP on another instance. The EIP is in a custom threat list. 

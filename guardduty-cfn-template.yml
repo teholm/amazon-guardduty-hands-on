@@ -298,7 +298,7 @@ Resources:
           Value: 
             Fn::Join:
               - ': '
-              - [!Ref ResourceName, 'Simulated: Malicious Instance']
+              - [!Ref ResourceName, 'Simulated - Malicious Instance']
         - Key: GD-Finding
           Value: 'UnauthorizedAccess:EC2/MaliciousIPCaller.Custom'
       UserData:
@@ -375,7 +375,7 @@ Resources:
             Value: 
               Fn::Join:
               - ': '
-              - [!Ref ResourceName, 'Simulated: Compromised Instance']
+              - [!Ref ResourceName, 'Simulated - Compromised Instance']
           - Key: GD-Finding
             Value: 'UnauthorizedAccess:EC2/MaliciousIPCaller.Custom'
       UserData:
@@ -513,7 +513,7 @@ Resources:
             Value: 
               Fn::Join:
               - ': '
-              - [!Ref ResourceName, 'Simulated: Compromised Instance']
+              - [!Ref ResourceName, 'Simulated - Compromised Instance']
           - Key: GD-Finding
             Value: 'UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration'
       UserData:
@@ -926,9 +926,10 @@ Resources:
           Arn: !Ref GuardDutySNSTopic
           Id: "GuardDutySNSTopic-EC2-ThreatList"
           InputTransformer:
-            InputTemplate: '"The EC2 instance <instanceid> may be compromised and should be investigated. Go to https://console.aws.amazon.com/guardduty"'
+            InputTemplate: '"GuardDuty Finding | ID:<gdid>: The EC2 instance <instanceid> may be compromised and should be investigated. Go to https://console.aws.amazon.com/guardduty"'
             InputPathsMap:
               instanceid: $.detail.resource.instanceDetails.instanceId
+              gdid: "$.detail.id"
 
   # GuardDuty CloudWatch Event - For GuardDuty Finding: UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration
   GuardDutyEventIAM: 
@@ -952,7 +953,7 @@ Resources:
             Ref: "GuardDutySNSTopic"
           Id: "GuardDutySNSTopic-EC2-IAM"
           InputTransformer:
-            InputTemplate: '"GuardDuty Finding ID:<gdid>: An EC2 instance IAM credentials (Role: <userName>) may be compromised and should be investigated. Go to https://console.aws.amazon.com/guardduty"'
+            InputTemplate: '"GuardDuty Finding | ID:<gdid>: An EC2 instance IAM credentials (Role: <userName>) may be compromised and should be investigated. Go to https://console.aws.amazon.com/guardduty"'
             InputPathsMap:
               userName: "$.detail.resource.accessKeyDetails.userName"
               gdid: "$.detail.id"
@@ -976,7 +977,7 @@ Resources:
             Ref: "GuardDutySNSTopic"
           Id: "GuardDutySNSTopic-IAM-ThreatList"
           InputTransformer:
-            InputTemplate: '"GuardDuty Finding ID:<gdid>: An AWS API operation was invoked (userName: <userName>) from an IP address that is included on your threat list and should be investigated. Go to https://console.aws.amazon.com/guardduty"'
+            InputTemplate: '"GuardDuty Finding | ID:<gdid>: An AWS API operation was invoked (userName: <userName>) from an IP address that is included on your threat list and should be investigated. Go to https://console.aws.amazon.com/guardduty"'
             InputPathsMap:
               userName: "$.detail.resource.accessKeyDetails.userName"
               gdid: "$.detail.id"
