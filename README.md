@@ -162,6 +162,12 @@ Next, double check the effects of the remediation to ensure the instance is isol
 
 4. Click on the **GuardDutyBlog-ForensicSecurityGroup** and view the ingress and egress rules.
 
+> What would you change about the automated remediation Alice put in place?  
+
+Will isolating the instance have any effect on an application running on that instance?
+
+Were the alerts detailed enough?
+
 ## Scenario 2 – Compromised IAM Credentials (Simulated) <a name="attack2"/>
 
 You have completed the examination of this first attack, confirmed it was properly remediated, and then sat back to take your first sip of coffee for the day when you notice an additional email about new findings. The first of the new findings indicates that an API call was made using IAM credentials from your AWS account from a malicious IP address. 
