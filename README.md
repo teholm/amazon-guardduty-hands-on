@@ -145,20 +145,22 @@ Scroll down to view the code for this function (walking through the code logic i
 
 ### Verify that the Remediation was Successful
 
-Next, double check the effects of the remediation to ensure the instance is isolated.
+Next, double check the effects of the remediation to ensure the instance is isolated.  At this point you have the instance ID of the compromised instance from the email notifications and the isolation security group name that was added by the Lambda Function.
 
 1.	Browse to the [EC2 console](https://us-east-2.console.aws.amazon.com/ec2/v2) and click **Running Instances**.
    
     > You should see three instances with names that begin with **GuardDuty-Example**.
 
     ![EC2 Instances](images/screenshot9.png "EC2 Instances")
-2.  Click on the instance named **GuardDuty-Example: Compromised Instance: Scenario 1**.  
-3.  Under the **Description** tab verify the instance was the Security Group with a name that starts with **GuardDutyBlog-ForensicSecurityGroup**.
+2.  Click on the instance with the instance ID you saw in the GuardDuty finding or email notifications.
 
-    Initially, all three of the instances launched by the CloudFormation template were in the Security Group that starts with the name **GuardDutyBlog-TargetSecurityGroup-**. The Lambda function removed this one instance from the TargetSecurityGroup and added it to the ForensicsSecurityGroup to isolate the instance. 
+    > **GuardDuty-Example: Compromised Instance: Scenario 1**.  
+
+3.  After reviewing the remediation Lambda Function you know that the instance should now have the Security Group with a name that starts with **GuardDutyBlog-ForensicSecurityGroup**.  Under the **Description** tab verify the instance has this security group.
+
+    > Initially, all three of the instances launched by the CloudFormation template were in the Security Group that starts with the name **GuardDutyBlog-TargetSecurityGroup-**. The Lambda function removed this one instance from the TargetSecurityGroup and added it to the ForensicsSecurityGroup to isolate the instance. 
+
 4. Click on the **GuardDutyBlog-ForensicSecurityGroup** and view the ingress and egress rules.
-
->	What additional information would be useful in the notifications?
 
 ## Scenario 2 – Compromised IAM Credentials (Simulated) <a name="attack2"/>
 
