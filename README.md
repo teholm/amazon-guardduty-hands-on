@@ -110,19 +110,20 @@ When Alice setup the hook for notifications she only included certain informatio
 
 ![GuardDuty Finding](images/screenshot5.png "GuardDuty Finding")
 
-The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a [custom threat list]. Click on **Lists** in the left navigation to view your current white lists and threat lists.
+The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a [custom threat list](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload_lists.html). Click on **Lists** in the left navigation to view the custom threat list Alice added.
 
 > GuardDuty uses managed threat intelligence provided by AWS Security and third-party providers, such as ProofPoint and CrowdStike. You can expand the monitoring scope of GuardDuty by configuring it to use your own custom trusted IP lists and threat lists.
 
 **Scenario Notes:** 
-* The EC2 instance indicated by this finding is actually just connecting to an [Elastic IP](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html) (EIP) on another instance in the same VPC to keep with the scenario localized to your environment. The CloudFormation template automatically created the threat list and added the EIP for the malicious instance to the list.
-* Another option, that may better align with your incident response plans, would be to notify the security team and allow them to investigate before any action is taken. A timer could be set to allow investigation before an automated action is taken.  This way a determination as to what action to take could be made based on the results of the investigation of the reported threat.
+* The EC2 instance indicated by this finding is actually just connecting to an [Elastic IP](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html) (EIP) on another instance in the same VPC to keep the scenario localized to your environment. The CloudFormation template automatically created the threat list and added the EIP for the malicious instance to the list.
 
 ### View the CloudWatch Event Rule
   
-Alice used CloudWatch Event Rules to send the email you received about the findings and also to take remediations steps. Examine the CloudWatch Events console to understand what Alice configured and to see how the remediation was triggered. 
+Alice used CloudWatch Event Rules to send the email you received about the findings and also to take remediations steps. Next, you decide to examine the CloudWatch Events console to understand what Alice configured and to see how the remediation was triggered. 
 
-1.	Navigate to the [CloudWatch console](https://us-east-2.console.aws.amazon.com/cloudwatch/home?) and then, on the left, under the **Events** section, click **Rules**. You will see three Rules in the list that were created by the CloudFormation template. All of these begin with the prefix “*GuardDuty-Event*."
+1.	Navigate to the [CloudWatch console](https://us-east-2.console.aws.amazon.com/cloudwatch/home?) and on the left navigation, under the **Events** section, click **Rules**. 
+
+> You will see three Rules in the list that were created by the CloudFormation template. All of these begin with the prefix “*GuardDuty-Event*."
 
 	![CloudWatch Event Rules](images/screenshot6.png "CloudWatch Event Rules")
 
