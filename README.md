@@ -164,9 +164,9 @@ Next, double check the effects of the remediation to ensure the instance is isol
 
 >	What would you change about the automated remediation Alice put in place?  
 
-	Will isolating the instance have any effect on an application running on that instance?
+>	Will isolating the instance have any effect on an application running on the instance?
 
-	Were the alerts detailed enough?
+>	Were the alerts detailed enough?
 
 ## Scenario 2 – Compromised IAM Credentials (Simulated) <a name="attack2"/>
 
