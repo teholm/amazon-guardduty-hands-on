@@ -101,8 +101,8 @@ Shortly after the first email, you receive a second email indicating that the sa
 
 When Alice setup the hook for notifications she only included certain information about the finding because she had also setup a Lambda function to automatically isolate the instance and send out the details of the remediation.  Since the finding has been remediated you decide you still want to take a closer look at the setup Alice currently has in place.
 1. Navigate to the [GuardDuty console](https://console.aws.amazon.com/guardduty) and click on **Findings** in the navigation pane on the left.
-
-   > If there is nothing displayed click the refresh button.
+   
+   >	If there is nothing displayed click the refresh button.
 
 The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a [custom threat list]. Click on **Lists** in the left navigation to view your current white lists and threat lists.
 
