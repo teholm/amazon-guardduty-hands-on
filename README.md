@@ -131,7 +131,7 @@ Alice used CloudWatch Event Rules to send the email you received about the findi
 
 	![CloudWatch Event Rule](images/screenshot7.png "CloudWatch Event Rule")
 
-	Under the **Targets** section you will see two entries, one for a Lambda function and one for an SNS Topic.  The CloudWatch Event Rule publishes the finding to the SNS Topic which in turn sends out an email notification.  Rather than sending the entire JSON event you can see how she customized the email by using an **[input transformer](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CloudWatch-Events-Input-Transformer-Tutorial.html)**.
+	Under the **Targets** section you will see two entries, one for a Lambda function and one for an SNS Topic.  The CloudWatch Event Rule publishes the finding to the SNS Topic which in turn sends out an email notification.  Rather than sending the entire JSON event you can see how Alice customized the email by using an **[input transformer](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CloudWatch-Events-Input-Transformer-Tutorial.html)**.
 
 ### View the Remediation Lambda Function
 
@@ -147,7 +147,9 @@ Scroll down to view the code for this function (walking through the code logic i
 
 Next, double check the effects of the remediation to ensure the instance is isolated.
 
-1.	Browse to the [EC2 console](https://us-east-2.console.aws.amazon.com/ec2/v2) and click **Running Instances**. You should see three instances with names that begin with **GuardDuty-Example**.
+1.	Browse to the [EC2 console](https://us-east-2.console.aws.amazon.com/ec2/v2) and click **Running Instances**.
+   
+    > You should see three instances with names that begin with **GuardDuty-Example**.
 
     ![EC2 Instances](images/screenshot9.png "EC2 Instances")
 2.  Click on the instance named **GuardDuty-Example: Compromised Instance: Scenario 1**.  
