@@ -162,11 +162,11 @@ Next, double check the effects of the remediation to ensure the instance is isol
 
 4. Click on the **GuardDutyBlog-ForensicSecurityGroup** and view the ingress and egress rules.
 
-> What would you change about the automated remediation Alice put in place?  
+>	What would you change about the automated remediation Alice put in place?  
 
-Will isolating the instance have any effect on an application running on that instance?
+	Will isolating the instance have any effect on an application running on that instance?
 
-Were the alerts detailed enough?
+	Were the alerts detailed enough?
 
 ## Scenario 2 – Compromised IAM Credentials (Simulated) <a name="attack2"/>
 
