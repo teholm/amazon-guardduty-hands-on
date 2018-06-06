@@ -104,6 +104,12 @@ When Alice setup the hook for notifications she only included certain informatio
    
 >	If there is nothing displayed click the refresh button.
 
+2. A finding should show up with the text **UnauthorizedAccess:EC2/MaliciousIPCaller.Custom**. 
+	
+>	Based on the format you reviewed earlier can you determine the security issue by the finding type?
+
+	![GuardDuty Finding](images/screenshot5.png "GuardDuty Finding")
+
 The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a [custom threat list]. Click on **Lists** in the left navigation to view your current white lists and threat lists.
 
 > GuardDuty uses managed threat intelligence provided by AWS Security and third party providers, such as ProofPoint and CrowdStike. You can expand the monitoring scope of GuardDuty by configuring it to use your own custom trusted IP lists and threat lists.
