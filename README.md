@@ -17,7 +17,7 @@ This repository walks you through a scenario covering threat detection and remed
 
 Follow these steps to enable GuardDuty:
 
-> Please use the **Oregon (us-west-2)** region.  Skip this step if you already have GuardDuty enabled in this region.  You can run this in other regions but the CloudFormation deploy button currently defaults to us-west-2 so adjust accordingly if you do not want to use this region.
+> Please use the **Oregon (us-west-2)** region.  Skip this step if you already have GuardDuty enabled in this region.  You can run this in other regions but the CloudFormation deploy button currently defaults to us-west-2 so download the template if you want to run this in another region.
 
 1. **First Click**: Navigate to the GuardDuty console in the region you want to run this scenario in and then click **Get Started**.
 
@@ -29,8 +29,7 @@ Follow these steps to enable GuardDuty:
 
 ### Data Sources
 
-That is all you need to do. There are no prerequisites you need to set up, no agents to install, and no hardware to configure. From the moment you enable GuardDuty it begins analyzing all of the VPC Flow Logs, CloudTrail logs, and DNS Query Logs (these are generated from the default DNS resolver in your VPCs and are not available to customers) in that region. GuardDuty accesses all of these [data sources](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_data-sources.html) without any of them having to be enabled; although it is a best practice to enable CloudTrail and VPC Flow Logs for your own analysis. Regardless of the number of VPCs, IAM users, or other AWS resources in your account, there is no impact to your resources because all of the processing is being done within the managed service. 
- 
+That is all you need to do. There are no prerequisites you need to set up, no agents to install, and no hardware to configure. From the moment you enable GuardDuty it begins analyzing all of the VPC Flow Logs, CloudTrail logs, and DNS Query Logs in that region (DNS Query logs are generated from the default DNS resolver in your VPCs and are not available to customers). GuardDuty accesses all of these [data sources](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_data-sources.html) without any of them having to be enabled; although it is a best practice to enable CloudTrail and VPC Flow Logs for your own analysis. GuardDuty is a regional service so in order for the service to monitor these data sources in other regions you need to enable it in those regions.  You can accomplish this by following the same steps above and enabling it through the console but most customers are using the APIs to programmatically enable it in all regions.  Regardless of the number of VPCs, IAM users, or other AWS resources in your account, there is no impact to your resources because all of the processing is being done within the managed service. 
 
 ![GuardDuty Enabled](images/screenshot3.png "GuardDuty Enabled")
 
@@ -40,11 +39,11 @@ Now that GuardDyty is enabled it is actively monitoring the three data sources f
 
 **ThreatPurpose : ResourceTypeAffected / ThreatFamilyName . ThreatFamilyVariant ! Artifact**
 
-> Click [here](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html) for a complete description each part.
+> Click [here](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#type-format) for a complete description each part.
 
 There are certain findings that will require a baseline (7 - 14 days) to be established so GuardDuty is able to understand regular behavior and identity anomalies. An example of a finding that requires a baseline would be if an EC2 instance started communicating with a remote host on an unusual port or an IAM User who has no prior history of modifying Route Tables starts making modifications.  All of the findings generated in these scenarios will be based on signatures, so the findings will be detected 10 minutes after the completion of the CloudFormation stack.  The delay is due to the amount of time it takes for the information about a threat to appear in one of the log files and the time GuardDuty is able to detect the finding.
 
-> Click [here](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html) for a complete list of current GuardDuty finding types. 
+> Click [here](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#actual-types) for a complete list of current GuardDuty finding types. 
 
 ## Deploy the Environment <a name="deploy"/>
 
@@ -100,7 +99,7 @@ Shortly after the first email, you receive a second email indicating that the sa
 ### Browse to the GuardDuty Console to Investigate
 
 When Alice setup the hook for notifications she only included certain information about the finding because she had also setup a Lambda function to automatically isolate the instance and send out the details of the remediation.  Since the finding has been remediated you decide you still want to take a closer look at the setup Alice currently has in place.
-1. Navigate to the [GuardDuty console](https://console.aws.amazon.com/guardduty) and click on **Findings** in the navigation pane on the left.
+1. Navigate to the [GuardDuty console](https://us-west-2.console.aws.amazon.com/guardduty/home?) and click on **Findings** in the navigation pane on the left.
    
 >	If there is nothing displayed click the refresh button.
 
@@ -121,7 +120,7 @@ The finding type indicates that an EC2 instance in your environment is communica
   
 Alice used CloudWatch Event Rules to send the email you received about the findings and also to take remediations steps. Next, you decide to examine the CloudWatch Events console to understand what Alice configured and to see how the remediation was triggered. 
 
-1.  Navigate to the [CloudWatch console](https://us-east-2.console.aws.amazon.com/cloudwatch/home?) and on the left navigation, under the **Events** section, click **Rules**. 
+1.  Navigate to the [CloudWatch console](https://us-west-2.console.aws.amazon.com/cloudwatch/home?) and on the left navigation, under the **Events** section, click **Rules**. 
 
     > You will see three Rules in the list that were created by the CloudFormation template. All of these begin with the prefix “*GuardDuty-Event*."
 
@@ -135,19 +134,19 @@ Alice used CloudWatch Event Rules to send the email you received about the findi
 
 ### View the Remediation Lambda Function
 
-The Lambda function is what handles the remediation logic for this finding. Alice setup the Lambda function to remove the compromised instance from its current security group and add it to one with no ingress or egress rules so that the instance is isolated from the network. Click the **Resource Name** for the Lambda function to evaluate the remediation logic.
+The Lambda function is what handles the remediation logic for this finding. Alice setup the Lambda function to remove the compromised instance from its current security group and add it to one with no ingress or egress rules so that the instance is isolated from the network. Click the **Resource Name** for the Lambda function in the Targets section to evaluate the remediation logic.
 
 ![Lambda Function](images/screenshot8.png "Lambda Function")
 
-Scroll down to view the code for this function (walking through the code logic is outside the scope of this scenario). You can also click the **Monitoring** tab and view the invocation of the function. You should see one invocation Count and no Invocation Errors. 
+Scroll down to view the code for this function (walking through the code logic is outside the scope of this scenario). You can also click the **Monitoring** tab and view the invocation of the function. 
 
 > What permissions does the Lambda Function need to perform the remediation?
 
 ### Verify that the Remediation was Successful
 
-Next, double check the effects of the remediation to ensure the instance is isolated.  At this point you have the instance ID of the compromised instance from the email notifications and the isolation security group name that was added by the Lambda Function.
+Next, double check the effects of the remediation to ensure the instance is isolated.  At this point you have the instance ID of the compromised instance from the email notifications and the name of the isolation security group name from reviewing the Lambda Function code.
 
-1.	Browse to the [EC2 console](https://us-east-2.console.aws.amazon.com/ec2/v2) and click **Running Instances**.
+1.	Browse to the [EC2 console](https://us-west-2.console.aws.amazon.com/ec2/v2) and click **Running Instances**.
    
     > You should see three instances with names that begin with **GuardDuty-Example**.
 
@@ -158,15 +157,16 @@ Next, double check the effects of the remediation to ensure the instance is isol
 
 3.  After reviewing the remediation Lambda Function you know that the instance should now have the Security Group with a name that starts with **GuardDutyBlog-ForensicSecurityGroup**.  Under the **Description** tab verify the instance has this security group.
 
-    > Initially, all three of the instances launched by the CloudFormation template were in the Security Group that starts with the name **GuardDutyBlog-TargetSecurityGroup-**. The Lambda function removed this one instance from the TargetSecurityGroup and added it to the ForensicsSecurityGroup to isolate the instance. 
+    > Initially, all three of the instances launched by the CloudFormation template were in the Security Group that starts with the name **GuardDutyBlog-TargetSecurityGroup**. The Lambda function removed this one instance from the TargetSecurityGroup and added it to the ForensicsSecurityGroup to isolate the instance. 
 
 4. Click on the **GuardDutyBlog-ForensicSecurityGroup** and view the ingress and egress rules.
 
-What would you change about the automated remediation Alice put in place?  
+### Questions
 
-Will isolating the instance have any effect on an application running on the instance?
-
-Were the alerts detailed enough?
+After running through Alice's remediation workflow for this particular you start thinking about the following questions:
+* What would you change about the automated remediation Alice put in place?  
+* Will isolating the instance have any effect on an application running on the instance?
+* Were the alerts detailed enough?
 
 ## Scenario 2 – Compromised IAM Credentials (Simulated) <a name="attack2"/>
 
@@ -225,7 +225,7 @@ How was the key compromised?
 
 What permissions did the user have?
 
-What actions did the user take?
+What actions did the user take? #########################################
 
 ## Scenario 3 – IAM Role Credential Exfiltration <a name="attack3"/>
 
