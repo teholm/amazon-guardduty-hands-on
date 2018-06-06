@@ -1,6 +1,6 @@
 # Getting Hands On with Amazon GuardDuty
 
-This repository walks you through a scenario covering threat detection and remediation using [Amazon GuardDuty](https://aws.amazon.com/guardduty/); a managed threat detection service. The scenario simulates an attack that spans a few threat vectors, representing just a small sample of the threats that GuardDuty is able to detect. In addition, we look at how to view and analyze GuardDuty findings, how to send alerts based on the findings, and, finally, how to remediate findings. The [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template used for this scenario builds out the resources needed to simulate attacks and in some cases auto-remediate the GuardDuty findings using a combination of [CloudWatch Event Rules](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html) and [AWS Lambda](https://aws.amazon.com/lambda/) Functions.  
+This repository walks you through a scenario covering threat detection and remediation using [Amazon GuardDuty](https://aws.amazon.com/guardduty/); a managed threat detection service. The scenario simulates an attack that spans a few threat vectors, representing just a small sample of the threats that GuardDuty is able to detect. In addition, we look at how to view and analyze GuardDuty findings, how to send alerts based on the findings, and, finally, how to remediate findings. The [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template used for this scenario builds out the resources needed to simulate attacks and auto-remediate the GuardDuty findings using a combination of [CloudWatch Event Rules](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html) and [AWS Lambda Functions](https://aws.amazon.com/lambda/).  
 
 > Ensure you are using an AWS IAM User with Admin privileges for this scenario.
 
@@ -17,7 +17,7 @@ This repository walks you through a scenario covering threat detection and remed
 
 Follow these steps to enable GuardDuty:
 
-> Please use the **Oregon - us-west-2** region.  Skip this step if you already have GuardDuty enabled in this region.
+> Please use the **Oregon (us-west-2)** region.  Skip this step if you already have GuardDuty enabled in this region.  You can run this in other regions but the CloudFormation deploy button currently defaults to us-west-2 so adjust accordingly if you do not want to use this region.
 
 1. **First Click**: Navigate to the GuardDuty console in the region you want to run this scenario in and then click **Get Started**.
 
@@ -29,64 +29,59 @@ Follow these steps to enable GuardDuty:
 
 ### Data Sources
 
-That is all you need to do. There are no prerequisites you need to set up, no agents to install, and no hardware to configure. From the moment you enable GuardDuty it begins analyzing all of the VPC Flow Logs, CloudTrail logs, and DNS Query Logs (these are generated from the default DNS resolver in your VPCs and are not available to customers) in that region. GuardDuty accesses all of these [data sources](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_data-sources.html) without any of them having to be enabled (although it is a best practice to enable CloudTrail and VPC Flow Logs for your own analysis). Regardless of the number of VPCs, IAM users, or other AWS resources there is no impact to your resources because all of the processing is being done within the managed service. 
+That is all you need to do. There are no prerequisites you need to set up, no agents to install, and no hardware to configure. From the moment you enable GuardDuty it begins analyzing all of the VPC Flow Logs, CloudTrail logs, and DNS Query Logs (these are generated from the default DNS resolver in your VPCs and are not available to customers) in that region. GuardDuty accesses all of these [data sources](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_data-sources.html) without any of them having to be enabled; although it is a best practice to enable CloudTrail and VPC Flow Logs for your own analysis. Regardless of the number of VPCs, IAM users, or other AWS resources in your account, there is no impact to your resources because all of the processing is being done within the managed service. 
  
 
 ![GuardDuty Enabled](images/screenshot3.png "GuardDuty Enabled")
 
 ### Findings
 
-Now that GuardDyty is enabled it is actively monitoring the three data sources for malicous or unauthorized behavior as it relates to your EC2 instances and AWS IAM Principals.  You should be taken directly to the **Findings** tab, which will show finding details as GuardDuty detects them. After deploying the scenario you will start to see GuardDuty findings being detected.  Each finding is broken down into the format below to allow for a concise yet readable description of potential security issues.
+Now that GuardDyty is enabled it is actively monitoring the three data sources for malicious or unauthorized behavior as it relates to your EC2 instances and AWS IAM Principals.  You should be taken directly to the **Findings** tab which will show finding details as GuardDuty detects them. After deploying the scenario, you will start to see GuardDuty findings being detected.  Each finding is broken down into the format below to allow for a concise yet readable description of potential security issues.
 
 **ThreatPurpose : ResourceTypeAffected / ThreatFamilyName . ThreatFamilyVariant ! Artifact**
 
-> View the [GuardDuty Documentation](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html) for a complete description of each part.
+> Click [here](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html) for a complete description each part.
 
-There are certain findings that will require a baseline (7 - 14 days) to be established so GuardDuty is able to understand regular behavior and identity anomalies. An example of a finding that requires a baseline would be if an EC2 instance started communicating with a remote host on an unusual port or an IAM User started modifying Route Tables and doesn't have any prior history of making those type of API calls.  All of the findings generated in these scenarios will be based on signatures so the findings will be detected 10 minutes after the completion of the CloudFormation stack.  It can take a few minutes from the time the information about a threat appears in one of the log files and the time GuardDuty is able to detect the finding.
+There are certain findings that will require a baseline (7 - 14 days) to be established so GuardDuty is able to understand regular behavior and identity anomalies. An example of a finding that requires a baseline would be if an EC2 instance started communicating with a remote host on an unusual port or an IAM User who has no prior history of modifying Route Tables starts making modifications.  All of the findings generated in these scenarios will be based on signatures, so the findings will be detected 10 minutes after the completion of the CloudFormation stack.  The delay is due to the amount of time it takes for the information about a threat to appear in one of the log files and the time GuardDuty is able to detect the finding.
 
-> If you would like to see the full list of GuardDuty finding types and understand the details of each finding, you can learn more in the [GuardDuty Documentation](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html). 
+> Click [here](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html) for a complete list of current GuardDuty finding types. 
 
 ## Deploy the Environment <a name="deploy"/>
 
-To initiate the scenarios and begin generating GuardDuty findings you need to run the provided CloudFormation template. Given that you will be simulating attacks and doing remediation, you should run the CloudFormation template in a non-production account. After running through this scenario, you can look at how you can implement GuardDuty and associated remediations in a multi-account structure so you are able to aggregate findings from other accounts and use the service in a more productized manner. 
+To initiate the scenarios and begin generating GuardDuty findings you need to run the provided CloudFormation template. Given that you will be simulating attacks and doing remediations, you should run the CloudFormation template in a non-production account. After running through this scenario, you can look at how you can implement GuardDuty and associated remediations in a multi-account structure so you are able to aggregate findings from other accounts and use the service in a more productionized manner. 
 
 Region| Deploy
 ------|-----
 US West 2 (Oregon) | [![Deploy CFN Template in us-west-2](./images/deploy-to-aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=GuardDuty-Hands-On&templateURL=https://s3-us-west-2.amazonaws.com/sa-security-specialist-workshops-us-west-2/guardduty-hands-on/guardduty-cfn-template.yml)
 
-1.  Click the **Deploy to AWS** button above.  This will automatically take you to the AWS Management Console to run the template.  If you prefer, you can also just use the template found in this repo (guardduty-cfn-template.yml).
-
+1.  Click the **Deploy to AWS** button above.  This will automatically take you to the AWS Management Console to run the template (in us-west-2).  If you prefer, you can also just use the template found in this repo (guardduty-cfn-template.yml).
 2.  On the **Specify Details** section enter the necessary parameters as shown below. 
-
     ![Parameters](images/screenshot4.png "Parameters")
-
 3.  Once you have entered your parameters click **Next**, then **Next** again \(leave everything on this page at the default\).
-
-4.  Finally, acknowledge the template will create IAM roles and click **Create**.
-
-    This will bring you back to the CloudFormation console. You can refresh the page to see the stack starting to create. Before moving on, make sure the stack is in a **CREATE_COMPLETE** status.
-
+4.  Finally, acknowledge the template will create IAM roles and click **Create**.  This will bring you back to the CloudFormation console. You can refresh the page to see the stack starting to create.
 5.  You will get an email from SNS asking you to confirm the Subscription. Confirm this so you can receive email alerts from GuardDuty.
 
-The initial findings will begin to show up in GuardDuty about 10 minutes after the CloudFormation stack creation completes. One housekeeping item that needs to be done after you launch the CloudFormation template is to confirm the SNS AWS Notification Subscription. An email will be sent to the address you provided above and by confirming the subscription, you will receive emails when GuardDuty generates findings.
+The initial findings will begin to show up in GuardDuty about 10 minutes after the CloudFormation stack creation completes. 
 
 ### What is Created?
 
 The CloudFormation template will create the following resources:
   * Three [Amazon EC2](https://aws.amazon.com/ec2/) Instances (all using a t2.micro instance type)
-    * Two Instances that contain the name “*Simulated - Compromised Instance*”
-    * One instance that contains the name “*Simulated - Malicious Instance*”
+    * Two Instances that contain the name “*Compromised Instance*”
+    * One instance that contains the name “*Malicious Instance*”
   * [AWS IAM Role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html) For EC2 which will have permissions to SSM Parameter Store and DynamoDB
   * One [Amazon SNS Topic](https://docs.aws.amazon.com/sns/latest/dg/GettingStarted.html) so you will be able to receive notifications
   * Three [AWS CloudWatch Event](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html) rules for triggering the appropriate notification or remediation
   * Two [AWS Lambda](https://aws.amazon.com/lambda/) functions that will be used for remediating findings and will have permissions to modify Security Groups and revoke active IAM Role sessions (on only the IAM Role associated with this scenario)
   * [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) values with the IAM temporary security credentials details (only used to easily retrieve credentials for the purposes of this scenario).
 
+> Make sure the CloudFormation stack is in a **CREATE_COMPLETE** status before moving on.
+
 ## Scenario 1 – Compromised EC2 Instance <a name="attack1"/>
 
 You are simulating an attack scenario so let’s set the scene: 
 
-###Scene Simulation
+### Scene Simulation
 
 After an uneventful yet unnecessarily long commute to work, you arrived at the office on Monday morning. You grabbed a cup of coffee, sat down in your cube, opened up your laptop and begin to go through your emails. Soon after you begin though you start receiving emails indicating that GuardDuty has detected new threats. You don’t yet know the extent of the threats but you quickly begin to investigate. Now the good news is that your coworker Alice has already set up some hooks for specific findings so that they will be automatically remediated. 
 
@@ -102,19 +97,15 @@ Shortly after the first email, you receive a second email indicating that the sa
 
 ![Attack Senario 1](images/attack1.png "Attack Scenario 1")
 
-### Browse to the GuardDuty console to investigate
+### Browse to the GuardDuty Console to Investigate
 
 When Alice setup the hook for notifications she only included certain information about the finding because she had also setup a Lambda function to automatically isolate the instance and send out the details of the remediation.  Since the finding has been remediated you decide you still want to take a closer look at the setup Alice currently has in place.  Browse to the GuardDuty console to investigate further.
 
-To view the GuardDuty findings:
-
-1.  Navigate to the [GuardDuty console](https://console.aws.amazon.com/guardduty) and click on **Findings** in the navigation pane on the left. 
+1.	Navigate to the [GuardDuty console](https://console.aws.amazon.com/guardduty) and click on **Findings** in the navigation pane on the left. 
+	> If there is nothing displayed click the refresh button.
     
-    > If there is nothing displayed click the refresh button.
-    
-2.  A finding should show up with the text **UnauthorizedAccess:EC2/MaliciousIPCaller.Custom**. 
-    
-    > Based on the format you reviewed earlier can you determine the security issue by the finding type?
+2.	A finding should show up with the text **UnauthorizedAccess:EC2/MaliciousIPCaller.Custom**. 
+	> Based on the format you reviewed earlier can you determine the security issue by the finding type?
 
 	![GuardDuty Finding](images/screenshot5.png "GuardDuty Finding")
 
