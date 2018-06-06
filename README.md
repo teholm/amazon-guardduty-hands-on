@@ -1,23 +1,24 @@
 # Getting Hands On with Amazon GuardDuty
 
-This repository walks you through a scenario covering threat detection and remediation using Amazon GuardDuty. The scenario simulates an attack that spans a few threat vectors, representing just a small sample of the threats that GuardDuty is able to detect. In addition, we look at how to view the GuardDuty findings, how to send alerts based on the findings, and, finally, how to remediate findings. The [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template used for this scenario builds out the assets used to simulate the attacks and the instructions walk you through how to analyze and remediate the findings.
+This repository walks you through a scenario covering threat detection and remediation using [Amazon GuardDuty](https://aws.amazon.com/guardduty/); a managed threat detection service. The scenario simulates an attack that spans a few threat vectors, representing just a small sample of the threats that GuardDuty is able to detect. In addition, we look at how to view and analyze GuardDuty findings, how to send alerts based on the findings, and, finally, how to remediate findings. The [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template used for this scenario builds out the resources needed to simulate attacks and in some cases auto-remediate the GuardDuty findings using a combination of [CloudWatch Event Rules](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html) and [AWS Lambda](https://aws.amazon.com/lambda/) Functions.  
 
 > Ensure you are using an AWS IAM User with Admin privileges for this scenario.
+
 ### Table of Contents
 
 * [Getting Started](#started) 
-* [Deploy the Scenario](#deploy)
-* [What is Created](#created)   
-* [Attack Scenario 1 – Compromised EC2 Instance](#attack1) 
-* [Attack Scenario 2 – Compromised IAM Credentials](#attack2)
-* [Attack Scenario 3 – IAM Role Credential Exfiltration](#attack3)
+* [Deploy the Environment](#deploy) 
+* [Scenario 1 – Compromised EC2 Instance](#attack1) 
+* [Scenario 2 – Compromised IAM Credentials](#attack2)
+* [Scenario 3 – IAM Role Credential Exfiltration](#attack3)
 * [Clean Up](#cleanup)
 
 ## Getting Started – Just Two Clicks <a name="started"/>
 
 Follow these steps to enable GuardDuty:
 
-> Please use the **Oregon- us-west-2** region.  Skip this step if you already have GuardDuty in the region.
+> Please use the **Oregon - us-west-2** region.  Skip this step if you already have GuardDuty enabled in this region.
+
 1. **First Click**: Navigate to the GuardDuty console in the region you want to run this scenario in and then click **Get Started**.
 
 ![Get Started](images/screenshot1.png "Get Started")
@@ -26,15 +27,28 @@ Follow these steps to enable GuardDuty:
 
 ![Enable GuardDuty](images/screenshot2.png "Enable GuardDuty")
 
-That is all you need to do. There are no prerequisites you need to set up, no agents to install, and no hardware to configure. From the moment you enable GuardDuty it begins analyzing all of the VPC Flow Logs, CloudTrail logs, and DNS Query Logs (generated from the default DNS resolver in your VPCs) in that region. There are some findings that require a baseline (7 - 14 days) to be established, such as if an AWS IAM user who has no prior history of invoking an API call related to modifying Route Tables starts making modifications.  But most findings will be available 10 - 15 minutes after you enable GuardDuty. It can take a few minutes from the time the information about a threat appears in one of the log files and the time GuardDuty is able to detect the finding. Regardless of the number of VPCs, IAM users, or other AWS resources there is no impact to your resources because all of the processing is being done within the managed service. 
+### Data Sources
+
+That is all you need to do. There are no prerequisites you need to set up, no agents to install, and no hardware to configure. From the moment you enable GuardDuty it begins analyzing all of the VPC Flow Logs, CloudTrail logs, and DNS Query Logs (these are generated from the default DNS resolver in your VPCs and are not available to customers) in that region. GuardDuty accesses all of these [data sources](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_data-sources.html) without any of them having to be enabled (although it is a best practice to enable CloudTrail and VPC Flow Logs for your own analysis). Regardless of the number of VPCs, IAM users, or other AWS resources there is no impact to your resources because all of the processing is being done within the managed service. 
+ 
 
 ![GuardDuty Enabled](images/screenshot3.png "GuardDuty Enabled")
 
-Now that GuardDyty is enabled, it is actively monitoring the three data sources mentioned above.  You should be taken directly to the **Findings** tab, which will show finding details as GuardDuty detects them.
+### Findings
 
-## Deploy the Senario Using AWS CloudFormation <a name="deploy"/>
+Now that GuardDyty is enabled it is actively monitoring the three data sources for malicous or unauthorized behavior as it relates to your EC2 instances and AWS IAM Principals.  You should be taken directly to the **Findings** tab, which will show finding details as GuardDuty detects them. After deploying the scenario you will start to see GuardDuty findings being detected.  Each finding is broken down into the format below to allow for a concise yet readable description of potential security issues.
 
-To initiate the scenario and begin generating GuardDuty findings you need to run the provided CloudFormation template. Given that we will be simulating attacks and doing remediation, you should run the CloudFormation template in a non-production account. After running through this scenario, you can look at how you can implement GuardDuty and associated remediations in a multi-account structure so you are able to aggregate findings from other accounts. 
+**ThreatPurpose : ResourceTypeAffected / ThreatFamilyName . ThreatFamilyVariant ! Artifact**
+
+> View the [GuardDuty Documentation](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html) for a complete description of each part.
+
+There are certain findings that will require a baseline (7 - 14 days) to be established so GuardDuty is able to understand regular behavior and identity anomalies. An example of a finding that requires a baseline would be if an EC2 instance started communicating with a remote host on an unusual port or an IAM User started modifying Route Tables and doesn't have any prior history of making those type of API calls.  All of the findings generated in these scenarios will be based on signatures so the findings will be detected 10 minutes after the completion of the CloudFormation stack.  It can take a few minutes from the time the information about a threat appears in one of the log files and the time GuardDuty is able to detect the finding.
+
+> If you would like to see the full list of GuardDuty finding types and understand the details of each finding, you can learn more in the [GuardDuty Documentation](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html). 
+
+## Deploy the Environment <a name="deploy"/>
+
+To initiate the scenarios and begin generating GuardDuty findings you need to run the provided CloudFormation template. Given that you will be simulating attacks and doing remediation, you should run the CloudFormation template in a non-production account. After running through this scenario, you can look at how you can implement GuardDuty and associated remediations in a multi-account structure so you are able to aggregate findings from other accounts and use the service in a more productized manner. 
 
 Region| Deploy
 ------|-----
@@ -54,9 +68,9 @@ US West 2 (Oregon) | [![Deploy CFN Template in us-west-2](./images/deploy-to-aws
 
 5.  You will get an email from SNS asking you to confirm the Subscription. Confirm this so you can receive email alerts from GuardDuty.
 
-> The initial findings will begin to show up in GuardDuty about 15 minutes after the CloudFormation stack creation completes. One housekeeping item that needs to be done after you launch the CloudFormation template is to confirm the SNS AWS Notification Subscription. An email will be sent to the address you provided above and by confirming the subscription, you will receive emails when GuardDuty generates findings.
+The initial findings will begin to show up in GuardDuty about 10 minutes after the CloudFormation stack creation completes. One housekeeping item that needs to be done after you launch the CloudFormation template is to confirm the SNS AWS Notification Subscription. An email will be sent to the address you provided above and by confirming the subscription, you will receive emails when GuardDuty generates findings.
 
-## What is Created? <a name="created"/>
+### What is Created?
 
 The CloudFormation template will create the following resources:
   * Three [Amazon EC2](https://aws.amazon.com/ec2/) Instances (all using a t2.micro instance type)
@@ -68,13 +82,21 @@ The CloudFormation template will create the following resources:
   * Two [AWS Lambda](https://aws.amazon.com/lambda/) functions that will be used for remediating findings and will have permissions to modify Security Groups and revoke active IAM Role sessions (on only the IAM Role associated with this scenario)
   * [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) values with the IAM temporary security credentials details (only used to easily retrieve credentials for the purposes of this scenario).
 
-## Attack Scenario 1 – Compromised EC2 Instance <a name="attack1"/>
+## Scenario 1 – Compromised EC2 Instance <a name="attack1"/>
 
-We are simulating an attack scenario so let’s set the scene: After an uneventful yet unnecessarily long commute to work, you have arrived at the office this Monday morning. You have grabbed a cup of coffee, sat down in your cube, opened up your laptop and begin to go through your emails. Soon after you begin though you start receiving emails indicating that GuardDuty has detected new threats. You don’t yet know the extent of the threats but you quickly begin to investigate. Now the good news is that your coworker Alice has already set up some hooks for specific findings so that they will be automatically remediated. 
+You are simulating an attack scenario so let’s set the scene: 
+
+###Scene Simulation
+
+After an uneventful yet unnecessarily long commute to work, you arrived at the office on Monday morning. You grabbed a cup of coffee, sat down in your cube, opened up your laptop and begin to go through your emails. Soon after you begin though you start receiving emails indicating that GuardDuty has detected new threats. You don’t yet know the extent of the threats but you quickly begin to investigate. Now the good news is that your coworker Alice has already set up some hooks for specific findings so that they will be automatically remediated. 
 
 The first email you receive from GuardDuty indicates that one of your EC2 instances might be compromised:
 
-*"GuardDuty Finding | ID: xxx: The EC2 instance i-xxxxxxxxx might be compromised and should be investigated"*
+*GuardDuty Finding | ID: 1xx: The EC2 instance i-xxxxxxxxx might be compromised and should be investigated*
+
+Shortly after the first email, you receive a second email indicating that the same GuardDuty finding has been remediated:
+
+*GuardDuty Remediation | ID: 1xx: GuardDuty discovered an EC2 instance (Instance ID: i-xxx) that is communicating outbound with an IP Address on a threat list that you uploaded.  All security groups have been removed and it has been isolated. Please follow up with any additional remediation actions.*
 
 ### Diagram of the Attack, Detection, and Remediation
 
@@ -82,84 +104,91 @@ The first email you receive from GuardDuty indicates that one of your EC2 instan
 
 ### Browse to the GuardDuty console to investigate
 
-When using CloudWatch Events to send a finding from GuardDuty to SNS and then to your email address, the default behavior is to send the entire JSON containing all of the threat data. It is also possible to put a transformation on the data before it is sent to SNS to produce a more user-friendly email. That is what was done in this case, so in order to get the complete information about the finding you need to check the GuardDuty console. You browse to the GuardDuty console to investigate further.
+When Alice setup the hook for notifications she only included certain information about the finding because she had also setup a Lambda function to automatically isolate the instance and send out the details of the remediation.  Since the finding has been remediated you decide you still want to take a closer look at the setup Alice currently has in place.  Browse to the GuardDuty console to investigate further.
 
 To view the GuardDuty findings:
 
 1.  Navigate to the [GuardDuty console](https://console.aws.amazon.com/guardduty) and click on **Findings** in the navigation pane on the left. 
     
-    > If there is nothing displayed, to refresh the display click the button next to words "*Findings".
-2.  A finding should show up with the text “*Recon:IAMUser/MaliciousIPCaller.Custom.*” 
+    > If there is nothing displayed click the refresh button.
     
-    > If you would like to see the full list of GuardDuty finding types and understand the details of each finding, you can learn more in the [GuardDuty Documentation](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html). 
+2.  A finding should show up with the text **UnauthorizedAccess:EC2/MaliciousIPCaller.Custom**. 
+    
+    > Based on the format you reviewed earlier can you determine the security issue by the finding type?
 
-![GuardDuty Finding](images/screenshot5.png "GuardDuty Finding")
+	![GuardDuty Finding](images/screenshot5.png "GuardDuty Finding")
 
-3. This finding means that one of your EC2 instances is communicating with an IP address that is on a custom threat list (GuardDuty comes with three managed threat lists and allows you to add your own [custom threat lists or trusted IP lists](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload_lists.html)) and should be investigated. Alice has set up a CloudWatch Event Rule for this type of finding. The rule will notify you via SNS and run a Lambda function to isolate instances--according to the particular finding type--that GuardDuty indicates might be compromised. The Lambda function removes the instance from its current security group and adds it to a security group with no ingress or egress rules. This isolates the instance so no inbound or outbound connections can be made. The instance will not be able to impact any resources in your VPC while the security team investigates.  She put in place this auto-remediation based on the security teams current runbooks for responding to compromised instances.
+The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a [custom threat list]. Click on **Lists** in the left navigation to view your current white lists and threat lists.
 
-#### Scenario Notes
+> GuardDuty uses managed threat intelligence provided by AWS Security and third party providers, such as ProofPoint and CrowdStike. You can expand the monitoring scope of GuardDuty by configuring it to use your own custom trusted IP lists and threat lists.
 
-1.	The EC2 instance indicated by this finding is actually just connecting to an [Elastic IP](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html) (EIP) on another instance in the same VPC to keep with the scenario localized to your environment. The CloudFormation template automatically created the threat list and added the EIP for the malicious instance to list.  
-2.	Another option, that may better align with your incident response plans, would be to notify the security team and allow them to investigate before any action is taken. A timer could be set to allow investigation before an automated action is taken.  This way a determination as to what action to take could be made based on the results of the investigation of the reported threat.
+**Scenario Notes:** 
+	*	The EC2 instance indicated by this finding is actually just connecting to an [Elastic IP](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html) (EIP) on another instance in the same VPC to keep with the scenario localized to your environment. The CloudFormation template automatically created the threat list and added the EIP for the malicious instance to the list.
+	* 	Another option, that may better align with your incident response plans, would be to notify the security team and allow them to investigate before any action is taken. A timer could be set to allow investigation before an automated action is taken.  This way a determination as to what action to take could be made based on the results of the investigation of the reported threat.
 
-### View the CloudWatch Event rule for the compromised EC2 instance
+### View the CloudWatch Event Rule
+  
+Alice used CloudWatch Event Rules to send the email you received about the findings and also to take remediations steps. Examine the CloudWatch Events console to understand what Alice configured and to see how the remediation was triggered. 
 
-Although you can view the GuardDuty findings in the console, most customers will want to receive a notification of new findings and possibly have all of the findings delivered to a central security information and event management (SIEM) system for analysis and remediation. The recommended process for GuardDuty findings management is to use CloudWatch Event Rules for triggering events (such as publishing to SNS topics or invoking Lambda functions) and Lambda functions for any automated actions. This is the most common pattern for sending findings to your SIEM. 
+1.	Navigate to the [CloudWatch console](https://us-east-2.console.aws.amazon.com/cloudwatch/home?) and then, on the left, under the **Events** section, click **Rules**. You will see three Rules in the list that were created by the CloudFormation template. All of these begin with the prefix “*GuardDuty-Event*."
 
-If you have multiple accounts and want to aggregate findings you can use a [Master/Member](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_accounts.html) setup for accounts and add up to 1000 members to a central master account. All of the findings for the member accounts will roll up to the master account GuardDuty console and the master account CloudWatch Events.  GuardDuty also has many [partners](https://aws.amazon.com/guardduty/resources/partners/) (some of which you may already be using) to help with the centralized management of all your findings as well correlation of those findings with other data sources (such as resource configurations or other threat intelligence information).   
+	![CloudWatch Event Rules](images/screenshot6.png "CloudWatch Event Rules")
 
-Now, let's get back to Monday morning.  Alice used CloudWatch Events to send the email you received about the findings and also to take remediations steps. We will examine the CloudWatch Events console to understand what Alice configured and to make sure the remediation was triggered. 
+2.	Click on the rule named **GuardDuty-Event-EC2-MaliciousIPCaller**. 
 
-1.	Navigate to the [CloudWatch console](https://us-east-2.console.aws.amazon.com/cloudwatch/home?) and then, on the left, under the **Events** section, click **Rules**. You will see three Rules in the list that were created by the CloudFormation template. All of these begin with the phrase “*GuardDuty-Event*” (you might see other rules depending on if any other rules were created for other purposes in this account)
+	![CloudWatch Event Rule](images/screenshot7.png "CloudWatch Event Rule")
 
-![CloudWatch Event Rules](images/screenshot6.png "CloudWatch Event Rules")
+	Under the **Targets** section you will see two entries, one for a Lambda function and one for an SNS Topic.  The CloudWatch Event Rule publishes the finding to the SNS Topic which in turn sends out an email notification.  Rather than sending the entire JSON event you can see how she customized the email by using an **[input transformer](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CloudWatch-Events-Input-Transformer-Tutorial.html)**.
 
-2.	The rule that Alice configured for this “*compromised instance*” scenario is called “GuardDuty-Event-EC2-MaliciousIPCaller”. **Click that rule**. Under the **Targets** section you will see two entries, one for a Lambda function and one for an SNS Topic.
+### View the Remediation Lambda Function
 
-![CloudWatch Event Rule](images/screenshot7.png "CloudWatch Event Rule")
-
-3.	The SNS topic entry will send an email to the email address you entered in the parameters for the CloudFormation template. In the **Input** section you can see that an **[input transformer](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CloudWatch-Events-Input-Transformer-Tutorial.html)** has been configured. This is to make the email that is sent a little friendlier than including the full JSON from the GuardDuty finding.
-4.	The Lambda function is what handles the remediation logic for this finding. The Lambda function will remove the compromised instance from its current security group and add it to one with no ingress or egress rules so that the instance is isolated from the network. If you click the **Resource name** for the Lambda function, this will take you into the Lambda console for that function.
+The Lambda function is what handles the remediation logic for this finding. Alice setup the Lambda function to remove the compromised instance from its current security group and add it to one with no ingress or egress rules so that the instance is isolated from the network. Click the **Resource Name** for the Lambda function to evaluate the remediation logic.
 
 ![Lambda Function](images/screenshot8.png "Lambda Function")
 
-5.	You can scroll down to view the code of this function (walking through the code logic is outside the scope of this scenario). You can also click the **Monitoring** tab and view the invocation of the function. You should see one invocation Count and no Invocation Errors. 
-6.	To see the effects of the remediation applied to the instance, browse to the [EC2 console](https://us-east-2.console.aws.amazon.com/ec2/v2) and click **Running Instances**. You should see three instances with names that begin with “GuardDuty-Example.” 
+Scroll down to view the code for this function (walking through the code logic is outside the scope of this scenario). You can also click the **Monitoring** tab and view the invocation of the function. You should see one invocation Count and no Invocation Errors. 
+
+> What permissions does the Lambda Function need to perform the remediation?
+
+### Verify that the Remediation was Successful
+
+Next, double check the effects of the remediation to ensure the instance is isolated.
+
+1.	Browse to the [EC2 console](https://us-east-2.console.aws.amazon.com/ec2/v2) and click **Running Instances**. You should see three instances with names that begin with **GuardDuty-Example**.
 
     ![EC2 Instances](images/screenshot9.png "EC2 Instances")
-7.  Click on the instance named **GuardDuty-Example: Compromised Instance: Scenario 1**.  
-8.  Under the **Description** tab click on the Security Group with a name that starts with **GuardDutyBlog-ForensicSecurityGroup**.
+2.  Click on the instance named **GuardDuty-Example: Compromised Instance: Scenario 1**.  
+3.  Under the **Description** tab verify the instance was the Security Group with a name that starts with **GuardDutyBlog-ForensicSecurityGroup**.
 
-    Initially, all three of the instances launched by the CloudFormation template were in the Security Group that starts with the name “*GuardDutyBlog-TargetSecurityGroup-*”. The Lambda function removed this one instance from the TargetSecurityGroup and added it to the ForensicsSecurityGroup to isolate the instance. 
+    Initially, all three of the instances launched by the CloudFormation template were in the Security Group that starts with the name **GuardDutyBlog-TargetSecurityGroup-**. The Lambda function removed this one instance from the TargetSecurityGroup and added it to the ForensicsSecurityGroup to isolate the instance. 
+4. Click on the **GuardDutyBlog-ForensicSecurityGroup** and view the ingress and egress rules.
 
-9.	If you check back in your email you should see another email that came right after that first email regarding the compromised instance. This second email indicates that the remediation was completed. 
+>	What additional information would be useful in the notifications?
 
-*GuardDuty Remediation | ID:xxx: GuardDuty discovered an EC2 instance (Instance ID: i-xxx) that is communicating outbound with an IP Address on a threat list that you uploaded.  All security groups have been removed and it has been isolated. Please follow up with any additional remediation actions.*
-
-## Attack Scenario 2 – Compromised IAM Credentials (Simluated) <a name="attack2"/>
+## Scenario 2 – Compromised IAM Credentials (Simulated) <a name="attack2"/>
 
 You have completed the examination of this first attack, confirmed it was properly remediated, and then sat back to take your first sip of coffee for the day when you notice an additional email about new findings. The first of the new findings indicates that an API call was made using IAM credentials from your AWS account from a malicious IP address. 
 
-#### Scenario Note
+> **Scenario Note**: None of your IAM credentials have actually been compromised or exposed in any way. The finding is the result of an EC2 instance using an IAM Role for EC2 and with an EIP that is in the custom threat list making API calls on your behalf. 
 
-None of your IAM credentials have actually been compromised or exposed in any way. The finding is the result of an EC2 instance using an IAM Role for EC2 and with an EIP that is in the custom threat list making API calls on your behalf. 
+### Diagram of the Simulated Attack and Detection
+
+![Attack 2](images/attack2.png "Attack2")
 
 ### Browse to the GuardDuty Console to investigate
 
 To view the findings:
+
 1. Navigate to the [GuardDuty console](https://console.aws.amazon.com/guardduty) and then, in the navigation pane on the left, choose **Current**. 
-2.	Click the  ![Refresh](images/refreshicon.png "Refresh") icon to refresh the GuardDuty console. A finding should be visible right after the prior EC2 one with the text starting with either “*API GetParameters*” or “*Reconnaissance API*” (although the e-mail you received was only reporting that first Recon threat which  refers specifically to the threat “*UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom*.” If you click on one the finding then you can bring up a window showing the full details of this finding. You can also select the finding and click the **Actions** menu, click **Export** and extract the full JSON from the finding. More findings will begin to show up in the GuardDuty console. Below is a screenshot of one example showing a partial view of the finding details. 
+2.	Click the  ![Refresh](images/refreshicon.png "Refresh") icon to refresh the GuardDuty console. You should now see additional findings that related to **Recon:IAMUser** and **UnauthorizedAccess:IAMUser**. Each GuardDuty finding is broken down into a format (**[ThreatPurpose:ResourceTypeAffected/ThreatFamilyName.ThreatFamilyVariant!Artifact](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#type-format)**) that allows for a concise yet readable description of a potential security issue. Click on one of the findings to view the full details. Below is a screenshot of one example showing a partial view of the finding details.
 
-![GuardDuty Finding](images/screenshot10.png "GuardDuty Finding")
+    ![GuardDuty Finding](images/screenshot10.png "GuardDuty Finding")
 
-3.	This finding indicates that the IAM credentials (the finding details show the Access key ID) are possibly compromised because API calls using those credentials are being made from an IP address on a threat list. The security team would be notified and proper steps to address this should be followed. This would usually lead to investigation of the IAM Credentials and, most likely, disabling them if they belong to am IAM user, or revoking the session, if they belong to an IAM Role. 
-4.	Similar to the compromised EC2 instance finding, Alice set up a CloudWatch Event Rule for this finding that we will examine now.
+    You can see the finding details include information about what happened, what AWS resources were involved in the suspicious activity, when this activity took place, and other additional information.  Under **Resource Affected**, find the name of AWS IAM **User Name** associated with this finding.
 
-**Scenario Note**: All of these findings showing up after the initial “*UnauthorizedAccess:EC2/MaliciousIPCaller.Custom*” are regarding IAM access key compromises. These IAM findings are being generated by the “malicious EC2” instance making API calls. These API calls generate findings because the EIP of that instance is in a custom threat list.
+This finding indicates that the IAM credentials (of the user you found above) are possibly compromised because API calls using those credentials are being made from an IP address on a custom threat list.  Similar to the compromised EC2 instance finding, Alice set up a CloudWatch Event Rule for this finding that we will examine now.
 
-### Diagram of the Attack and Detection
-
-![Attack 2](images/attack2.png "Attack2")
+>	**Scenario Note**: All of these findings showing up after the initial “*UnauthorizedAccess:EC2/MaliciousIPCaller.Custom*” are regarding IAM access key compromises. These IAM findings are being generated by the “malicious EC2” instance making API calls. These API calls generate findings because the EIP of that instance is in a custom threat list.
 
 ### View the CloudWatch Event rule for the compromised IAM credential
 
@@ -168,7 +197,10 @@ To view the findings:
 2.	You will see three Rules in the list that were created by the CloudFormation template each beginning with the phrase “*GuardDuty-Event*” (you might see other rules depending on if any other rules were created for other purposes.) 
 3.	The rule that Alice configured for this “compromised access key” scenario is called “*GuardDuty-Event-EC2-MaliciousIPCaller*”. Click that rule. 
 4.	Under the **Targets** section, you will see a rule for an SNS Topic. The SNS topic entry was responsible for sending an email to the email address you entered in the parameters for the CloudFormation template. You can see this SNS Topic Trigger also has a transformation filter to modify the email to make it more user friendly.
-5.	Alice did not set up a Lambda function to remediate this threat but there are many options that can be employed for dealing with this potential compromise. There could be an investigative phase before an action is taken, including disabling the IAM Credential or the revoking the IAM Role session. This is also where a third-party solution could be examined. In many customer use cases, we have seen CloudWatch Events are used to send findings to an existing customer’s SIEM. Many [Amazon GuardDuty partners](https://aws.amazon.com/guardduty/resources/partners/) already have solutions for GuardDuty to make ingestion simple, help with analysis of findings, and also to help set up remediations. Some of these remediation options use Lambda, so instead of a CloudWatch Event Rule triggering Lambda, the solution itself could trigger a workflow which would include Lambda taking action.
+5.	Alice did not set up a Lambda function to remediate this threat because the decision by the security team was to manually investigate and remediate this particular type of finding. 
+
+
+There could be an investigative phase before an action is taken, including disabling the IAM Credential or the revoking the IAM Role session. This is also where a third-party solution could be examined. In many customer use cases, we have seen CloudWatch Events are used to send findings to an existing customer’s SIEM. Many [Amazon GuardDuty partners](https://aws.amazon.com/guardduty/resources/partners/) already have solutions for GuardDuty to make ingestion simple, help with analysis of findings, and also to help set up remediations. Some of these remediation options use Lambda, so instead of a CloudWatch Event Rule triggering Lambda, the solution itself could trigger a workflow which would include Lambda taking action.
 
 ## Attack Scenario 3 – IAM Role Credential Exfiltration <a name="attack3"/>
 
