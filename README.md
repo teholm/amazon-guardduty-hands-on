@@ -99,16 +99,6 @@ Shortly after the first email, you receive a second email indicating that the sa
 
 ### Browse to the GuardDuty Console to Investigate
 
-When Alice setup the hook for notifications she only included certain information about the finding because she had also setup a Lambda function to automatically isolate the instance and send out the details of the remediation.  Since the finding has been remediated you decide you still want to take a closer look at the setup Alice currently has in place.
-	
-1. Navigate to the [GuardDuty console](https://console.aws.amazon.com/guardduty) and click on **Findings** in the navigation pane on the left. 
-
-	> If there is nothing displayed click the refresh button.
-2. A finding should show up with the text **UnauthorizedAccess:EC2/MaliciousIPCaller.Custom**. 
-	
-	> Based on the format you reviewed earlier can you determine the security issue by the finding type?
-
-	![GuardDuty Finding](images/screenshot5.png "GuardDuty Finding")
 
 The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a [custom threat list]. Click on **Lists** in the left navigation to view your current white lists and threat lists.
 
