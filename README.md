@@ -54,6 +54,8 @@ Now that GuardDuty is enabled it is actively monitoring the three data sources f
 
 There are certain findings that will require a baseline (7 - 14 days) to be established so GuardDuty is able to understand regular behavior and identity anomalies. An example of a finding that requires a baseline would be if an EC2 instance started communicating with a remote host on an unusual port or an IAM User who has no prior history of modifying Route Tables starts making modifications.  All of the findings generated in these scenarios will be based on signatures, so the findings will be detected 10 minutes after the completion of the CloudFormation stack.  The delay is due to the amount of time it takes for the information about a threat to appear in one of the data sources and the amount of time it takes for GuardDuty to access and analyze that particular data source.  
 
+> Click [here](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#actual-types) for a complete list of current GuardDuty finding types. 
+
 GuardDuty sends notifications based on Amazon CloudWatch Events when any change in the findings takes place. These notificaitons are sent within 5 minutes of the finding. All subsequent occurences of an existing finding will have the same ID as the original finding and notifications will be sent every 6 hours after the initial notification.  This is to eliminate alert fatigue due to the same finding.
 
 ## Deploy the Environment <a name="deploy"/>
@@ -394,15 +396,13 @@ You should see a response that states that there is an explicit deny for that ac
 
 ## Summary
 
-By walking through the scenarios you generated, analyzed, and remediated all of the following threats in your environment:
+By walking through these scenarios you generated, analyzed, and remediated all of the following threats in your environment:
 * [UnauthorizedAccess:EC2/MaliciousIPCaller.Custom](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#unauthorized8)
 * [Recon:IAMUser/MaliciousIPCaller.Custom](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#recon2)
 * [UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#unauthorized2)
 * [UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#unauthorized11)
 
-Now that you understand the different components of the GuardDuty service and how to integrate with other AWS services to create notifcation and remediation workflows, you can look at how this service can be used at scale to identity threats in your environments.  
-
-> Click [here](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#actual-types) for a complete list of current GuardDuty finding types. 
+Now that you understand the different components of the GuardDuty service and how to integrate with other AWS services to create remediation workflows, you can look at how this service can fit in with your threat detection strategy.
 
 ## Cleanup <a name="cleanup"/>
 
