@@ -402,7 +402,7 @@ By walking through these scenarios you generated, analyzed, and remediated all o
 * [UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#unauthorized2)
 * [UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#unauthorized11)
 
-Now that you understand the different components of the GuardDuty service and how to integrate with other AWS services, you can look at how you can use this service to identity threats in your own environments.
+Now that you understand the different components of the GuardDuty service and how to integrate with other AWS services, you can start exploring ways of using the service to identity threats across your own environments.
 
 ## Cleanup <a name="cleanup"/>
 
