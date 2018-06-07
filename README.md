@@ -13,11 +13,11 @@ This repository walks you through a scenario covering threat detection and remed
 * [Scenario 3 – IAM Role Credential Exfiltration](#attack3)
 * [Clean Up](#cleanup)
 
+> All of the links assume you are using the **us-west-2 (Oregon)** region.
+
 ## Getting Started – Just Two Clicks <a name="started"/>
 
 Follow these steps to enable GuardDuty:
-
-> All of the links assume you are using the us-west-2 (Oregon) region.
 
 1. **First Click**: Navigate to the [GuardDuty console](https://us-west-2.console.aws.amazon.com/guardduty/home?) and click **Get Started**.
 
