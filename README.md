@@ -17,7 +17,7 @@ This repository walks you through a scenario covering threat detection and remed
 
 Follow these steps to enable GuardDuty:
 
-> Use the **Oregon (us-west-2)** region.
+> All of the links assume you are using the us-west-2 (Oregon) region.
 
 1. **First Click**: Navigate to the [GuardDuty console](https://us-west-2.console.aws.amazon.com/guardduty/home?) and click **Get Started**.
 
