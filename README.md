@@ -316,7 +316,6 @@ Since Alice did not setup a remediation for this finding, you have to manually r
 
 ### Questions
 * Which data source did GuardDuty use to identity this threat?
-* How was the key compromised?
 * What permissions did the user have?
 * Why would the security team decide against setting up an automated remediation?
 
@@ -336,9 +335,9 @@ To view the findings:
 
 3.  Click on the **UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration** finding to view the full details. 
 
-Looking at the finding details you can see that this is actually a **High Severity** finding.  This finding informs you of attempts to run AWS API operations from a host outside of EC2, using temporary AWS credentials that were created on an EC2 instance in your AWS account.  This could mean your EC2 instance might be compromised, and the temporary credentials from the instance have been exfiltrated to a remote host outside of AWS.
+Looking at the finding details you can see that this is actually a **High Severity** finding.  This finding informs you of attempts to run AWS API operations from a host outside of EC2, using temporary AWS credentials that were created on an EC2 instance in your AWS account.  This means your EC2 instance has been compromised, and the temporary credentials from the instance have been exfiltrated to a remote host outside of AWS.
 
-> You will notice that each GuardDuty finding has an assigned severity level and value that can help you determine your response to a potential security issue that is highlighted by the finding.  These severity levels are preset by AWS but we have seen customers modify these values in their automation workflows to better align the risk of that finding in the context of their environment.
+> You will notice that each GuardDuty finding has an assigned severity level and value (low, medium, or high) that can help you determine your response to a potential security issue that is highlighted by the finding.  These severity levels are preset by AWS but we have seen customers modify these values in their automation workflows to better align the risk of that finding in the context of their environment and requirements.
 
 ### View the CloudWatch Event Rule
 
@@ -347,7 +346,7 @@ Looking at the finding details you can see that this is actually a **High Severi
 
 Take a closer look at the **Event Pattern**.  The pattern Alice setup for all the rules specifies particular findings.  
 
-> Like Alice, you can create CloudWatch Event Rules that are triggered for particular findings but you can also create a centralized rule that is triggered based on any GuardDuty finding.  Below is an example of an Event Pattern that would trigger for any GuardDuty finding:
+> Like Alice, you can create CloudWatch Event Rules that are triggered for particular findings but you can also create a rule that is triggered based on any GuardDuty finding in order to have a centralized workflow.  Below is an example of an Event Pattern that would trigger for any GuardDuty finding:
 
 ```
 {
@@ -393,12 +392,12 @@ You should see a response that states that there is an explicit deny for that ac
 ## Cleanup <a name="cleanup"/>
 
 To remove the assets created by the CloudFormation, follow these steps: 
-1. Delete the S3 bucket that was created by the CloudFormation template (it will have a name that begins with “*guardduty-example*”).  This needs to be done because data was put in the bucket and CloudFormation will not allow you to delete a bucket with data in it.
+1. Delete the S3 bucket that was created by the CloudFormation template (it will have a name that begins with **guardduty-example**).  This needs to be done because data was put in the bucket and CloudFormation will not allow you to delete a bucket with data in it.
 2. Delete the compromised instance IAM Role (it will have the name **GuardDuty-Example-EC2-Compromised**). Because one of the Lambda functions added an additional policy to this Role you need to manually delete this.
-3. Delete the custom Threat List within GuardDuty.  Within the GuardDuty console click **Lists** in the left navigation.  From there delete the "*Example-Threat-List*".
+3. Delete the custom Threat List within GuardDuty.  Within the GuardDuty console click **Lists** in the left navigation.  From there delete the **Example-Threat-List**.
 4. Disable GuardDuty (if you didn't have it enabled already).  Within the GuardDuty console click **Settings**. Then check the box to **Disable GuardDuty** and save.
 
-> Suspending GuardDuty stops the service from monitoring so you don't incur any costs and won't receive any findings but it will retain your existing findings and baseline activity.
+   > Suspending GuardDuty stops the service from monitoring so you don't incur any costs and won't receive any findings but it will retain your existing findings and baseline activity.
 5. Delete the CloudFormation Stack. If you see any errors, it means you didn't delete the S3 Bucket or IAM role in the previous steps.   
 
 ## License Summary
