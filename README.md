@@ -50,7 +50,7 @@ Now that GuardDuty is enabled it is actively monitoring the three data sources f
 
 **ThreatPurpose : ResourceTypeAffected / ThreatFamilyName . ThreatFamilyVariant ! Artifact**
 
-> Click [here](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#type-format) for a complete description each part.
+> Click [here](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#type-format) for a description of each part.
 
 The more advanced behavioral and machine learning detections require a baseline (7 - 14 days) to be established so GuardDuty is able to learn the regular behavior and identity anomalies. An example of a finding that requires a baseline would be if an EC2 instance started communicating with a remote host on an unusual port or an IAM User who has no prior history of modifying Route Tables starts making modifications.  All of the findings generated in these scenarios will be based on signatures, so the findings will be detected 10 minutes after the completion of the CloudFormation stack.  The delay is due to the amount of time it takes for the information about a threat to appear in one of the data sources and the amount of time it takes for GuardDuty to access and analyze that particular data source.  
 
