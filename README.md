@@ -40,7 +40,7 @@ That is all you need to do. There are no prerequisites you need to set up, no ag
 
 GuardDuty accesses all of these [data sources](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_data-sources.html) without any of them having to be enabled; although it is a best practice to enable CloudTrail and VPC Flow Logs for your own analysis. GuardDuty is a regional service so in order for the service to monitor these data sources in other regions you will need to enable it in those regions.  You can accomplish this by following the same steps above and enabling it through the console but most customers are using the APIs to programmatically enable it in all regions and across multiple accounts.  Regardless of the number of VPCs, IAM users, or other AWS resources in your account, there is no impact to your resources because all of the processing is being done within the managed service. 
 
-> The pricing for GuardDuty is based on the quantity of AWS CloudTrail Events analyzed and the volume of Amazon VPC Flow Log and DNS Log data analyzed (per GB).  Each region in an AWS Account has a free 30 day trial to better forecast what the cost of the service will be.
+> The pricing for GuardDuty is based on the quantity of AWS CloudTrail Events analyzed and the volume of Amazon VPC Flow Log and DNS Log data analyzed (per GB).  Each region in an AWS Account has a free 30-day trial to better forecast what the cost of the service will be.
 
 ![GuardDuty Enabled](images/screenshot3.png "GuardDuty Enabled")
 
@@ -56,7 +56,7 @@ The more advanced behavioral and machine learning detections require a baseline 
 
 > Click [here](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types.html#actual-types) for a complete list of current GuardDuty finding types. 
 
-GuardDuty sends notifications based on Amazon CloudWatch Events when any change in the findings takes place. These notificaitons are sent within 5 minutes of the finding. All subsequent occurences of an existing finding will have the same ID as the original finding and notifications will be sent every 6 hours after the initial notification.  This is to eliminate alert fatigue due to the same finding.
+GuardDuty sends notifications based on Amazon CloudWatch Events when any change in the findings takes place. These notifications are sent within 5 minutes of the finding. All subsequent occurrences of an existing finding will have the same ID as the original finding and notifications will be sent every 6 hours after the initial notification.  This is to eliminate alert fatigue due to the same finding.
 
 ## Deploy the Environment <a name="deploy"/>
 
@@ -207,7 +207,7 @@ When Alice setup the hook for notifications she only included certain informatio
 
 ![GuardDuty Finding](images/screenshot5.png "GuardDuty Finding")
 
-The quick view of the finding shows a severity symbol, the finding type, the affected resource, the last time the finding was detected, and a count of the subsequent occurences of an existing finding.  
+The quick view of the finding shows a severity symbol, the finding type, the affected resource, the last time the finding was detected, and a count of the subsequent occurrences of an existing finding.  
 
 > Findings are available in the service for 90 days.
 
