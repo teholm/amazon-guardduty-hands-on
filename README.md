@@ -265,7 +265,7 @@ Next, double check the effects of the remediation to ensure the instance is isol
 4. Click on the **ForensicSecurityGroup** and view the ingress and egress rules.
 
 ### Questions
-* Which data source did GuardDuty use to identity this threat?
+* Which data source did GuardDuty use to identify this threat?
 * Will isolating the instance have any effect on an application running on the instance?
 * How could you add more detail to the email notifications?
 
