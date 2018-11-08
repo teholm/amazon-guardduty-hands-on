@@ -182,7 +182,7 @@ After an uneventful yet unnecessarily long commute to work, you arrived at the o
 
 The first email you receive from GuardDuty indicates that one of your EC2 instances might be compromised:
 
-*GuardDuty Finding | ID: 1xx: The EC2 instance i-xxxxxxxxx might be compromised and should be investigated*
+*GuardDuty Finding | ID: 1xx: The EC2 instance i-xxxxxxxxx may be compromised and should be investigated*
 
 Shortly after the first email, you receive a second email indicating that the same GuardDuty finding has been remediated:
 
