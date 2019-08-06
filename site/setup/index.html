@@ -894,13 +894,13 @@
 </blockquote>
 <p>GuardDuty sends notifications based on Amazon CloudWatch Events when any change in the findings takes place. These notifications are sent within 5 minutes of the finding. All subsequent occurrences of an existing finding will have the same ID as the original finding and notifications will be sent every 6 hours after the initial notification.  This is to eliminate alert fatigue due to the same finding.</p>
 <h2 id="deploy-the-environment">Deploy the environment</h2>
-<details class="note"><summary>AWS Sponsored Event</summary><ul>
-<li>Browse to the URL provided to you and login. </li>
-<li>After you login click the <strong>AWS Account</strong> box, then click on the Account ID displayed below that (the red box in the image.) You should see a link below that for the <strong>Management console</strong>. Click on that and you will be taken to the AWS console. </li>
-</ul>
-<p><img alt="login-page" src="./images/login.png" /></p>
+<details class="info"><summary>AWS Sponsored Event</summary><ol>
+<li>Navigate to the <a href="https://dashboard.eventengine.run" target="_blank">Event Engine dashboard</a></li>
+<li>Enter your <strong>team hash</strong> code. </li>
+<li>Click <strong>AWS Console</strong>.  The CloudFormation template for this round has already been prerun.</li>
+</ol>
 </details>
-<details class="note"><summary>Individual</summary><p>Launch the CloudFormation stack below to setup the GuardDuty environment:</p>
+<details class="info"><summary>Individual</summary><p>Launch the CloudFormation stack below to setup the GuardDuty environment:</p>
 <table>
 <thead>
 <tr>
