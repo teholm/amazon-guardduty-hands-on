@@ -46,13 +46,12 @@ GuardDuty sends notifications based on Amazon CloudWatch Events when any change 
 
 ## Deploy the environment
 
-??? note "AWS Sponsored Event"
-    * Browse to the URL provided to you and login. 
-    * After you login click the **AWS Account** box, then click on the Account ID displayed below that (the red box in the image.) You should see a link below that for the **Management console**. Click on that and you will be taken to the AWS console. 
+??? info "AWS Sponsored Event"
+    1. Navigate to the <a href="https://dashboard.eventengine.run" target="_blank">Event Engine dashboard</a>
+	2. Enter your **team hash** code. 
+	3. Click **AWS Console**.  The CloudFormation template for this round has already been prerun.
 
-    ![login-page](./images/login.png)
-
-??? note "Individual"
+??? info "Individual"
 
     Launch the CloudFormation stack below to setup the GuardDuty environment:
 

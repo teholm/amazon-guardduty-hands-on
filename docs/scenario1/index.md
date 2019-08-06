@@ -40,8 +40,8 @@ The finding type indicates that an EC2 instance in your environment is communica
 
 > GuardDuty uses managed threat intelligence provided by AWS Security and third-party providers, such as ProofPoint and CrowdStike. You can expand the monitoring scope of GuardDuty by configuring it to use your own custom trusted IP lists and threat lists.  If you setup a Master/Member GuardDuty structure, users from the Master GuardDuty account can manage trusted IP lists and threats lists and they are inherited by the member accounts.  Users from the member accounts are not able to modify the lists.  
 
-**Scenario Notes:** 
-The EC2 instance indicated by this finding is actually just connecting to an [Elastic IP](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html) (EIP) on another instance in the same VPC to keep the scenario localized to your environment. The CloudFormation template automatically created the threat list and added the EIP for the malicious instance to the list.
+??? info
+	The EC2 instance indicated by this finding is actually just connecting to an [Elastic IP](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html) (EIP) on another instance in the same VPC to keep the scenario localized to your environment. The CloudFormation template automatically created the threat list and added the EIP for the malicious instance to the list.
 
 ### View the CloudWatch Event rule
   
@@ -65,7 +65,7 @@ The Lambda function is what handles the remediation logic for this finding. Alic
 
 ![Lambda Function](images/screenshot8.png "Lambda Function")
 
-Scroll down to view the code for this function (walking through the code logic is outside the scope of this scenario). You can also click the **Monitoring** tab and view the invocation details for this function. 
+Collapse the **Designer** tab and scroll down to view the code for this function (walking through the code logic is outside the scope of this scenario). You can also click the **Monitoring** tab and view the invocation details for this function. 
 
 > What permissions does the Lambda Function need to perform the remediation?
 
@@ -92,10 +92,8 @@ Next, double check the effects of the remediation to ensure the instance is isol
 ## Questions
 
 ??? info "Which data source did GuardDuty use to identify this threat?"
-	Something Here
 
 ??? info "Will isolating the instance have any effect on an application running on the instance?"
-	Something Here
-
+	
 ??? info "How could you add more detail to the email notifications?"
-	Something Here
+	
