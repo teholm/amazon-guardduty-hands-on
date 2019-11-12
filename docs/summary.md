@@ -2,10 +2,10 @@
 
 By walking through these scenarios you generated, analyzed, and remediated all of the following threats in your environment:
 
-* [UnauthorizedAccess:EC2/MaliciousIPCaller.Custom](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_unauthorized.html#unauthorized8)
-* [Recon:IAMUser/MaliciousIPCaller.Custom](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_recon.html#recon2)
-* [UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_unauthorized.html#unauthorized2)
-* [UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_unauthorized.html#unauthorized11)
+* <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_unauthorized.html#unauthorized8" target="_blank">UnauthorizedAccess:EC2/MaliciousIPCaller.Custom</a>
+* <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_recon.html#recon2" target="_blank">Recon:IAMUser/MaliciousIPCaller.Custom</a>
+* <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_unauthorized.html#unauthorized2" target="_blank">UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom</a>
+* <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_unauthorized.html#unauthorized11" target="_blank">UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration</a>
 
 Now that you understand the different components of the GuardDuty service and how it integrates with other AWS services, you can explore ways of using it across your own environments.
 

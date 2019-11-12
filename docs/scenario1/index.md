@@ -30,9 +30,9 @@ When Alice setup the hook for notifications she only included certain informatio
 
 ### Browse to the GuardDuty console to investigate
 
-Although you can view the GuardDuty findings in the console, most customers aggregate all findings across their regions and accounts to a central security information and event management (SIEM) system for analysis and remediation.  A common approach for aggregating these findings is to setup GuardDuty in a [Master/Member](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_accounts.html) structure and then use a workflow including CloudWatch Event Rules and Lambda Functions to push findings to your SIEM or a centralized logging framework.  There are also partner solutions that publish Lambda Function Blueprints to make it easier to consolidate findings.
+Although you can view the GuardDuty findings in the console, most customers aggregate all findings across their regions and accounts to a central security information and event management (SIEM) system for analysis and remediation.  A common approach for aggregating these findings is to setup GuardDuty in a <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_accounts.html" target="_blank">Master/Member</a> structure and then use a workflow including CloudWatch Event Rules and Lambda Functions to push findings to your SIEM or a centralized logging framework.  There are also partner solutions that publish Lambda Function Blueprints to make it easier to consolidate findings.
 
-1. Navigate to the [GuardDuty console](https://us-west-2.console.aws.amazon.com/guardduty/home?) (us-west-2).
+1. Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?" target="_blank">GuardDuty Console</a> (us-west-2).
 > If there is nothing displayed click the refresh button.
 
 2. A finding should show up with the type **UnauthorizedAccess:EC2/MaliciousIPCaller.Custom**. 
@@ -44,7 +44,7 @@ The quick view of the finding shows a severity symbol, the finding type, the aff
 
 > Findings are available in the service for 90 days.
 
-The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a [custom threat list](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload_lists.html). Click on **Lists** in the left navigation to view the custom threat list Alice added.
+The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload_lists.html" target="_blank">custom threat list</a>. Click on **Lists** in the left navigation to view the custom threat list Alice added.
 
 > GuardDuty uses managed threat intelligence provided by AWS Security and third-party providers, such as ProofPoint and CrowdStike. You can expand the monitoring scope of GuardDuty by configuring it to use your own custom trusted IP lists and threat lists.  If you setup a Master/Member GuardDuty structure, users from the Master GuardDuty account can manage trusted IP lists and threats lists and they are inherited by the member accounts.  Users from the member accounts are not able to modify the lists.  
 
@@ -55,7 +55,7 @@ The finding type indicates that an EC2 instance in your environment is communica
   
 Alice used CloudWatch Event Rules to send the email you received about the findings and also to take remediations steps. Examine the CloudWatch Events console to understand what Alice configured and to see how the remediation was triggered. 
 
-1.  Navigate to the [CloudWatch console](https://us-west-2.console.aws.amazon.com/cloudwatch/home?) (us-west-2) and on the left navigation, under the **Events** section, click **Rules**. 
+1.  Navigate to the <a href="https://us-west-2.console.aws.amazon.com/cloudwatch/home?" target="_blank">CloudWatch Console</a> (us-west-2) and on the left navigation, under the **Events** section, click **Rules**. 
 
     > You will see three Rules in the list that were created by the CloudFormation template. All of these begin with the prefix “*GuardDuty-Event*."
 
@@ -65,7 +65,7 @@ Alice used CloudWatch Event Rules to send the email you received about the findi
 
 	![CloudWatch Event Rule](images/screenshot7.png "CloudWatch Event Rule")
 
-Under the **Targets** section you will see two entries, one for a Lambda function and one for an SNS Topic.  The CloudWatch Event Rule publishes the finding to the SNS Topic which in turn sends out an email notification.  Rather than sending the entire JSON event you can see how Alice customized the email by using an **[input transformer](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CloudWatch-Events-Input-Transformer-Tutorial.html)**.
+Under the **Targets** section you will see two entries, one for a Lambda function and one for an SNS Topic.  The CloudWatch Event Rule publishes the finding to the SNS Topic which in turn sends out an email notification.  Rather than sending the entire JSON event you can see how Alice customized the email by using an **<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CloudWatch-Events-Input-Transformer-Tutorial.html" target="_blank">input transformer</a>**.
 
 ### View the Remediation Lambda function
 
@@ -81,7 +81,7 @@ Collapse the **Designer** tab and scroll down to view the code for this function
 
 Next, double check the effects of the remediation to ensure the instance is isolated.  At this point you have the instance ID of the compromised instance from the email notifications and the name of the isolation security group name from reviewing the Lambda Function code.
 
-1.	Browse to the [EC2 console](https://us-west-2.console.aws.amazon.com/ec2/v2) (us-west-2) and click **Running Instances**.
+1.	Browse to the <a href="https://us-west-2.console.aws.amazon.com/ec2/v2" target="_blank">EC2 console</a> (us-west-2) and click **Running Instances**.
    
     > You should see three instances with names that begin with **GuardDuty-Example**.
 
