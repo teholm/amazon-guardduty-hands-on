@@ -45,15 +45,10 @@ markdown_extensions:
 # Navigation
 nav:
   - Overview: 'index.md'
-  - 'Overview and Environment Setup':
-    - 'Overview and Environment Setup': 'setup.md'
-  - 'Compromised EC2 Instance': 
-    - 'Scenario 1': 'scenario1/index.md'
-  - 'Compromised IAM Credentials': 
-    - 'Scenario 2': 'scenario2/index.md'
-  - 'IAM Role Credential Exfiltration': 
-    - 'Scenario 3': 'scenario3/index.md'
-  - 'Summary':
-    - 'Summary': 'summary.md'  
+  - 'Environment Setup': 'setup.md'
+  - 'Compromised EC2 Instance': 'scenario1/index.md'
+  - 'Compromised IAM Credentials': 'scenario2/index.md'
+  - 'IAM Role Credential Exfiltration': 'scenario3/index.md'
+  - 'Summary': 'summary.md'  
   - Contributing: 'contribute.md'
   - License: 'license.md'

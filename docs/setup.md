@@ -4,7 +4,7 @@
 
 * **AWS Account**: Given that you will be simulating attacks and doing remediations, you should run this in a non-production account. After running through these scenarios, you can look at how you can implement GuardDuty and associated automated remediation workflows in a multi-account structure so you are able to aggregate findings from other accounts and use the service in a more scalable manner. 
 * **Admin privileges**: Ensure you are using an AWS IAM User with Admin privileges.
-* **AWS CLI**: You will be using the AWS CLI for simulating one of the attacks so be sure you have installed on your local machine.
+* **AWS CLI**: You will be using the <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html" target="_blank">AWS CLI</a> for simulating one of the attacks so be sure you have installed on your local machine.
 
 > All of the links assume you are using the **us-west-2 (Oregon)** region.
 
@@ -12,7 +12,7 @@
 
 Follow these steps to enable GuardDuty:
 
-1. **First Click**: Navigate to the [GuardDuty console](https://us-west-2.console.aws.amazon.com/guardduty/home?) (us-west-2) and click **Get Started**.
+1. **First Click**: Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?" target="_blank">GuardDuty Console</a> and click **Get Started**.
 ![Get Started](images/screenshot1.png "Get Started")
 
 2. **Second Click**: On the next screen click **Enable GuardDuty**.
@@ -24,7 +24,7 @@ That is all you need to do. There are no prerequisites you need to set up, no ag
 
 > If you are using a 3rd party DNS resolver or if you set up your own DNS resolvers, then GuardDuty cannot access, process, and identify threats from that data source. 
 
-GuardDuty accesses all of these [data sources](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_data-sources.html) without any of them having to be enabled; although it is a best practice to enable CloudTrail and VPC Flow Logs for your own analysis. GuardDuty is a regional service so in order for the service to monitor these data sources in other regions you will need to enable it in those regions.  You can accomplish this by following the same steps above and enabling it through the console but most customers are using the APIs to programmatically enable it in all regions and across multiple accounts.  Regardless of the number of VPCs, IAM users, or other AWS resources in your account, there is no impact to your resources because all of the processing is being done within the managed service. 
+GuardDuty accesses all of these <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_data-sources.html" target="_blank">data sources</a> without any of them having to be enabled; although it is a best practice to enable CloudTrail and VPC Flow Logs for your own analysis. GuardDuty is a regional service so in order for the service to monitor these data sources in other regions you will need to enable it in those regions.  You can accomplish this by following the same steps above and enabling it through the console but most customers are using the APIs to programmatically enable it in all regions and across multiple accounts.  Regardless of the number of VPCs, IAM users, or other AWS resources in your account, there is no impact to your resources because all of the processing is being done within the managed service. 
 
 > The pricing for GuardDuty is based on the quantity of AWS CloudTrail Events analyzed and the volume of Amazon VPC Flow Log and DNS Log data analyzed (per GB).  Each region in an AWS Account has a free 30-day trial to better forecast what the cost of the service will be.
 
@@ -36,11 +36,11 @@ Now that GuardDuty is enabled it is actively monitoring the three data sources f
 
 **ThreatPurpose : ResourceTypeAffected / ThreatFamilyName . ThreatFamilyVariant ! Artifact**
 
-> Click [here](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-format.html) for a description of each part.
+> Click <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-format.html" target="_blank">here</a> for a description of each part.
 
 The more advanced behavioral and machine learning detections require a baseline (7 - 14 days) to be established so GuardDuty is able to learn the regular behavior and identity anomalies. An example of a finding that requires a baseline would be if an EC2 instance started communicating with a remote host on an unusual port or an IAM User who has no prior history of modifying Route Tables starts making modifications.  All of the findings generated in these scenarios will be based on signatures, so the findings will be detected 10 minutes after the completion of the CloudFormation stack.  The delay is due to the amount of time it takes for the information about a threat to appear in one of the data sources and the amount of time it takes for GuardDuty to access and analyze that particular data source.  
 
-> Click [here](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types-active.html) for a complete list of current GuardDuty finding types. 
+> Click <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types-active.html" target="_blank">here</a> for a complete list of current GuardDuty finding types. 
 
 GuardDuty sends notifications based on Amazon CloudWatch Events when any change in the findings takes place. These notifications are sent within 5 minutes of the finding. All subsequent occurrences of an existing finding will have the same ID as the original finding and notifications will be sent every 6 hours after the initial notification.  This is to eliminate alert fatigue due to the same finding.
 
@@ -73,14 +73,14 @@ The initial findings will begin to show up in GuardDuty 10 minutes after the Clo
 
 The CloudFormation template will create the following resources:
 
-  * Three [Amazon EC2](https://aws.amazon.com/ec2/) Instances (and supporting network infrastructure)
+  * Three <a href="https://aws.amazon.com/ec2/" target="_blank">Amazon EC2</a> Instances (and supporting network infrastructure)
     * Two Instances that contain the name “*Compromised Instance*”
     * One instance that contains the name “*Malicious Instance*”
-  * [AWS IAM Role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html) For EC2 which will have permissions to SSM Parameter Store and DynamoDB
-  * One [Amazon SNS Topic](https://docs.aws.amazon.com/sns/latest/dg/GettingStarted.html) so you will be able to receive notifications
-  * Three [AWS CloudWatch Event](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html) rules for triggering the appropriate notification or remediation
-  * Two [AWS Lambda](https://aws.amazon.com/lambda/) functions that will be used for remediating findings and will have permissions to modify Security Groups and revoke active IAM Role sessions (on only the IAM Role associated with this scenario)
-  * [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) value for storing a fake database password.
+  * <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html" target="_blank">AWS IAM Role</a> For EC2 which will have permissions to SSM Parameter Store and DynamoDB
+  * One <a href="https://docs.aws.amazon.com/sns/latest/dg/GettingStarted.html" target="_blank">Amazon SNS Topic</a> so you will be able to receive notifications
+  * Three <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html" target="_blank">AWS CloudWatch Event</a> rules for triggering the appropriate notification or remediation
+  * Two <a href="https://aws.amazon.com/lambda/" target="_blank">AWS Lambda</a> functions that will be used for remediating findings and will have permissions to modify Security Groups and revoke active IAM Role sessions (on only the IAM Role associated with this scenario)
+  * <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html" target="_blank">AWS Systems Manager Parameter Store</a> value for storing a fake database password.
 
 > Make sure the CloudFormation stack is in a **CREATE_COMPLETE** status before moving on.
 
@@ -92,7 +92,7 @@ All of the simulated attacks are automated in the CloudFormation template except
 
 To simulate this last and final attack you will need to retrieve the IAM temporary security credentials generated by the IAM Role for EC2. You can either SSH directly to the instance and query the metadata or follow the steps below to use [AWS Systems Manager Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html) (an SSM agent was automatically started on the instance at launch). 
 
-1.  Go to [Managed Instances](https://us-west-2.console.aws.amazon.com/systems-manager/managed-instances?region=us-west-2) within the **AWS Systems Manager** console (us-west-2).
+1.  Go to <a href="https://us-west-2.console.aws.amazon.com/systems-manager/managed-instances?region=us-west-2" target="_blank">Managed Instances</a> within the **AWS Systems Manager** console (us-west-2).
     
     > You should see an instance named **GuardDuty-Example: Compromised Instance: Scenario 3** with a ping status of **Online**.
 
@@ -122,7 +122,9 @@ If you view your local aws credentials file, you should now see an [attacker] pr
 
 ### Run commands using the IAM temporary credentials
 
-Now that you have your named profile you can use it to make API calls. Use the commands below to query different services to see what you have access to (don't be surprised if you see some access denied responses):
+Now that you have your named profile you can use it to make API calls. Use the commands below to query different services to see what you have access to. 
+
+!!! failure "Don't be surprised if you see some access denied responses, it is intended"
 
 **Do you have any IAM permissions:**
 ```

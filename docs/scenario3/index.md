@@ -2,8 +2,18 @@
 
 After manually remediating the previous GuardDuty finding, you have finally finished your first cup of coffee when an email notification comes in alerting you to yet another finding.  You finish reading the first email and then a minute or so later you see the relevant remediation email, meaning Alice has already put in place a remediation for this finding.  The other findings you looked at dealt with EC2 instances and AWS IAM credentials separately, but this finding appears to be related to an AWS IAM Role associated with an EC2 instance.  You decide to take a closer look at the finding and remediation.
 
-??? info "Scenario Note"
-	None of your IAM credentials have actually been compromised or exposed in any way. The finding was triggered when you used AWS Systems Manager for accessing the temporary security credentials of the EC2 instance and then ran a number of CLI commands locally from your computer.
+!!! attention  "None of your personal IAM credentials have actually been compromised or exposed in any way."
+
+## Architecture Evaluation
+
+![Attack Scenario 3](images/attack3.png "Attack Scenario 3")
+
+> 1. The remote host accesses the **compromised instance** and exfiltrates the IAM role credentials via the metadata.
+> 2. The remote host sets up a CLI user to make API calls to the AWS account to which the credentials belong.
+> 3. GuardDuty generates a finding and sends this to the GuardDuty console and CloudWatch Events.
+> 4. The CloudWatch Event rule triggers an SNS topic and a Lambda function.
+> 5. SNS sends you an e-mail with the finding information.
+> 6. A Lambda function attaches a policy to the role revoking all active sessions.
 
 ## Investigation
 
@@ -18,7 +28,7 @@ To view the findings:
 
 Looking at the finding details you can see that this is actually a **High Severity** finding.  This finding informs you of attempts to run AWS API operations from a host outside of EC2, using temporary AWS credentials that were created on an EC2 instance in your AWS account.  This means your EC2 instance has been compromised, and the temporary credentials from the instance have been exfiltrated to a remote host outside of AWS.
 
-> You will notice that each GuardDuty finding has an assigned severity level and value (low, medium, or high) that can help you determine your response to a potential security issue that is highlighted by the finding.  These severity levels are preset by AWS but we have seen customers modify these values in their automation workflows to better align the risk of that finding in the context of their environment and requirements.
+> You will notice that each GuardDuty finding has an assigned severity level (low, medium, or high) that can help you determine your response to a potential security issue that is highlighted by the finding.  These severity levels are preset by AWS but we have seen customers modify these values in their automation workflows to better align the risk of that finding in the context of their environment and requirements.
 
 ### View the CloudWatch Event rule
 
@@ -68,5 +78,5 @@ You should see a response that states that there is an explicit deny for that ac
 
 ## Questions
 
-!!! info "What are the risks involved with this remediation?"
-!!! info "What other EC2 instances are using this Role?"
+!!! question "What are the risks involved with this remediation?"
+!!! question "What other EC2 instances are using this Role?"

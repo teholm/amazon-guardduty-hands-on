@@ -2,12 +2,17 @@
 
 You have completed the examination of the first attack, confirmed it was properly remediated, and then sat back to take your first sip of coffee for the day when you notice an additional email about new findings. The first of the new findings indicates that an API call was made using AWS IAM credentials from an IP address on a custom threat list. 
 
-??? info "Scenario Note"
-	None of your IAM credentials have actually been compromised or exposed in any way. The finding is the result of an EC2 instance using an IAM Users credentials to make API calls and the EIP for the instance is on your custom threat list.
-
+!!! attention "None of your personal IAM credentials have actually been compromised or exposed in any way."
+	
 ## Diagram of the simulated attack and detection
 
 ![Attack 2](images/attack2.png "Attack2")
+
+> 1. The **malicious instance** makes API calls. The EIP on the instance is in a custom threat list. API calls are logged in CloudTrail
+> 2. GuardDuty is monitoring the CloudTrail Logs (in addition to VPC Flow Logs and DNS Logs) and analyzing this based on threat list, machine learning, baselines, etc.
+> 3. GuardDuty generates a finding and sends this to the GuardDuty console and CloudWatch Events.
+> 4. The CloudWatch Event rule triggers an SNS topic.
+> 5. SNS sends you an e-mail with the finding information.
 
 ## Investigation
 
@@ -35,7 +40,7 @@ This finding indicates that the IAM credentials (of the user you found above) ar
 ### View the CloudWatch Event rule
 
 1.	Navigate to the [CloudWatch console](https://us-west-2.console.aws.amazon.com/cloudwatch/home?) and on the left navigation, under the **Events** section, click **Rules**.
-2.	Click on the rule that Alice configured for this particular finding (**GuardDuty-Event-IAM-MaliciousIPCaller**). 
+2.	Click on the rule that Alice configured for this particular finding (**GuardDuty-Event-IAMUser-MaliciousIPCaller**). 
 3.	Under the **Targets** section, you will see a rule for an SNS Topic. Turns out Alice did not set up a Lambda function to remediate this threat because the decision by the security team was to manually investigate and remediate this particular type of finding. 
 
 > Since GuardDuty integrates with CloudWatch Events you have the flexibility to put in place full or partial automated remediation workflows.  These could be custom Lambda Functions that you build out or maybe even [partner](https://aws.amazon.com/guardduty/resources/partners/) solutions.  You can also configure other AWS Resources as targets in your CloudWatch Event Rules such as SSM Run Commands or Step Functions state machines. For some finding types you may choose to have only notification workflows and require manual remediation steps. As you design these workflows it is important to evaluate the workloads running in your environments to see what effects a remediation could have.
@@ -52,9 +57,9 @@ Since Alice did not setup a remediation for this finding, you have to manually r
 
 ## Questions
 
-!!! info "Which data source did GuardDuty use to identity this threat?"
+!!! question "Which data source did GuardDuty use to identity this threat?"
 
-!!! info "What permissions did the user have?"
+!!! question "What permissions did the user have?"
 
-!!! info "Why would the security team decide against setting up an automated remediation?"
+!!! question "Why would the security team decide against setting up an automated remediation?"
 

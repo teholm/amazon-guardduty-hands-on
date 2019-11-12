@@ -6,15 +6,23 @@ After an uneventful yet unnecessarily long commute to work, you arrived at the o
 
 The first email you receive from GuardDuty indicates that one of your EC2 instances might be compromised:
 
-*GuardDuty Finding | ID: 1xx: The EC2 instance i-xxxxxxxxx may be compromised and should be investigated*
+> GuardDuty Finding | ID: 1xx: The EC2 instance i-xxxxxxxxx may be compromised and should be investigated
 
 Shortly after the first email, you receive a second email indicating that the same GuardDuty finding has been remediated:
 
-*GuardDuty Remediation | ID: 1xx: GuardDuty discovered an EC2 instance (Instance ID: i-xxx) that is communicating outbound with an IP Address on a threat list that you uploaded.  All security groups have been removed and it has been isolated. Please follow up with any additional remediation actions.*
+> GuardDuty Remediation | ID: 1xx: GuardDuty discovered an EC2 instance (Instance ID: i-xxx) that is communicating outbound with an IP Address on a threat list that you uploaded.  All security groups have been removed and it has been isolated. Please follow up with any additional remediation actions.
 
 ## Architecture Evaluation
 
 ![Attack Scenario 1](images/attack1.png "Attack Scenario 1")
+
+> 1. The **compromised instance** pings the EIP of the **malicious instance**. That EIP is in a custom threat list.
+> 2. GuardDuty is monitoring the VPC Flow Logs (in addition to CloudTrail and DNS Logs) and analyzing this based on threat lists, machine learning, baselines, etc.
+> 3. GuardDuty generates a finding and sends this to the GuardDuty console and CloudWatch Events.
+> 4. The CloudWatch Event rule triggers an SNS topic and a Lambda function.
+> 5. SNS sends you an e-mail with the finding information.
+> 6. A Lambda function isolates the **compromised instance**.
+
 
 When Alice setup the hook for notifications she only included certain information about the finding because she had also setup a Lambda function to automatically isolate the instance and send out the details of the remediation.  Since the finding has been remediated you decide you still want to take a closer look at the setup Alice currently has in place.
 
@@ -22,7 +30,7 @@ When Alice setup the hook for notifications she only included certain informatio
 
 ### Browse to the GuardDuty console to investigate
 
-> Although you can view the GuardDuty findings in the console, most customers aggregate all findings across their regions and accounts to a central security information and event management (SIEM) system for analysis and remediation.  A common approach for aggregating these findings is to setup GuardDuty in a [Master/Member](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_accounts.html) structure and then use a workflow including CloudWatch Event Rules and Lambda Functions to push findings to your SIEM or a centralized logging framework.  There are also partner solutions that publish Lambda Function Blueprints to make it easier to consolidate findings.
+Although you can view the GuardDuty findings in the console, most customers aggregate all findings across their regions and accounts to a central security information and event management (SIEM) system for analysis and remediation.  A common approach for aggregating these findings is to setup GuardDuty in a [Master/Member](https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_accounts.html) structure and then use a workflow including CloudWatch Event Rules and Lambda Functions to push findings to your SIEM or a centralized logging framework.  There are also partner solutions that publish Lambda Function Blueprints to make it easier to consolidate findings.
 
 1. Navigate to the [GuardDuty console](https://us-west-2.console.aws.amazon.com/guardduty/home?) (us-west-2).
 > If there is nothing displayed click the refresh button.
@@ -91,9 +99,9 @@ Next, double check the effects of the remediation to ensure the instance is isol
 
 ## Questions
 
-!!! info "Which data source did GuardDuty use to identify this threat?"
+!!! question "Which data source did GuardDuty use to identify this threat?"
 
-!!! info "Will isolating the instance have any effect on an application running on the instance?"
+!!! question "Will isolating the instance have any effect on an application running on the instance?"
 	
-!!! info "How could you add more detail to the email notifications?"
+!!! question "How could you add more detail to the email notifications?"
 	
