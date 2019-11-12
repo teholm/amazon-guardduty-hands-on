@@ -650,7 +650,7 @@
 <h3 id="browse-to-the-guardduty-console-to-investigate">Browse to the GuardDuty console to investigate</h3>
 <p>To view the findings:</p>
 <ol>
-<li>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?">GuardDuty console</a> (us-west-2) and then, in the navigation pane on the left, choose <strong>Current</strong>. </li>
+<li>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?" target="_blank">GuardDuty console</a> (us-west-2) and then, in the navigation pane on the left, choose <strong>Current</strong>. </li>
 <li>
 <p>Click the  <img alt="Refresh" src="images/refreshicon.png" title="Refresh" /> icon to refresh the GuardDuty console. You should see a finding with the type <strong>UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration</strong>. </p>
 </li>
@@ -664,7 +664,7 @@
 </blockquote>
 <h3 id="view-the-cloudwatch-event-rule">View the CloudWatch Event rule</h3>
 <ol>
-<li>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/cloudwatch/home?">CloudWatch console</a> (us-west-2) and on the left navigation, under the <strong>Events</strong> section, click <strong>Rules</strong>.</li>
+<li>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/cloudwatch/home?" target="_blank">CloudWatch console</a> (us-west-2) and on the left navigation, under the <strong>Events</strong> section, click <strong>Rules</strong>.</li>
 <li>Click on the rule that Alice configured for this particular finding (<strong>GuardDuty-Event-IAMUser-InstanceCredentialExfiltration</strong>). </li>
 </ol>
 <p>Take a closer look at the <strong>Event Pattern</strong>.  The pattern Alice setup for all the rules specifies particular findings.  </p>
@@ -684,7 +684,7 @@
 
 <h3 id="view-the-remediation-lambda-function">View the remediation Lambda function</h3>
 <p>Alice also set up a remediation for this threat. Look through the Lambda Function code to better understand the remediation.</p>
-<p>Go to the <a href="https://us-west-2.console.aws.amazon.com/lambda/home?">Lambda console</a> (us-west-2) and review the function named <strong>GuardDuty-Example-Remediation-InstanceCredentialExfiltration</strong>.</p>
+<p>Go to the <a href="https://us-west-2.console.aws.amazon.com/lambda/home?" target="_blank">Lambda console</a> (us-west-2) and review the function named <strong>GuardDuty-Example-Remediation-InstanceCredentialExfiltration</strong>.</p>
 <p>The Lambda Function retrieves the Role name from the finding details and then attaches an IAM policy that revokes all active sessions for the role.</p>
 <blockquote>
 <p>What permissions does the Lambda Function need to perform the remediation?  Is there a risk associated with this level of permissions?</p>
@@ -697,7 +697,7 @@
 
 <p>You should see a response that states that there is an explicit deny for that action. Go view the Role to evaluate the policy that was attached.</p>
 <ol>
-<li>Browse to the <a href="https://console.aws.amazon.com/iam/home?region=us-west-2">AWS IAM</a> console.</li>
+<li>Browse to the <a href="https://console.aws.amazon.com/iam/home?region=us-west-2" target="_blank">AWS IAM</a> console.</li>
 <li>Click <strong>Roles</strong> in the left navigation.</li>
 <li>Click on the Role you identified in the GuardDuty finding and email notifications (<strong>GuardDuty-Example-EC2-Compromised</strong>).</li>
 <li>Click the <strong>Permissions</strong> tab.</li>

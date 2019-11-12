@@ -669,10 +669,10 @@
 <p>When Alice setup the hook for notifications she only included certain information about the finding because she had also setup a Lambda function to automatically isolate the instance and send out the details of the remediation.  Since the finding has been remediated you decide you still want to take a closer look at the setup Alice currently has in place.</p>
 <h2 id="investigation">Investigation</h2>
 <h3 id="browse-to-the-guardduty-console-to-investigate">Browse to the GuardDuty console to investigate</h3>
-<p>Although you can view the GuardDuty findings in the console, most customers aggregate all findings across their regions and accounts to a central security information and event management (SIEM) system for analysis and remediation.  A common approach for aggregating these findings is to setup GuardDuty in a <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_accounts.html">Master/Member</a> structure and then use a workflow including CloudWatch Event Rules and Lambda Functions to push findings to your SIEM or a centralized logging framework.  There are also partner solutions that publish Lambda Function Blueprints to make it easier to consolidate findings.</p>
+<p>Although you can view the GuardDuty findings in the console, most customers aggregate all findings across their regions and accounts to a central security information and event management (SIEM) system for analysis and remediation.  A common approach for aggregating these findings is to setup GuardDuty in a <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_accounts.html" target="_blank">Master/Member</a> structure and then use a workflow including CloudWatch Event Rules and Lambda Functions to push findings to your SIEM or a centralized logging framework.  There are also partner solutions that publish Lambda Function Blueprints to make it easier to consolidate findings.</p>
 <ol>
 <li>
-<p>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?">GuardDuty console</a> (us-west-2).</p>
+<p>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?" target="_blank">GuardDuty Console</a> (us-west-2).</p>
 <blockquote>
 <p>If there is nothing displayed click the refresh button.</p>
 </blockquote>
@@ -689,7 +689,7 @@
 <blockquote>
 <p>Findings are available in the service for 90 days.</p>
 </blockquote>
-<p>The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload_lists.html">custom threat list</a>. Click on <strong>Lists</strong> in the left navigation to view the custom threat list Alice added.</p>
+<p>The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload_lists.html" target="_blank">custom threat list</a>. Click on <strong>Lists</strong> in the left navigation to view the custom threat list Alice added.</p>
 <blockquote>
 <p>GuardDuty uses managed threat intelligence provided by AWS Security and third-party providers, such as ProofPoint and CrowdStike. You can expand the monitoring scope of GuardDuty by configuring it to use your own custom trusted IP lists and threat lists.  If you setup a Master/Member GuardDuty structure, users from the Master GuardDuty account can manage trusted IP lists and threats lists and they are inherited by the member accounts.  Users from the member accounts are not able to modify the lists.  </p>
 </blockquote>
@@ -699,7 +699,7 @@
 <p>Alice used CloudWatch Event Rules to send the email you received about the findings and also to take remediations steps. Examine the CloudWatch Events console to understand what Alice configured and to see how the remediation was triggered. </p>
 <ol>
 <li>
-<p>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/cloudwatch/home?">CloudWatch console</a> (us-west-2) and on the left navigation, under the <strong>Events</strong> section, click <strong>Rules</strong>. </p>
+<p>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/cloudwatch/home?" target="_blank">CloudWatch Console</a> (us-west-2) and on the left navigation, under the <strong>Events</strong> section, click <strong>Rules</strong>. </p>
 <blockquote>
 <p>You will see three Rules in the list that were created by the CloudFormation template. All of these begin with the prefix “<em>GuardDuty-Event</em>."</p>
 </blockquote>
@@ -710,7 +710,7 @@
 <p><img alt="CloudWatch Event Rule" src="images/screenshot7.png" title="CloudWatch Event Rule" /></p>
 </li>
 </ol>
-<p>Under the <strong>Targets</strong> section you will see two entries, one for a Lambda function and one for an SNS Topic.  The CloudWatch Event Rule publishes the finding to the SNS Topic which in turn sends out an email notification.  Rather than sending the entire JSON event you can see how Alice customized the email by using an <strong><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CloudWatch-Events-Input-Transformer-Tutorial.html">input transformer</a></strong>.</p>
+<p>Under the <strong>Targets</strong> section you will see two entries, one for a Lambda function and one for an SNS Topic.  The CloudWatch Event Rule publishes the finding to the SNS Topic which in turn sends out an email notification.  Rather than sending the entire JSON event you can see how Alice customized the email by using an <strong><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CloudWatch-Events-Input-Transformer-Tutorial.html" target="_blank">input transformer</a></strong>.</p>
 <h3 id="view-the-remediation-lambda-function">View the Remediation Lambda function</h3>
 <p>The Lambda function is what handles the remediation logic for this finding. Alice setup the Lambda function to remove the compromised instance from its current security group and add it to one with no ingress or egress rules so that the instance is isolated from the network. Click the <strong>Resource Name</strong> for the Lambda function in the Targets section to evaluate the remediation logic.</p>
 <p><img alt="Lambda Function" src="images/screenshot8.png" title="Lambda Function" /></p>
@@ -722,7 +722,7 @@
 <p>Next, double check the effects of the remediation to ensure the instance is isolated.  At this point you have the instance ID of the compromised instance from the email notifications and the name of the isolation security group name from reviewing the Lambda Function code.</p>
 <ol>
 <li>
-<p>Browse to the <a href="https://us-west-2.console.aws.amazon.com/ec2/v2">EC2 console</a> (us-west-2) and click <strong>Running Instances</strong>.</p>
+<p>Browse to the <a href="https://us-west-2.console.aws.amazon.com/ec2/v2" target="_blank">EC2 console</a> (us-west-2) and click <strong>Running Instances</strong>.</p>
 <blockquote>
 <p>You should see three instances with names that begin with <strong>GuardDuty-Example</strong>.</p>
 </blockquote>
