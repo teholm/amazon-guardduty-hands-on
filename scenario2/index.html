@@ -635,7 +635,7 @@
 <h3 id="browse-to-the-guardduty-console-to-investigate">Browse to the GuardDuty console to investigate</h3>
 <p>To view the findings:</p>
 <ol>
-<li>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?">GuardDuty console</a> (us-west-2). </li>
+<li>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?" target="_blank">GuardDuty Console</a> (us-west-2). </li>
 <li>
 <p>Click the  <img alt="Refresh" src="images/refreshicon.png" title="Refresh" /> icon to refresh the GuardDuty console. You should now see additional findings that are related to <strong>Recon:IAMUser</strong> and <strong>UnauthorizedAccess:IAMUser</strong>. </p>
 <blockquote>
@@ -656,17 +656,17 @@
 </details>
 <h3 id="view-the-cloudwatch-event-rule">View the CloudWatch Event rule</h3>
 <ol>
-<li>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/cloudwatch/home?">CloudWatch console</a> and on the left navigation, under the <strong>Events</strong> section, click <strong>Rules</strong>.</li>
+<li>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/cloudwatch/home?" target="_blank">CloudWatch console</a> and on the left navigation, under the <strong>Events</strong> section, click <strong>Rules</strong>.</li>
 <li>Click on the rule that Alice configured for this particular finding (<strong>GuardDuty-Event-IAMUser-MaliciousIPCaller</strong>). </li>
 <li>Under the <strong>Targets</strong> section, you will see a rule for an SNS Topic. Turns out Alice did not set up a Lambda function to remediate this threat because the decision by the security team was to manually investigate and remediate this particular type of finding. </li>
 </ol>
 <blockquote>
-<p>Since GuardDuty integrates with CloudWatch Events you have the flexibility to put in place full or partial automated remediation workflows.  These could be custom Lambda Functions that you build out or maybe even <a href="https://aws.amazon.com/guardduty/resources/partners/">partner</a> solutions.  You can also configure other AWS Resources as targets in your CloudWatch Event Rules such as SSM Run Commands or Step Functions state machines. For some finding types you may choose to have only notification workflows and require manual remediation steps. As you design these workflows it is important to evaluate the workloads running in your environments to see what effects a remediation could have.</p>
+<p>Since GuardDuty integrates with CloudWatch Events you have the flexibility to put in place full or partial automated remediation workflows.  These could be custom Lambda Functions that you build out or maybe even <a href="https://aws.amazon.com/guardduty/resources/partners/" target="_blank">partner</a> solutions.  You can also configure other AWS Resources as targets in your CloudWatch Event Rules such as SSM Run Commands or Step Functions state machines. For some finding types you may choose to have only notification workflows and require manual remediation steps. As you design these workflows it is important to evaluate the workloads running in your environments to see what effects a remediation could have.</p>
 </blockquote>
 <h3 id="manually-remediate-the-finding">Manually remediate the finding</h3>
 <p>Since Alice did not setup a remediation for this finding, you have to manually remediate this.  While the security team is analyzing the previous activity of this user to better understand the scope of the compromise, you need to disable the access key associated with the user to prevent any more unauthorized actions.</p>
 <ol>
-<li>Browse to the <a href="https://console.aws.amazon.com/iam/home?region=us-west-2">AWS IAM</a> console.</li>
+<li>Browse to the <a href="https://console.aws.amazon.com/iam/home?region=us-west-2" target="_blank">AWS IAM</a> console.</li>
 <li>Click <strong>Users</strong> in the left navigation.</li>
 <li>Click on the user you identified in the GuardDuty finding and email notifications (<strong>GuardDuty-Example-Compromised-Simulated</strong>).</li>
 <li>Click the <strong>Security Credentials</strong> tab.</li>
