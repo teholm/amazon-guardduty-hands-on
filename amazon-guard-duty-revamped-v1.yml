@@ -19,6 +19,7 @@ Parameters:
   EmailAddress:
     Description: Email address for receiving alerts.
     Type: String
+    AllowedPAttern: ".+"
 
 Metadata: {}
 
@@ -240,7 +241,7 @@ Resources:
       - GDThreatListBucket
     Type: AWS::EC2::Instance
     Properties: 
-      InstanceType: t2.micro
+      InstanceType: t3.micro
       ImageId: 
         Fn::FindInMap: 
           - RegionMap
@@ -315,7 +316,7 @@ Resources:
     Type: AWS::EC2::Instance
     DependsOn: MaliciousIP
     Properties: 
-      InstanceType: t2.micro
+      InstanceType: t3.micro
       ImageId: 
         Fn::FindInMap: 
           - RegionMap
@@ -446,7 +447,7 @@ Resources:
   CompromisedInstance2: 
     Type: AWS::EC2::Instance
     Properties: 
-      InstanceType: t2.micro
+      InstanceType: t3.micro
       IamInstanceProfile: !Ref CompromisedInstanceProfile
       #KeyName: !Ref KeyName
       ImageId: 
