@@ -2,7 +2,7 @@
 
 ## Scene simulation
 
-After an uneventful yet unnecessarily long commute to work, you arrived at the office on Monday morning. You grabbed a cup of coffee, sat down in your cube, opened up your laptop and begin to go through your emails. Soon after you begin though you start receiving emails indicating that GuardDuty has detected new threats. You don’t yet know the extent of the threats but you quickly begin to investigate. Now the good news is that your coworker Alice has already set up some hooks for specific findings so that they will be automatically remediated. 
+After an uneventful yet unnecessarily long commute to work, you arrived at the office on Monday morning. You grabbed a cup of coffee, sat down in your cube, opened up your laptop and begin to go through your emails. Soon after you begin though you start receiving emails indicating that GuardDuty has detected new threats. You don’t yet know the extent of the threats but you quickly begin to investigate. Now the good news is that your coworker Alice has already set up some hooks for specific findings so that they will be automatically remediated.
 
 The first email you receive from GuardDuty indicates that one of your EC2 instances might be compromised:
 
@@ -12,7 +12,7 @@ Shortly after the first email, you receive a second email indicating that the sa
 
 > GuardDuty Remediation | ID: 1xx: GuardDuty discovered an EC2 instance (Instance ID: i-xxx) that is communicating outbound with an IP Address on a threat list that you uploaded.  All security groups have been removed and it has been isolated. Please follow up with any additional remediation actions.
 
-## Architecture Evaluation
+## Architecture Overview
 
 ![Attack Scenario 1](images/attack1.png "Attack Scenario 1")
 
@@ -35,7 +35,7 @@ Although you can view the GuardDuty findings in the console, most customers aggr
 1. Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?" target="_blank">GuardDuty Console</a> (us-west-2).
 > If there is nothing displayed click the refresh button.
 
-2. A finding should show up with the type **UnauthorizedAccess:EC2/MaliciousIPCaller.Custom**. 
+2. A finding should show up with the type **UnauthorizedAccess:EC2/MaliciousIPCaller.Custom**.
 > Based on the format you reviewed earlier can you determine the security issue by the finding type?
 
 ![GuardDuty Finding](images/screenshot5.png "GuardDuty Finding")
@@ -52,20 +52,20 @@ The finding type indicates that an EC2 instance in your environment is communica
 	The EC2 instance indicated by this finding is actually just connecting to an [Elastic IP](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html) (EIP) on another instance in the same VPC to keep the scenario localized to your environment. The CloudFormation template automatically created the threat list and added the EIP for the malicious instance to the list.
 
 ### View the CloudWatch Event rule
-  
-Alice used CloudWatch Event Rules to send the email you received about the findings and also to take remediations steps. Examine the CloudWatch Events console to understand what Alice configured and to see how the remediation was triggered. 
 
-1.  Navigate to the <a href="https://us-west-2.console.aws.amazon.com/cloudwatch/home?" target="_blank">CloudWatch Console</a> (us-west-2) and on the left navigation, under the **Events** section, click **Rules**. 
+Alice used CloudWatch Event Rules to send the email you received about the findings and also to take remediations steps. Examine the CloudWatch Events console to understand what Alice configured and to see how the remediation was triggered.
+
+1.  Navigate to the <a href="https://us-west-2.console.aws.amazon.com/cloudwatch/home?" target="_blank">CloudWatch Console</a> (us-west-2) and on the left navigation, under the **Events** section, click **Rules**.
 
     > You will see three Rules in the list that were created by the CloudFormation template. All of these begin with the prefix “*GuardDuty-Event*."
 
 	![CloudWatch Event Rules](images/screenshot6.png "CloudWatch Event Rules")
 
-2.	Click on the rule named **GuardDuty-Event-EC2-MaliciousIPCaller**. 
+2.	Click on the rule named **GuardDuty-Event-EC2-MaliciousIPCaller**.
 
 	![CloudWatch Event Rule](images/screenshot7.png "CloudWatch Event Rule")
 
-Under the **Targets** section you will see two entries, one for a Lambda function and one for an SNS Topic.  The CloudWatch Event Rule publishes the finding to the SNS Topic which in turn sends out an email notification.  Rather than sending the entire JSON event you can see how Alice customized the email by using an **<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CloudWatch-Events-Input-Transformer-Tutorial.html" target="_blank">input transformer</a>**.
+Under the **Targets** section you will see two entries, one for a Lambda function and one for an SNS Topic.  The CloudWatch Event Rule publishes the finding to the SNS Topic which in turn sends out an email notification.  Rather than sending the entire JSON event you can see how Alice customized the email by using an **<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CloudWatch-Events-Input-Transformer-Tutorial.html" target="_blank">input transformer</a>**. You can use the input transformer feature of CloudWatch Events to customize the text that is taken from an event before it is input to the target of a rule.
 
 ### View the Remediation Lambda function
 
@@ -73,7 +73,7 @@ The Lambda function is what handles the remediation logic for this finding. Alic
 
 ![Lambda Function](images/screenshot8.png "Lambda Function")
 
-Collapse the **Designer** tab and scroll down to view the code for this function (walking through the code logic is outside the scope of this scenario). You can also click the **Monitoring** tab and view the invocation details for this function. 
+Collapse the **Designer** tab and scroll down to view the code for this function (walking through the code logic is outside the scope of this scenario). You can also click the **Monitoring** tab and view the invocation details for this function.
 
 > What permissions does the Lambda Function need to perform the remediation?
 
@@ -82,18 +82,18 @@ Collapse the **Designer** tab and scroll down to view the code for this function
 Next, double check the effects of the remediation to ensure the instance is isolated.  At this point you have the instance ID of the compromised instance from the email notifications and the name of the isolation security group name from reviewing the Lambda Function code.
 
 1.	Browse to the <a href="https://us-west-2.console.aws.amazon.com/ec2/v2" target="_blank">EC2 console</a> (us-west-2) and click **Running Instances**.
-   
+
     > You should see three instances with names that begin with **GuardDuty-Example**.
 
     ![EC2 Instances](images/screenshot9.png "EC2 Instances")
-    
+
 2.  Click on the instance with the instance ID you saw in the GuardDuty finding or email notifications.
 
     > **GuardDuty-Example: Compromised Instance: Scenario 1**.  
 
 3.  After reviewing the remediation Lambda Function you know that the instance should now have the Security Group with a name that includes **ForensicSecurityGroup**.  Under the **Description** tab verify the instance has this security group.
 
-    > Initially, all three of the instances launched by the CloudFormation template were in the Security Group with a name that includes **TargetSecurityGroup**. The Lambda function removed the TargetSecurityGroup from the instance and added the ForensicsSecurityGroup to isolate the instance. 
+    > Initially, all three of the instances launched by the CloudFormation template were in the Security Group with a name that includes **TargetSecurityGroup**. The Lambda function removed the TargetSecurityGroup from the instance and added the ForensicsSecurityGroup to isolate the instance.
 
 4. Click on the **ForensicSecurityGroup** and view the ingress and egress rules.
 
@@ -102,6 +102,5 @@ Next, double check the effects of the remediation to ensure the instance is isol
 !!! question "Which data source did GuardDuty use to identify this threat?"
 
 !!! question "Will isolating the instance have any effect on an application running on the instance?"
-	
+
 !!! question "How could you add more detail to the email notifications?"
-	
