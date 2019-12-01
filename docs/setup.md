@@ -13,7 +13,7 @@
 ??? info "AWS Sponsored Event"
     1. Navigate to the <a href="https://dashboard.eventengine.run" target="_blank">Event Engine dashboard</a>
 	  2. Enter your **team hash** code.
-	  3. Click **AWS Console**.
+	  3. Click **AWS Console**. Please note we are using the US West 2 (Oregon).
     4. Let's enable GuardDuty, in just 2 clicks! Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?" target="_blank">GuardDuty Console</a> and click **Get Started**.
     ![Get Started](images/screenshot1.png "Get Started")
     5. On the next screen click **Enable GuardDuty**.
@@ -40,7 +40,7 @@
 
 
     1. Let's enable GuardDuty, in just 2 clicks!
-       Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?" target="_blank">GuardDuty Console</a> and click **Get Started**.
+       Please note we are using the US West 2 (Oregon). Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?" target="_blank">GuardDuty Console</a> and click **Get Started**.
     ![Get Started](images/screenshot1.png "Get Started")
     2. On the next screen click **Enable GuardDuty**.
     ![Enable GuardDuty](images/screenshot2.png "Enable GuardDuty")
