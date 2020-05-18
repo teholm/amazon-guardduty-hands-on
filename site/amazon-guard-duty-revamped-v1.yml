@@ -789,7 +789,7 @@ Resources:
 
               if instanceID == os.environ['INSTANCE_ID']:
 
-                print("log -- Security Group Created %s in vpc %s." % (security_group_id))
+                print("log -- Security Group Created %s." % security_group_id)
 
                 # Isolate Instance
                 ec2 = boto3.resource('ec2')
