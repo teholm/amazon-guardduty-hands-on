@@ -148,7 +148,7 @@ The Lambda Function retrieves the Role name from the finding details and then at
 To verify that the **InstanceCredentialExfiltration** finding was remediated, you can run one of the CLI commands you ran earlier.
 
 ```
-aws dynamodb list-tables --profile attacker
+aws dynamodb list-tables --profile badbob
 ```
 
 You should see a response that states that there is an explicit deny for that action. Go view the Role to evaluate the policy that was attached.
