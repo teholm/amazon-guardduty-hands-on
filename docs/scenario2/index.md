@@ -26,7 +26,7 @@ To view the findings:
 
 3.  Click on the **UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom** finding to view the full details.
 
-![GuardDuty Finding](images/screenshot10.png "GuardDuty Finding")
+![GuardDuty Finding](images/unauth-IAMuser-malIPcallercustom-snap.png "GuardDuty Finding")
 
 You can see the finding details include information about what happened, what AWS resources were involved in the suspicious activity, when this activity took place, and other additional information.  Under **Resource Affected**, find the **User Name** associated with this finding.
 
