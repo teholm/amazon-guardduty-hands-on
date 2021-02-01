@@ -26,7 +26,7 @@ To view the findings:
 
 3.  Click on the **Stealth:S3/ServerAccessLoggingDisabled** finding to view the full details. You can see the finding details include information about what happened, what AWS resources were involved in the suspicious activity, when this activity took place, and other additional information.  Under **Resource Affected**, find the **S3 bucket** associated with this finding.
 
-	![GuardDuty Finding](images/Stealth-s3.png "GuardDuty Finding")
+	![GuardDuty Finding](images/Stealth-S3.png "GuardDuty Finding")
 
 	This finding informs you that S3 server access logging is disabled for a bucket within your AWS environment. If disabled, no logs are created for any actions taken on the identified S3 bucket or on the objects in the bucket, unless S3 object level logging is enabled for this bucket. Disabling logging is a technique used by unauthorized users in order to cover their tracks. To learn more, see S3 <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerLogs.html" target="_blank">Server Access Logging</a>. Disabling logging is generally viewed as a tactic used to cover tracks. That is why it is important to investigate this finding. 
 
