@@ -20,6 +20,11 @@ Parameters:
     Description: Email address for receiving alerts.
     Type: String
     AllowedPattern: ".+"
+  
+  #Automatically select latest EC2 AMI based on region
+  LatestAWSLinuxAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
 
 Metadata: {}
 
@@ -61,7 +66,7 @@ Conditions: {}
 
 Resources:
 
-  # GuardDuty Bucket 1
+  #GuardDuty Bucket 1
   GDThreatListBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
@@ -79,6 +84,11 @@ Resources:
         - '-'
         - ['guardduty-example-log', !Ref "AWS::AccountId", !Ref "AWS::Region"]
       AccessControl: LogDeliveryWrite
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true 
+        RestrictPublicBuckets: true
 
   # GuardDuty Bucket 3
   GDCompromisedBucket:
@@ -93,7 +103,7 @@ Resources:
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
-        IgnorePublicAcls: true
+        IgnorePublicAcls: true 
         RestrictPublicBuckets: true
 
   # VPC & EC2 Creation
@@ -253,6 +263,39 @@ Resources:
       Users:
         - !Ref CompromisedUser
 
+  # Malicious IAM User 2
+  CompromisedUser2:
+    Type: "AWS::IAM::User"
+    Properties:
+      UserName:
+        Fn::Join:
+          - '-'
+          - [!Ref ResourceName, 'Compromised2', 'Simulated']
+
+  CompromisedUserKey2:
+    Type: "AWS::IAM::AccessKey"
+    Properties:
+      UserName: !Ref CompromisedUser2
+
+  CompromisedUserPolicy2:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyName: "CompromisedUserPolicy2"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: Allow
+            Action:
+              - s3:PutBucketPublicAccessBlock
+              - s3:PutBucketLogging
+            Resource:
+              Fn::Join:
+              - ':'
+              - ["arn:aws:s3::", "*"] 
+      Users:
+        - !Ref CompromisedUser2
+
   # Malicious Instance - For GuardDuty Finding: UnauthorizedAccess:EC2/MaliciousIPCaller.Custom
   MaliciousIP:
     DependsOn:
@@ -268,11 +311,11 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: t3.micro
-      ImageId:
-        Fn::FindInMap:
-          - RegionMap
-          - !Ref AWS::Region
-          - '64'
+      ImageId: !Ref LatestAWSLinuxAmiId
+        #Fn::FindInMap:
+        #  - RegionMap
+        #  - !Ref AWS::Region
+        # - '64'
       #KeyName: !Ref KeyName
       NetworkInterfaces:
         - AssociatePublicIpAddress: 'false'
@@ -293,6 +336,9 @@ Resources:
         Fn::Base64: !Sub
           - |
             #!/bin/bash -ex
+
+            # Start SSM Agent
+            sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
 
             # Create Creds and Config files
             mkdir /home/ec2-user/.aws
@@ -340,17 +386,97 @@ Resources:
             Bucket:
               !Ref GDCompromisedBucket
 
+  # Malicious Instance - For GuardDuty S3 Findings, Stealth and Policy
+  MaliciousInstance2:
+    DependsOn:
+      - GDCompromisedBucket
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t3.micro
+      ImageId: !Ref LatestAWSLinuxAmiId
+      #ImageId:
+        #Fn::FindInMap:
+          #- RegionMap
+          #- !Ref AWS::Region
+          #- '64'
+      #KeyName: !Ref KeyName
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: 'true'
+          DeviceIndex: '0'
+          GroupSet:
+            - !Ref TargetSecurityGroup
+          SubnetId:
+            Ref: Subnet
+      Tags:
+        - Key: Name
+          Value:
+            Fn::Join:
+              - ': '
+              - [!Ref ResourceName, 'Malicious Instance', 'Scenario 4']
+        - Key: GD-Finding
+          Value: 'S3 findings'
+      UserData:
+        Fn::Base64: !Sub
+          - |
+            #!/bin/bash -ex
+
+            # Start SSM Agent
+            sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+
+            # Create Creds and Config files
+            mkdir /home/ec2-user/.aws
+            touch /home/ec2-user/.aws/credentials
+            touch /home/ec2-user/.aws/config
+            
+            cat <<EOT >> /home/ec2-user/.aws/credentials
+            [default]
+            aws_access_key_id = ${AccessKey}
+            aws_secret_access_key = ${SecretKey}
+            EOT
+            
+            # Modify Permissions and Ownership
+            chmod 746 /home/ec2-user/.aws/credentials
+            chown ec2-user /home/ec2-user/.aws/credentials
+            chmod 746 /home/ec2-user/.aws/config
+            chown ec2-user /home/ec2-user/.aws/config
+            
+            cat <<EOT >> /home/ec2-user/gd-findings.sh
+            #!/bin/bash
+            aws configure set default.region ${Region}
+            aws s3api list-buckets     
+            aws s3api delete-public-access-block --bucket ${Bucket}
+            aws s3api put-bucket-logging --bucket ${Bucket} --bucket-logging-status {}
+            EOT
+            
+            chmod 744 /home/ec2-user/gd-findings.sh
+            chown ec2-user /home/ec2-user/gd-findings.sh
+            
+            echo "* * * * * /home/ec2-user/gd-findings.sh > /home/ec2-user/gd-findings.log 2>&1" | tee -a /var/spool/cron/ec2-user
+            
+          -
+            Region:
+              !Ref "AWS::Region"
+            AccessKey:
+              !Ref CompromisedUserKey2
+            SecretKey:
+              Fn::GetAtt:
+                - "CompromisedUserKey2"
+                - "SecretAccessKey"
+            Bucket:
+              !Ref GDCompromisedBucket
+
   # Compromised Instance - For GuardDuty Finding: UnauthorizedAccess:EC2/MaliciousIPCaller.Custom
   CompromisedInstance:
     Type: AWS::EC2::Instance
     DependsOn: MaliciousIP
     Properties:
       InstanceType: t3.micro
-      ImageId:
-        Fn::FindInMap:
-          - RegionMap
-          - !Ref AWS::Region
-          - '64'
+      ImageId: !Ref LatestAWSLinuxAmiId
+      #ImageId:
+      #  Fn::FindInMap:
+      #    - RegionMap
+      #    - !Ref AWS::Region
+      #    - '64'
       #KeyName: !Ref KeyName
       NetworkInterfaces:
         - AssociatePublicIpAddress: 'true'
@@ -479,11 +605,12 @@ Resources:
       InstanceType: t3.micro
       IamInstanceProfile: !Ref CompromisedInstanceProfile
       #KeyName: !Ref KeyName
-      ImageId:
-        Fn::FindInMap:
-          - RegionMap
-          - !Ref "AWS::Region"
-          - '64'
+      ImageId: !Ref LatestAWSLinuxAmiId 
+      #ImageId:
+        #Fn::FindInMap:
+        #  - RegionMap
+        #  - !Ref "AWS::Region"
+        #  - '64'
       NetworkInterfaces:
         - AssociatePublicIpAddress: true
           DeviceIndex: 0
@@ -984,5 +1111,32 @@ Resources:
             InputPathsMap:
               userName: "$.detail.resource.accessKeyDetails.userName"
               gdid: "$.detail.id"
+
+
+  # GuardDuty CloudWatch Event - For GuardDuty S3 findings Stealth:S3/ServerAccessLoggingDisabled & Policy:S3/BucketBlockPublicAccessDisabled
+  GuardDutyEventS3:
+    Type: "AWS::Events::Rule"
+    Properties:
+      Name: GuardDuty-Event-S3-Stealth-Policy
+      Description: "GuardDuty Event: Stealth:S3/ServerAccessLoggingDisabled & Policy:S3/BucketBlockPublicAccessDisabled"
+      EventPattern:
+        source:
+        - aws.guardduty
+        detail:
+          type:
+          - "Policy:S3/BucketBlockPublicAccessDisabled"
+          - "Stealth:S3/ServerAccessLoggingDisabled"
+      State: "ENABLED"
+      Targets:
+        -
+          Arn:
+            Ref: "GuardDutySNSTopic"
+          Id: "GuardDutySNSTopic-IAM-ThreatList"
+          InputTransformer:
+            InputTemplate: '"GuardDuty Finding | ID:<gdid>: An AWS S3 related API operation was invoked by user (userName: <userName>) in account <account> . This activity seems suspicious. Please investigate with the user to check if this was expectated behaviour. Go to https://console.aws.amazon.com/guardduty"'
+            InputPathsMap:
+              userName: "$.detail.resource.accessKeyDetails.userName"
+              gdid: "$.detail.id"
+              account: "$.detail.accountId"
 
 Outputs: {}
