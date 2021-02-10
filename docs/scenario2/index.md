@@ -50,8 +50,6 @@ These findings indicates that the IAM credentials (of the user you found above) 
 
 > Since GuardDuty integrates with CloudWatch Events you have the flexibility to put in place full or partial automated remediation workflows.  These could be custom Lambda Functions that you build out or maybe even <a href="https://aws.amazon.com/guardduty/resources/partners/" target="_blank">partner</a> solutions.  You can also configure other AWS Resources as targets in your CloudWatch Event Rules such as SSM Run Commands or Step Functions state machines. For some finding types you may choose to have only notification workflows and require manual remediation steps. As you design these workflows it is important to evaluate the workloads running in your environments to see what effects a remediation could have. 
 
-> GuardDuty can also sends its finding to Security Hub (if enabled) which helps aggregate findings from different AWS services as well as partner services. Security hub can then be used to take <a href="https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cwe-custom-actions.html" target="_blank">custom actions</a> on these findings by using CloudWatch Event rules to send the findings to ticketing, chat, Security Information and Event Management (SIEM), Security Orchestration Automation and Response (SOAR), and incident management tools or to custom remediation playbooks.
-
 ### Manually remediate the finding
 
 Since Alice did not setup a remediation for this finding, you have to manually remediate this.  While the security team is analyzing the previous activity of this user to better understand the scope of the compromise, you need to disable the access key associated with the user to prevent any more unauthorized actions.

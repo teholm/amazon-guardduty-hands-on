@@ -34,6 +34,9 @@ This workshop is broken up into the three scenarios below:
 3. [IAM Role Exfiltration](./scenario3/index.md)
 > We will identity that credentials have been exfiltrated from a compromised host and identify the API calls taken from an external host using those credentials. In addition we will review the automated remediation taken through AWS Lambda.
 
+4. [Compromised S3 Bucket](./scenario4/index.md)
+> We will identity a malicious host attempting to make S3 API calls insoude our AWS environment and remediate the host manually.
+
 ## Cleanup
 
 [Summary and Environment Cleanup](./summary.md)
