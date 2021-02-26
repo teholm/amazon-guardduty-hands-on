@@ -21,7 +21,7 @@ You have completed the examination of the first attack, confirmed it was properl
 To view the findings:
 
 1.  Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?" target="_blank">GuardDuty Console</a> (us-west-2).
-2.  Click the  ![Refresh](images/refreshicon.png "Refresh") icon to refresh the GuardDuty console. You should now see additional findings that are related to **Recon:IAMUser**, **UnauthorizedAccess:IAMUser** and **Discovery:S3**.
+2.  Click the  ![Refresh](images/refreshicon.png "Refresh") icon to refresh the GuardDuty console. You should now see additional findings that are related to **Recon:IAMUser/MaliciousIPCaller.Custom**, **UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom** and **Discovery:S3/MaliciousIPCaller.Custom**.
 > Based on the format you reviewed earlier can you determine the security issues by the finding type?
 
 3.  Click on the **UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom** finding to view the full details. You can see the finding details include information about what happened, what AWS resources were involved in the suspicious activity, when this activity took place, and other additional information.  Under **Resource Affected**, find the **User Name** associated with this finding.
