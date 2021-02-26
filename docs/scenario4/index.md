@@ -1,4 +1,4 @@
-#Compromised IAM credentials (simulated)
+#Compromised S3 Bucket (simulated)
 
 You were already having a rough morning, you just finished your coffee and see a few more findings related to S3 in the GuardDuty console. These are different from the the previously seen IAM and EC2 findings.
 
@@ -28,12 +28,12 @@ To view the findings:
 
 	![GuardDuty Finding](images/Stealth-S3.png "GuardDuty Finding")
 
-	This finding informs you that S3 server access logging is disabled for a bucket within your AWS environment. If disabled, no logs are created for any actions taken on the identified S3 bucket or on the objects in the bucket, unless S3 object level logging is enabled for this bucket. Disabling logging is a technique used by unauthorized users in order to cover their tracks. To learn more, see S3 <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerLogs.html" target="_blank">Server Access Logging</a>. Disabling logging is generally viewed as a tactic used to cover tracks. That is why it is important to investigate this finding. 
+	This finding informs you that S3 server access logging is disabled for a bucket within your AWS environment. If disabled, no logs are created for any actions taken on the S3 bucket or on the objects in the bucket, unless S3 object level logging is enabled. Even though this is a low severity finding, it is important to investigate why would someone disable logging as this can be used to cover up changes that otherwise should not have been made. To learn more, see S3 <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerLogs.html" target="_blank">Server Access Logging</a>. 
 
 4. Lets look at another one, click on **Policy:S3/BucketBlockPublicAccessDisabled**. This finding is generated when block public access settings are disabled, if they were previously enabled. This could be a legit activity or an innocent user could have accidentally changed the bucket settings. In such a situation it is always good to confirm with the bucket owner if this was an expected condition. But given the context of what is going on with this bucket where we also saw bucket logging being disabled, this seems more suspicious. 
 
  
-> What actions did this IAM User take? Click on each of the findings, You can see under **Action** and then **API** the API calls were made.  GuardDuty is able to analyze large volumes of data and identity true threats in your environment but from an investigation and remediation stand point it is still important to correlate other data to understand the full scope of the threat.  In this case an analyst would use the details in this finding to pinpoint historical user activity in CloudTrail. AWS also has a investigation tool called <a href="https://aws.amazon.com/detective/" target="_blank">Amazon Detective</a> that can help with further investigation and analyze the root cause of security issue.
+> What actions did this IAM User take? Click on each of the findings, You can see under **Action** and then **API** the API calls were made.  GuardDuty is able to analyze large volumes of data and identify true threats in your environment but from an investigation and remediation stand point it is still important to correlate other data to understand the full scope of the threat.  In this case an analyst would use the details in this finding to pinpoint historical user activity in CloudTrail. AWS also has a investigation tool called <a href="https://aws.amazon.com/detective/" target="_blank">Amazon Detective</a> that can help with further investigation and analyze the root cause of security issue.
 
 
 
@@ -65,6 +65,9 @@ Since the bucket settings were changed you confirmed with the bucket owner that 
 6.  For making the bucket private again, click on the **Permissions** tab, and edit the **Block public access (bucket setting)**
 7.  Check **Block all public access** box, then click **Save changes** and type 'confirm' in the dialogue box that appears. Now you have made the bucket private again.
 
+??? info "Note"
+	Another option for customers to protect against unintentional bucket exposures is to add  <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html" target="_blank">service control policies (SCP).</a> an SCP defines a guardrail, or sets limits, on the actions that the account's administrator can delegate to the IAM users and roles in the accounts.
+
 ### Manually remediate the compromised IAM user through which the bucket settings were changed. 
 
 While the security team is analyzing the previous activity of this user to better understand the scope of the compromise, you need to disable the access key associated with the user to prevent any more unauthorized actions just like you did in "Compromised IAM Credentials" Scenario.  
@@ -77,7 +80,7 @@ While the security team is analyzing the previous activity of this user to bette
 
 ## Questions
 
-!!! question "Which data source did GuardDuty use to identity this threat?"
+!!! question "Which data source did GuardDuty use to identify this threat?"
 
 !!! question "Was the bucket actually exposed to the Internet?"
 

@@ -1,6 +1,6 @@
 # Summary
 
-By walking through these scenarios you generated, analyzed, and remediated some or all of the following threats in your environment:
+By walking through these scenarios you generated, analyzed, and remediated some or all of the following findings in your environment:
 
 * <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_unauthorized.html#unauthorized8" target="_blank">UnauthorizedAccess:EC2/MaliciousIPCaller.Custom</a>
 * <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_recon.html#recon2" target="_blank">Recon:IAMUser/MaliciousIPCaller.Custom</a>
