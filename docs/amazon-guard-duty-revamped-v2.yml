@@ -278,10 +278,6 @@ Resources:
     Properties:
       InstanceType: t3.micro
       ImageId: !Ref LatestAWSLinuxAmiId
-        #Fn::FindInMap:
-        #  - RegionMap
-        #  - !Ref AWS::Region
-        # - '64'
       #KeyName: !Ref KeyName
       NetworkInterfaces:
         - AssociatePublicIpAddress: 'false'
@@ -332,6 +328,7 @@ Resources:
             aws s3api list-buckets
             aws ssm describe-parameters
             aws ssm get-parameters --names "gd_prod_dbpwd_sample"
+            sleep 10m
             aws s3api list-objects --bucket ${Bucket}
             EOT
 
@@ -358,13 +355,8 @@ Resources:
       - GDCompromisedBucket
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: t3.micro
+      InstanceType: m4.large
       ImageId: !Ref LatestAWSLinuxAmiId
-      #ImageId:
-        #Fn::FindInMap:
-          #- RegionMap
-          #- !Ref AWS::Region
-          #- '64'
       #KeyName: !Ref KeyName
       NetworkInterfaces:
         - AssociatePublicIpAddress: 'true'
@@ -406,6 +398,7 @@ Resources:
             chmod 746 /home/ec2-user/.aws/config
             chown ec2-user /home/ec2-user/.aws/config
             
+            sleep 20m
             cat <<EOT >> /home/ec2-user/gd-findings.sh
             #!/bin/bash
             aws configure set default.region ${Region}
@@ -436,13 +429,8 @@ Resources:
     Type: AWS::EC2::Instance
     DependsOn: MaliciousIP
     Properties:
-      InstanceType: m4.large
+      InstanceType: t3.micro
       ImageId: !Ref LatestAWSLinuxAmiId
-      #ImageId:
-      #  Fn::FindInMap:
-      #    - RegionMap
-      #    - !Ref AWS::Region
-      #    - '64'
       #KeyName: !Ref KeyName
       NetworkInterfaces:
         - AssociatePublicIpAddress: 'true'
@@ -463,7 +451,7 @@ Resources:
         Fn::Base64: !Sub |
             #!/bin/bash -ex
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-            sleep 1m
+            sleep 5m
             echo BEGIN
             echo "* * * * * ping -c 6 -i 10 ${MaliciousIP}" | tee -a /var/spool/cron/ec2-user
 
@@ -573,11 +561,6 @@ Resources:
       IamInstanceProfile: !Ref CompromisedInstanceProfile
       #KeyName: !Ref KeyName
       ImageId: !Ref LatestAWSLinuxAmiId 
-      #ImageId:
-        #Fn::FindInMap:
-        #  - RegionMap
-        #  - !Ref "AWS::Region"
-        #  - '64'
       NetworkInterfaces:
         - AssociatePublicIpAddress: true
           DeviceIndex: 0
