@@ -20,7 +20,7 @@
     ![Enable GuardDuty](images/screenshot2.png "Enable GuardDuty")
     6. Click Deploy to AWS to launch the CloudFormation stack to setup the lab environment.
       Please note we are using the US West 2 (Oregon):
-      <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=GuardDuty-Hands-On&templateURL=https://sa-security-specialist-workshops-us-west-2.s3-us-west-2.amazonaws.com/guardduty-hands-on/amazon-guard-duty-revamped-v1.yml" target="_blank">![Deploy in us-west-2](./images/deploy-to-aws.png)</a>
+      <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=GuardDuty-Hands-On&templateURL=https://sa-security-specialist-workshops-us-west-2.s3-us-west-2.amazonaws.com/guardduty-hands-on/amazon-guard-duty-revamped-v2.yml" target="_blank">![Deploy in us-west-2](./images/deploy-to-aws.png)</a>
 
     7. Click the **Deploy to AWS** button above.  This will automatically take you to the console to run the template.  
 
@@ -47,7 +47,7 @@
 
     3. Click Deploy to AWS to launch the CloudFormation stack to setup the lab environment.
       Please note we are using the US West 2 (Oregon):
-      <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=GuardDuty-Hands-On&templateURL=https://sa-security-specialist-workshops-us-west-2.s3-us-west-2.amazonaws.com/guardduty-hands-on/amazon-guard-duty-revamped-v1.yml" target="_blank">![Deploy in us-west-2](./images/deploy-to-aws.png)</a>
+      <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=GuardDuty-Hands-On&templateURL=https://sa-security-specialist-workshops-us-west-2.s3-us-west-2.amazonaws.com/guardduty-hands-on/amazon-guard-duty-revamped-v2.yml" target="_blank">![Deploy in us-west-2](./images/deploy-to-aws.png)</a>
 
     7. Click the **Deploy to AWS** button above.  This will automatically take you to the console to run the template.  
 

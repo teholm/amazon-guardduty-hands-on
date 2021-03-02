@@ -44,7 +44,7 @@ The quick view of the finding shows a severity symbol, the finding type, the aff
 
 > Findings are available in the service for 90 days.
 
-The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload_lists.html" target="_blank">custom threat list</a>. Click on **Lists** in the left navigation to view the custom threat list Alice added.
+The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload-lists.html" target="_blank">custom threat list</a>. Click on **Lists** in the left navigation to view the custom threat list Alice added.
 
 > GuardDuty uses managed threat intelligence provided by AWS Security and third-party providers, such as ProofPoint and CrowdStike. You can expand the monitoring scope of GuardDuty by configuring it to use your own custom trusted IP lists and threat lists.  If you setup a Administrator/Member GuardDuty structure, users from the Administrator GuardDuty account can manage trusted IP lists and threats lists and they are inherited by the member accounts.  Users from the member accounts are not able to modify the lists.  
 
@@ -69,7 +69,7 @@ Under the **Targets** section you will see two entries, one for a Lambda functio
 
 ### View the Remediation Lambda function
 
-The Lambda function is what handles the remediation logic for this finding. Alice setup the Lambda function to remove the compromised instance from its current security group and add it to one with no ingress or egress rules so that the instance is isolated from the network. Click the **Resource Name** for the Lambda function in the Targets section to evaluate the remediation logic.
+The Lambda function is what handles the remediation logic for this finding. Alice setup the Lambda function to remove the compromised instance from its current security group and add it to one with no ingress or egress rules so that the instance is isolated from the network. Click the **Name** for the Lambda function in the Targets section to evaluate the remediation logic.
 
 ![Lambda Function](images/screenshot8.png "Lambda Function")
 
@@ -83,17 +83,17 @@ Next, double check the effects of the remediation to ensure the instance is isol
 
 1.	Browse to the <a href="https://us-west-2.console.aws.amazon.com/ec2/v2" target="_blank">EC2 console</a> (us-west-2) and click **Running Instances**.
 
-    > You should see three instances with names that begin with **GuardDuty-Example**.
+    > You should see four instances with names that begin with **GuardDuty-Example**.
 
-    ![EC2 Instances](images/screenshot9.png "EC2 Instances")
+    ![EC2 Instances](images/EC2Console.png "EC2 Instances")
 
 2.  Click on the instance with the instance ID you saw in the GuardDuty finding or email notifications.
 
     > **GuardDuty-Example: Compromised Instance: Scenario 1**.  
 
-3.  After reviewing the remediation Lambda Function you know that the instance should now have the Security Group with a name that includes **ForensicSecurityGroup**.  Under the **Description** tab verify the instance has this security group.
+3.  After reviewing the remediation Lambda Function you know that the instance should now have the Security Group with a name that includes **ForensicSecurityGroup**.  Under the **Security** tab verify the instance has this security group.
 
-    > Initially, all three of the instances launched by the CloudFormation template were in the Security Group with a name that includes **TargetSecurityGroup**. The Lambda function removed the TargetSecurityGroup from the instance and added the ForensicsSecurityGroup to isolate the instance.
+    > Initially, all four of the instances launched by the CloudFormation template were in the Security Group with a name that includes **TargetSecurityGroup**. The Lambda function removed the TargetSecurityGroup from the instance and added the ForensicsSecurityGroup to isolate the instance.
 
 4. Click on the **ForensicSecurityGroup** and view the ingress and egress rules.
 
