@@ -17,10 +17,10 @@ Now that you understand the different components of the GuardDuty service and ho
 
 To remove the assets created by the CloudFormation, follow these steps: 
 
-1. Delete the S3 bucket that was created by the CloudFormation template (it will have a name that begins with **guardduty-example**).  This needs to be done because data was put in the bucket and CloudFormation will not allow you to delete a bucket with data in it.
-2. Delete the compromised instance IAM Role (it will have the name **GuardDuty-Example-EC2-Compromised**). Because one of the Lambda functions added an additional policy to this Role you need to manually delete this.
+1. Delete the S3 buckets that were created by the CloudFormation template (it will have names that begins with **guardduty-example**).  This needs to be done because data was put in the bucket and CloudFormation will not allow you to delete a bucket with data in it.
+2. Delete the compromised instance IAM Roles (it will have the name **GuardDuty-Example-EC2-Compromised**). Because one of the Lambda functions added an additional policy to this Role you need to manually delete this.
 3. Delete the custom Threat List within GuardDuty.  Within the GuardDuty console click **Lists** in the left navigation.  From there delete the **Example-Threat-List**.
-4. Disable GuardDuty (if you didn't have it enabled already).  Within the GuardDuty console click **Settings**. Then check the box to **Disable GuardDuty** and save.
+4. Disable GuardDuty.  Within the GuardDuty console click **Settings**. Then check the box to **Disable GuardDuty** and save.
 	
 	> Suspending GuardDuty stops the service from monitoring so you don't incur any costs and won't receive any findings **but** it will retain your existing findings and baseline activity.
 

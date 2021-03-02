@@ -58,7 +58,7 @@ Since Alice did not setup a remediation for this finding, you have to manually r
 2.  Click **Users** in the left navigation.
 3.  Click on the user you identified in the GuardDuty finding and email notifications (**GuardDuty-Example-Compromised-Simulated**).
 4.  Click the **Security Credentials** tab.
-5.  Under **Access Keys**, find the Access Key ID you identified in the finding and click **Make Inactive**.
+5.  Under **Access Keys**, find the Access Key ID you identified in the finding, click **Make Inactive** and then click **Deactivate**.
 
 ## Questions
 
