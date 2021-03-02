@@ -44,7 +44,7 @@ The quick view of the finding shows a severity symbol, the finding type, the aff
 
 > Findings are available in the service for 90 days.
 
-The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload_lists.html" target="_blank">custom threat list</a>. Click on **Lists** in the left navigation to view the custom threat list Alice added.
+The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload-lists.html" target="_blank">custom threat list</a>. Click on **Lists** in the left navigation to view the custom threat list Alice added.
 
 > GuardDuty uses managed threat intelligence provided by AWS Security and third-party providers, such as ProofPoint and CrowdStike. You can expand the monitoring scope of GuardDuty by configuring it to use your own custom trusted IP lists and threat lists.  If you setup a Administrator/Member GuardDuty structure, users from the Administrator GuardDuty account can manage trusted IP lists and threats lists and they are inherited by the member accounts.  Users from the member accounts are not able to modify the lists.  
 
