@@ -359,6 +359,19 @@
 
 
   <li class="md-nav__item">
+    <a href="../scenario4/" class="md-nav__link">
+      Compromised S3 Bucket
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  <li class="md-nav__item">
     <a href="../summary/" class="md-nav__link">
       Summary
     </a>
@@ -540,7 +553,7 @@
 <blockquote>
 <p>Findings are available in the service for 90 days.</p>
 </blockquote>
-<p>The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload_lists.html" target="_blank">custom threat list</a>. Click on <strong>Lists</strong> in the left navigation to view the custom threat list Alice added.</p>
+<p>The finding type indicates that an EC2 instance in your environment is communicating outbound to an IP address included on a <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload-lists.html" target="_blank">custom threat list</a>. Click on <strong>Lists</strong> in the left navigation to view the custom threat list Alice added.</p>
 <blockquote>
 <p>GuardDuty uses managed threat intelligence provided by AWS Security and third-party providers, such as ProofPoint and CrowdStike. You can expand the monitoring scope of GuardDuty by configuring it to use your own custom trusted IP lists and threat lists.  If you setup a Administrator/Member GuardDuty structure, users from the Administrator GuardDuty account can manage trusted IP lists and threats lists and they are inherited by the member accounts.  Users from the member accounts are not able to modify the lists.  </p>
 </blockquote>
@@ -563,7 +576,7 @@
 </ol>
 <p>Under the <strong>Targets</strong> section you will see two entries, one for a Lambda function and one for an SNS Topic.  The CloudWatch Event Rule publishes the finding to the SNS Topic which in turn sends out an email notification.  Rather than sending the entire JSON event you can see how Alice customized the email by using an <strong><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/CloudWatch-Events-Input-Transformer-Tutorial.html" target="_blank">input transformer</a></strong>. You can use the input transformer feature of CloudWatch Events to customize the text that is taken from an event before it is input to the target of a rule.</p>
 <h3 id="view-the-remediation-lambda-function">View the Remediation Lambda function</h3>
-<p>The Lambda function is what handles the remediation logic for this finding. Alice setup the Lambda function to remove the compromised instance from its current security group and add it to one with no ingress or egress rules so that the instance is isolated from the network. Click the <strong>Resource Name</strong> for the Lambda function in the Targets section to evaluate the remediation logic.</p>
+<p>The Lambda function is what handles the remediation logic for this finding. Alice setup the Lambda function to remove the compromised instance from its current security group and add it to one with no ingress or egress rules so that the instance is isolated from the network. Click the <strong>Name</strong> for the Lambda function in the Targets section to evaluate the remediation logic.</p>
 <p><img alt="Lambda Function" src="images/screenshot8.png" title="Lambda Function" /></p>
 <p>Collapse the <strong>Designer</strong> tab and scroll down to view the code for this function (walking through the code logic is outside the scope of this scenario). You can also click the <strong>Monitoring</strong> tab and view the invocation details for this function.</p>
 <blockquote>
@@ -575,9 +588,9 @@
 <li>
 <p>Browse to the <a href="https://us-west-2.console.aws.amazon.com/ec2/v2" target="_blank">EC2 console</a> (us-west-2) and click <strong>Running Instances</strong>.</p>
 <blockquote>
-<p>You should see three instances with names that begin with <strong>GuardDuty-Example</strong>.</p>
+<p>You should see four instances with names that begin with <strong>GuardDuty-Example</strong>.</p>
 </blockquote>
-<p><img alt="EC2 Instances" src="images/screenshot9.png" title="EC2 Instances" /></p>
+<p><img alt="EC2 Instances" src="images/EC2Console.png" title="EC2 Instances" /></p>
 </li>
 <li>
 <p>Click on the instance with the instance ID you saw in the GuardDuty finding or email notifications.</p>
@@ -586,9 +599,9 @@
 </blockquote>
 </li>
 <li>
-<p>After reviewing the remediation Lambda Function you know that the instance should now have the Security Group with a name that includes <strong>ForensicSecurityGroup</strong>.  Under the <strong>Description</strong> tab verify the instance has this security group.</p>
+<p>After reviewing the remediation Lambda Function you know that the instance should now have the Security Group with a name that includes <strong>ForensicSecurityGroup</strong>.  Under the <strong>Security</strong> tab verify the instance has this security group.</p>
 <blockquote>
-<p>Initially, all three of the instances launched by the CloudFormation template were in the Security Group with a name that includes <strong>TargetSecurityGroup</strong>. The Lambda function removed the TargetSecurityGroup from the instance and added the ForensicsSecurityGroup to isolate the instance.</p>
+<p>Initially, all four of the instances launched by the CloudFormation template were in the Security Group with a name that includes <strong>TargetSecurityGroup</strong>. The Lambda function removed the TargetSecurityGroup from the instance and added the ForensicsSecurityGroup to isolate the instance.</p>
 </blockquote>
 </li>
 <li>

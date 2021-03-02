@@ -13,14 +13,14 @@
         <meta name="author" content="aws-security-workshops@amazon.com">
       
       
-        <link rel="canonical" href="https://hands-on-guardduty.awssecworkshops.com/summary/">
+        <link rel="canonical" href="https://hands-on-guardduty.awssecworkshops.com/scenario4/">
       
       <link rel="shortcut icon" href="../assets/images/aws-favicon.ico">
       <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.4">
     
     
       
-        <title>Summary - Getting Hands on with Amazon GuardDuty</title>
+        <title>Compromised S3 Bucket - Getting Hands on with Amazon GuardDuty</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#summary" class="md-skip">
+        <a href="#compromised-s3-bucket-simulated" class="md-skip">
           Skip to content
         </a>
       
@@ -97,7 +97,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Summary
+              Compromised S3 Bucket
             
           </span>
         </div>
@@ -264,19 +264,6 @@
       
 
 
-
-  <li class="md-nav__item">
-    <a href="../scenario4/" class="md-nav__link">
-      Compromised S3 Bucket
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
   
 
 
@@ -288,12 +275,12 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
-        Summary
+        Compromised S3 Bucket
         <span class="md-nav__icon md-icon"></span>
       </label>
     
     <a href="./" class="md-nav__link md-nav__link--active">
-      Summary
+      Compromised S3 Bucket
     </a>
     
       
@@ -310,8 +297,56 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#cleanup" class="md-nav__link">
-    Cleanup
+  <a href="#architecture-overview" class="md-nav__link">
+    Architecture Overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#investigation" class="md-nav__link">
+    Investigation
+  </a>
+  
+    <nav class="md-nav" aria-label="Investigation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#browse-to-the-guardduty-console-to-investigate" class="md-nav__link">
+    Browse to the GuardDuty console to investigate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-the-cloudwatch-event-rule" class="md-nav__link">
+    View the CloudWatch Event rule
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manually-remediate-s3-bucket" class="md-nav__link">
+    Manually remediate S3 bucket
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manually-remediate-the-compromised-iam-user-through-which-the-bucket-settings-were-changed" class="md-nav__link">
+    Manually remediate the compromised IAM user through which the bucket settings were changed.
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions" class="md-nav__link">
+    Questions
   </a>
   
 </li>
@@ -320,6 +355,19 @@
   
 </nav>
     
+  </li>
+
+    
+      
+      
+      
+
+
+
+  <li class="md-nav__item">
+    <a href="../summary/" class="md-nav__link">
+      Summary
+    </a>
   </li>
 
     
@@ -374,8 +422,56 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#cleanup" class="md-nav__link">
-    Cleanup
+  <a href="#architecture-overview" class="md-nav__link">
+    Architecture Overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#investigation" class="md-nav__link">
+    Investigation
+  </a>
+  
+    <nav class="md-nav" aria-label="Investigation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#browse-to-the-guardduty-console-to-investigate" class="md-nav__link">
+    Browse to the GuardDuty console to investigate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-the-cloudwatch-event-rule" class="md-nav__link">
+    View the CloudWatch Event rule
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manually-remediate-s3-bucket" class="md-nav__link">
+    Manually remediate S3 bucket
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manually-remediate-the-compromised-iam-user-through-which-the-bucket-settings-were-changed" class="md-nav__link">
+    Manually remediate the compromised IAM user through which the bucket settings were changed.
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions" class="md-nav__link">
+    Questions
   </a>
   
 </li>
@@ -392,39 +488,104 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/aws-samples/amazon-guardduty-hands-on/edit/master/docs/summary.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/aws-samples/amazon-guardduty-hands-on/edit/master/docs/scenario4/index.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="summary">Summary</h1>
-<p>By walking through these scenarios you generated, analyzed, and remediated some or all of the following findings in your environment:</p>
-<ul>
-<li><a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_unauthorized.html#unauthorized8" target="_blank">UnauthorizedAccess:EC2/MaliciousIPCaller.Custom</a></li>
-<li><a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_recon.html#recon2" target="_blank">Recon:IAMUser/MaliciousIPCaller.Custom</a></li>
-<li><a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_unauthorized.html#unauthorized2" target="_blank">UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom</a></li>
-<li><a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types-s3.html#discovery-s3-maliciousipcallercustom" target="_blank">Discovery:S3/MaliciousIPCaller.Custom</a></li>
-<li><a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_unauthorized.html#unauthorized11" target="_blank">UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration</a></li>
-<li><a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types-s3.html#stealth-s3-serveraccessloggingdisabled" target="_blank">Stealth:S3/ServerAccessLoggingDisabled</a></li>
-<li><a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types-s3.html#policy-s3-accountblockpublicaccessdisabled" target="_blank">Policy:S3/AccountBlockPublicAccessDisabled</a></li>
-</ul>
-<p>Now that you understand the different components of the GuardDuty service and how it integrates with other AWS services, you can explore ways of using it across your own environments.</p>
-<h2 id="cleanup">Cleanup</h2>
-<p>To remove the assets created by the CloudFormation, follow these steps: </p>
-<ol>
-<li>Delete the S3 buckets that were created by the CloudFormation template (it will have names that begins with <strong>guardduty-example</strong>).  This needs to be done because data was put in the bucket and CloudFormation will not allow you to delete a bucket with data in it.</li>
-<li>Delete the compromised instance IAM Roles (it will have the name <strong>GuardDuty-Example-EC2-Compromised</strong>). Because one of the Lambda functions added an additional policy to this Role you need to manually delete this.</li>
-<li>Delete the custom Threat List within GuardDuty.  Within the GuardDuty console click <strong>Lists</strong> in the left navigation.  From there delete the <strong>Example-Threat-List</strong>.</li>
-<li>
-<p>Disable GuardDuty.  Within the GuardDuty console click <strong>Settings</strong>. Then check the box to <strong>Disable GuardDuty</strong> and save.</p>
+                <h1 id="compromised-s3-bucket-simulated">Compromised S3 Bucket (simulated)</h1>
+<p>You were already having a rough morning, you just finished your coffee and see a few more findings related to S3 in the GuardDuty console. These are different from the the previously seen IAM and EC2 findings.</p>
+<div class="admonition attention">
+<p class="admonition-title">None of your personal IAM credentials have actually been compromised or exposed in any way.</p>
+</div>
+<h2 id="architecture-overview">Architecture Overview</h2>
+<p><img alt="Attack 4" src="images/attack4.png" title="Attack4" /></p>
 <blockquote>
-<p>Suspending GuardDuty stops the service from monitoring so you don't incur any costs and won't receive any findings <strong>but</strong> it will retain your existing findings and baseline activity.</p>
+<ol>
+<li>The <strong>malicious instance</strong> makes API calls. API calls are logged in CloudTrail</li>
+<li>GuardDuty is monitoring the CloudTrail management events and S3 data events (in addition to VPC Flow Logs and DNS Logs) and analyzing this based on threat list, machine learning, baselines, etc.</li>
+<li>GuardDuty generates findings and sends this to the GuardDuty console and CloudWatch Events.</li>
+<li>The CloudWatch Event rule triggers an SNS topic.</li>
+<li>SNS sends you an e-mail with the finding information.</li>
+</ol>
+</blockquote>
+<h2 id="investigation">Investigation</h2>
+<h3 id="browse-to-the-guardduty-console-to-investigate">Browse to the GuardDuty console to investigate</h3>
+<p>To view the findings:</p>
+<ol>
+<li>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?" target="_blank">GuardDuty Console</a> (us-west-2).</li>
+<li>
+<p>Click the  <img alt="Refresh" src="images/refreshicon.png" title="Refresh" /> icon to refresh the GuardDuty console. You should now see additional findings that are related to <strong>Stealth:S3</strong> and <strong>Policy:S3</strong>.</p>
+<blockquote>
+<p>Based on the format you reviewed earlier can you determine the security issues by the finding type?</p>
 </blockquote>
 </li>
 <li>
-<p>Delete the CloudFormation Stack. If you see any errors, it means you didn't delete the S3 Bucket or IAM role in the previous steps.   </p>
+<p>Click on the <strong>Stealth:S3/ServerAccessLoggingDisabled</strong> finding to view the full details. You can see the finding details include information about what happened, what AWS resources were involved in the suspicious activity, when this activity took place, and other additional information.  Under <strong>Resource Affected</strong>, find the <strong>S3 bucket</strong> associated with this finding.</p>
+<p><img alt="GuardDuty Finding" src="images/Stealth-S3.png" title="GuardDuty Finding" /></p>
+<p>This finding informs you that S3 server access logging is disabled for a bucket within your AWS environment. If disabled, no logs are created for any actions taken on the S3 bucket or on the objects in the bucket, unless S3 object level logging is enabled. Even though this is a low severity finding, it is important to investigate why would someone disable logging as this can be used to cover up changes that otherwise should not have been made. To learn more, see S3 <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerLogs.html" target="_blank">Server Access Logging</a>. </p>
+</li>
+<li>
+<p>Lets look at another one, click on <strong>Policy:S3/BucketBlockPublicAccessDisabled</strong>. This finding is generated when block public access settings are disabled, if they were previously enabled. This could be a legit activity or an innocent user could have accidentally changed the bucket settings. In such a situation it is always good to confirm with the bucket owner if this was an expected condition. But given the context of what is going on with this bucket where we also saw bucket logging being disabled, this seems more suspicious. </p>
 </li>
 </ol>
+<blockquote>
+<p>What actions did this IAM User take? Click on each of the findings, You can see under <strong>Action</strong> and then <strong>API</strong> the API calls were made. Are these management events or data plane events. GuardDuty is able to analyze large volumes of data and identify true threats in your environment but from an investigation and remediation stand point it is still important to correlate other data to understand the full scope of the threat.  In this case an analyst would use the details in this finding to pinpoint historical user activity in CloudTrail. AWS also has a investigation tool called <a href="https://aws.amazon.com/detective/" target="_blank">Amazon Detective</a> that can help with further investigation and analyze the root cause of security issue.</p>
+</blockquote>
+<details class="info"><summary>Scenario Note</summary><p>These IAM findings are being generated by the “malicious EC2” instance making API calls. These API calls generate findings because GuardDuty is looking for such S3 data plane API activity that can disable S3 logging and S3 block public access setttings. </p>
+</details>
+<div class="admonition attention">
+<p class="admonition-title">The bucket has not been exposed in any way, if you go to the S3 console the public block settings at the account level are still enabled.</p>
+</div>
+<details class="info"><summary>GuardDuty S3 Protection</summary><p>S3 protection enables Amazon GuardDuty to monitor object-level API operations to identify potential security risks for data within S3 buckets.</p>
+<p>GuardDuty monitors threats against Amazon S3 resources by analyzing AWS CloudTrail management events and CloudTrail S3 data events. These data sources monitor different kinds of activity, for example, CloudTrail management events for S3 include operations that list or configure S3 buckets, such as ListBuckets, DeleteBuckets, and PutBucketReplication. Examples of data events for S3 include object-level API operations, such as GetObject, ListObjects, DeleteObject, and PutObject.</p>
+<p>GuardDuty monitoring of CloudTrail management events is on by default for all accounts that have enabled GuardDuty and is not configurable. However, S3 data event logs are a configurable data source in GuardDuty. The processes for enabling or disabling S3 data event monitoring is part of <a href="https://docs.aws.amazon.com/guardduty/latest/ug/s3_detection.html" target="_blank">Configuring S3 protection for an individual account</a> documentation. </p>
+</details>
+<h3 id="view-the-cloudwatch-event-rule">View the CloudWatch Event rule</h3>
+<ol>
+<li>Navigate to the <a href="https://us-west-2.console.aws.amazon.com/cloudwatch/home?" target="_blank">CloudWatch console</a> and on the left navigation, under the <strong>Events</strong> section, click <strong>Rules</strong>.</li>
+<li>Click on the rule that Alice configured for this particular finding (<strong>GuardDuty-Event-S3-Stealth-Policy</strong>).</li>
+<li>Under the <strong>Targets</strong> section, you will see a rule for an SNS Topic. Turns out Alice did not set up a Lambda function to remediate this threat either because the team is investigating using <a href="https://docs.aws.amazon.com/config/latest/developerguide/managed-rules-by-aws-config.html" target="_blank">AWS Config managed rules</a> to autoremediate such findings. </li>
+<li>Observe the input transformer, how would you modify this setting to get any additional data you need in the SNS email ?</li>
+</ol>
+<blockquote>
+<p>GuardDuty can also sends its finding to Security Hub (if enabled) which helps aggregate findings from different AWS services as well as partner services. Security hub can then be used to take <a href="https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cwe-custom-actions.html" target="_blank">custom actions</a> on these findings by using CloudWatch Event rules to send the findings to ticketing, chat, Security Information and Event Management (SIEM), Security Orchestration Automation and Response (SOAR), and incident management tools or to custom remediation playbooks.</p>
+</blockquote>
+<h3 id="manually-remediate-s3-bucket">Manually remediate S3 bucket</h3>
+<p>Since the bucket settings were changed you confirmed with the bucket owner that those changes need to reverted back.</p>
+<ol>
+<li>Browse to the <a href="https://s3.console.aws.amazon.com/s3/home?region=us-west-2" target="_blank">AWS S3</a> console.</li>
+<li>Click <strong>guardduty-example-finance</strong> bucket in the bucket list.</li>
+<li>Click on the <strong>properties</strong> tab, scroll down to <strong>Server Access Logging</strong>, and click <strong>Edit</strong>, then <strong>Enable</strong>.</li>
+<li>Now click <strong>Browse S3</strong> button and select the <strong>guardduty-example-log</strong> and click <strong>choose path</strong>.</li>
+<li>Finally click <strong>Save changes</strong> button and you have enabled server access logging. </li>
+<li>For making the bucket private again, click on the <strong>Permissions</strong> tab, and edit the <strong>Block public access (bucket setting)</strong></li>
+<li>Check <strong>Block all public access</strong> box, then click <strong>Save changes</strong> and type 'confirm' in the dialogue box that appears. Now you have made the bucket private again.</li>
+</ol>
+<details class="info"><summary>Note</summary><p>Another option for customers to protect against unintentional bucket exposures is to add  <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html" target="_blank">service control policies (SCP).</a> an SCP defines a guardrail, or sets limits, on the actions that the account's administrator can delegate to the IAM users and roles in the accounts.</p>
+</details>
+<h3 id="manually-remediate-the-compromised-iam-user-through-which-the-bucket-settings-were-changed">Manually remediate the compromised IAM user through which the bucket settings were changed.</h3>
+<p>While the security team is analyzing the previous activity of this user to better understand the scope of the compromise, you need to disable the access key associated with the user to prevent any more unauthorized actions just like you did in "Compromised IAM Credentials" Scenario.  </p>
+<ol>
+<li>Browse to the <a href="https://console.aws.amazon.com/iam/home?region=us-west-2" target="_blank">AWS IAM</a> console.</li>
+<li>Click <strong>Users</strong> in the left navigation.</li>
+<li>Click on the user you identified in the GuardDuty finding and email notifications (<strong>GuardDuty-Example-Compromised2-Simulated</strong>).</li>
+<li>Click the <strong>Security Credentials</strong> tab.</li>
+<li>Under <strong>Access Keys</strong>, find the Access Key ID you identified in the finding and click <strong>Make Inactive</strong>.</li>
+</ol>
+<h2 id="questions">Questions</h2>
+<div class="admonition question">
+<p class="admonition-title">Which data source did GuardDuty use to identify this threat?</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Was the bucket actually exposed to the Internet?</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Why is the severity of both these findings 'Low'?</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">How would you protect unauthorized access of Access Keys?</p>
+</div>
                 
               
               
@@ -443,7 +604,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../scenario4/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../scenario3/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -452,19 +613,19 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Compromised S3 Bucket
+                IAM Role Credential Exfiltration
               </div>
             </div>
           </a>
         
         
-          <a href="../contribute/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../summary/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Contributing
+                Summary
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">
