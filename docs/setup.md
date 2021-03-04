@@ -99,12 +99,12 @@ The initial findings will begin to show up in GuardDuty 10 minutes after the Clo
 
 The CloudFormation template will create the following resources:
 
-  * Three <a href="https://aws.amazon.com/ec2/" target="_blank">Amazon EC2</a> Instances (and supporting network infrastructure)
+  * Four <a href="https://aws.amazon.com/ec2/" target="_blank">Amazon EC2</a> Instances (and supporting network infrastructure)
     * Two Instances that contain the name “*Compromised Instance*”
-    * One instance that contains the name “*Malicious Instance*”
+    * Two instance that contains the name “*Malicious Instance*”
   * <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html" target="_blank">AWS IAM Role</a> For EC2 which will have permissions to SSM Parameter Store and DynamoDB
   * One <a href="https://docs.aws.amazon.com/sns/latest/dg/GettingStarted.html" target="_blank">Amazon SNS Topic</a> so you will be able to receive notifications
-  * Three <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html" target="_blank">AWS CloudWatch Event</a> rules for triggering the appropriate notification or remediation
+  * Four <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html" target="_blank">AWS CloudWatch Event</a> rules for triggering the appropriate notification or remediation
   * Two <a href="https://aws.amazon.com/lambda/" target="_blank">AWS Lambda</a> functions that will be used for remediating findings and will have permissions to modify Security Groups and revoke active IAM Role sessions (on only the IAM Role associated with this scenario)
   * <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html" target="_blank">AWS Systems Manager Parameter Store</a> value for storing a fake database password.
 
