@@ -355,7 +355,7 @@ Resources:
       - GDCompromisedBucket
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: m4.large
+      InstanceType: t3.micro
       ImageId: !Ref LatestAWSLinuxAmiId
       #KeyName: !Ref KeyName
       NetworkInterfaces:
@@ -557,7 +557,7 @@ Resources:
   CompromisedInstance2:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: m4.large
+      InstanceType: t3.micro
       IamInstanceProfile: !Ref CompromisedInstanceProfile
       #KeyName: !Ref KeyName
       ImageId: !Ref LatestAWSLinuxAmiId 
@@ -919,13 +919,14 @@ Resources:
               ec2 = boto3.client('ec2')
 
               # Set Variables
-              vpc_id = event["detail"]["resource"]["instanceDetails"]["networkInterfaces"][0]["vpcId"]
+              #vpc_id = event["detail"]["resource"]["instanceDetails"]["networkInterfaces"][0]["vpcId"]
               instanceID = event["detail"]["resource"]["instanceDetails"]["instanceId"]
               security_group_id = os.environ['FORENSICS_SG']
 
               if instanceID == os.environ['INSTANCE_ID']:
 
-                print("log -- Security Group Created %s in vpc %s." % (security_group_id, vpc_id))
+                #print("log -- Security Group Created %s in vpc %s." % (security_group_id, vpc_id))
+                print("log -- Security Group Created %s." % (security_group_id))
 
                 # Isolate Instance
                 ec2 = boto3.resource('ec2')

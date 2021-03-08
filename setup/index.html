@@ -585,16 +585,17 @@
 <h3 id="what-is-created">What is created?</h3>
 <p>The CloudFormation template will create the following resources:</p>
 <ul>
-<li>Three <a href="https://aws.amazon.com/ec2/" target="_blank">Amazon EC2</a> Instances (and supporting network infrastructure)<ul>
+<li>Four <a href="https://aws.amazon.com/ec2/" target="_blank">Amazon EC2</a> Instances (and supporting network infrastructure)<ul>
 <li>Two Instances that contain the name “<em>Compromised Instance</em>”</li>
-<li>One instance that contains the name “<em>Malicious Instance</em>”</li>
+<li>Two instance that contains the name “<em>Malicious Instance</em>”</li>
 </ul>
 </li>
 <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html" target="_blank">AWS IAM Role</a> For EC2 which will have permissions to SSM Parameter Store and DynamoDB</li>
 <li>One <a href="https://docs.aws.amazon.com/sns/latest/dg/GettingStarted.html" target="_blank">Amazon SNS Topic</a> so you will be able to receive notifications</li>
-<li>Three <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html" target="_blank">AWS CloudWatch Event</a> rules for triggering the appropriate notification or remediation</li>
+<li>Four <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html" target="_blank">AWS CloudWatch Event</a> rules for triggering the appropriate notification or remediation</li>
 <li>Two <a href="https://aws.amazon.com/lambda/" target="_blank">AWS Lambda</a> functions that will be used for remediating findings and will have permissions to modify Security Groups and revoke active IAM Role sessions (on only the IAM Role associated with this scenario)</li>
 <li><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html" target="_blank">AWS Systems Manager Parameter Store</a> value for storing a fake database password.</li>
+<li>Three <a href="https://aws.amazon.com/s3/" target="_blank">S3 buckets</a>. </li>
 </ul>
 <blockquote>
 <p>Make sure the CloudFormation stack is in a <strong>CREATE_COMPLETE</strong> status before moving on.</p>
