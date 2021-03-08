@@ -107,5 +107,6 @@ The CloudFormation template will create the following resources:
   * Four <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html" target="_blank">AWS CloudWatch Event</a> rules for triggering the appropriate notification or remediation
   * Two <a href="https://aws.amazon.com/lambda/" target="_blank">AWS Lambda</a> functions that will be used for remediating findings and will have permissions to modify Security Groups and revoke active IAM Role sessions (on only the IAM Role associated with this scenario)
   * <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html" target="_blank">AWS Systems Manager Parameter Store</a> value for storing a fake database password.
+  * Three <a href="https://aws.amazon.com/s3/" target="_blank">S3 buckets</a>. 
 
 > Make sure the CloudFormation stack is in a **CREATE_COMPLETE** status before moving on.

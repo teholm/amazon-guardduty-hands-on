@@ -21,7 +21,7 @@ You have completed the examination of the first attack, confirmed it was properl
 To view the findings:
 
 1.  Navigate to the <a href="https://us-west-2.console.aws.amazon.com/guardduty/home?" target="_blank">GuardDuty Console</a> (us-west-2).
-2.  Click the  ![Refresh](images/refreshicon.png "Refresh") icon to refresh the GuardDuty console. You should now see additional findings that are related to **Recon:IAMUser/MaliciousIPCaller.Custom**, **UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom** and **Discovery:S3/MaliciousIPCaller.Custom**.
+2.  Click the  ![Refresh](images/refreshicon.png "Refresh") icon to refresh the GuardDuty console. You should now see additional findings that are related to **Recon:IAMUser**, **UnauthorizedAccess:IAMUser** and **Discovery:S3**.
 > Based on the format you reviewed earlier can you determine the security issues by the finding type?
 
 3.  Click on the **UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom** finding to view the full details. You can see the finding details include information about what happened, what AWS resources were involved in the suspicious activity, when this activity took place, and other additional information.  Under **Resource Affected**, find the **User Name** associated with this finding.
@@ -33,7 +33,7 @@ To view the findings:
 
 	![GuardDuty Finding](images/discovery-s3-malIPcallercustom-snap.png "GuardDuty Finding")
 
-Just like the previous finding, you can see details about what happened and the details of the threat. In this specific case a ListObjects API call was run which is a data plane API event for S3, that is why this finding was separately categorized as a S3 discovery finding. More on S3 control plane events vs data plane events in the next section. 
+Just like the previous finding, you can see details about what happened and the details of the threat. In this specific case a ListObjects API call was run which is a data plane API event for S3, that is why this finding was separately categorized as a S3 discovery finding. More on S3 control plane events vs data plane events in the "Compromised S3 Bucket" section. 
 
 These findings indicates that the IAM credentials (of the user you found above) are possibly compromised because API calls using those credentials are being made from an IP address on a custom threat list.
 
