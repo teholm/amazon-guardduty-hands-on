@@ -487,9 +487,16 @@ Resources:
             aws s3 cp $list s3://${Bucket}/$list
             sleep 5
 
-            # Create GuardDuty Threat List
+            # Create GuardDuty Threat List (with retry logic to ensure the threat list creates successfully)
             id=`aws guardduty list-detectors --query 'DetectorIds[0]' --output text`
-            aws guardduty create-threat-intel-set --activate --detector-id $id --format TXT --location https://s3.amazonaws.com/${Bucket}/$list --name Example-Threat-List
+            
+            n=0
+            until [ "$n" -ge 5 ]
+            do
+               aws guardduty create-threat-intel-set --activate --detector-id $id --format TXT --location https://s3.amazonaws.com/${Bucket}/$list --name Example-Threat-List && break
+               n=$((n+1)) 
+               sleep 5
+            done
 
             # Set Parameters in SSM
             aws ssm put-parameter --name 'gd_prod_dbpwd_sample' --type "SecureString" --value 'Password123' --overwrite
