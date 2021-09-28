@@ -6,7 +6,7 @@ By walking through these scenarios you generated, analyzed, and remediated some 
 * <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_recon.html#recon2" target="_blank">Recon:IAMUser/MaliciousIPCaller.Custom</a>
 * <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_unauthorized.html#unauthorized2" target="_blank">UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom</a>
 * <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types-s3.html#discovery-s3-maliciousipcallercustom" target="_blank">Discovery:S3/MaliciousIPCaller.Custom</a>
-* <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_unauthorized.html#unauthorized11" target="_blank">UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration</a>
+* <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_unauthorized.html#unauthorized11" target="_blank">UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration.OutsideAWS</a>
 * <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types-s3.html#stealth-s3-serveraccessloggingdisabled" target="_blank">Stealth:S3/ServerAccessLoggingDisabled</a>
 * <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types-s3.html#policy-s3-accountblockpublicaccessdisabled" target="_blank">Policy:S3/AccountBlockPublicAccessDisabled</a>
 
