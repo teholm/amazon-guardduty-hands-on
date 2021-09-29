@@ -455,7 +455,7 @@ Resources:
             echo BEGIN
             echo "* * * * * ping -c 6 -i 10 ${MaliciousIP}" | tee -a /var/spool/cron/ec2-user
 
-  # Compromised Instance IAM Role - For GuardDuty Finding: UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration
+  # Compromised Instance IAM Role - For GuardDuty Finding: UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration.OutsideAWS
   CompromisedRole:
     Type: AWS::IAM::Role
     Properties:
@@ -553,7 +553,7 @@ Resources:
       Value: "NA"
       Description: "Sample secret for generating GuardDuty findings."
 
-  # Compromised Instance - For GuardDuty Finding: UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration
+  # Compromised Instance - For GuardDuty Finding: UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration.OutsideAWS
   CompromisedInstance2:
     Type: AWS::EC2::Instance
     Properties:
@@ -575,7 +575,7 @@ Resources:
               - ': '
               - [!Ref ResourceName, 'Compromised Instance', 'Scenario 3']
           - Key: GD-Finding
-            Value: 'UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration'
+            Value: 'UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration.OutsideAWS'
       UserData:
         Fn::Base64: !Sub
           - |
@@ -1022,18 +1022,18 @@ Resources:
               instanceid: $.detail.resource.instanceDetails.instanceId
               gdid: "$.detail.id"
 
-  # GuardDuty CloudWatch Event - For GuardDuty Finding: UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration
+  # GuardDuty CloudWatch Event - For GuardDuty Finding: UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration.OutsideAWS
   GuardDutyEventIAM:
     Type: "AWS::Events::Rule"
     Properties:
       Name: GuardDuty-Event-IAMUser-InstanceCredentialExfiltration
-      Description: "GuardDuty Event: UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration"
+      Description: "GuardDuty Event: UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration.OutsideAWS"
       EventPattern:
         source:
         - aws.guardduty
         detail:
           type:
-          - "UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration"
+          - "UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration.OutsideAWS"
       State: "ENABLED"
       Targets:
         -
