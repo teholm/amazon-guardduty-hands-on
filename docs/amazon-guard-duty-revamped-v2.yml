@@ -526,6 +526,10 @@ Resources:
                 Resource: !Sub 'arn:aws:s3:::${GDThreatListBucket}/*'
               -
                 Effect: Allow
+                Action: 's3:PutAccountPublicAccessBlock'
+                Resource: '*'
+              -
+                Effect: Allow
                 Action:
                   - iam:PutRolePolicy
                 Resource:
@@ -597,6 +601,9 @@ Resources:
             aws s3 cp $list s3://${Bucket}/$list
             sleep 5
 
+            #Block public S3 access at the account level
+            aws s3control put-public-access-block --account-id ${Account} --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
+
             # Create GuardDuty Threat List
             #id=`aws guardduty list-detectors --query 'DetectorIds[0]' --output text`
             #aws guardduty create-threat-intel-set --activate --detector-id $id --format TXT --location https://s3.amazonaws.com/${Bucket}/$list --name Example-Threat-List
@@ -623,6 +630,8 @@ Resources:
               !Ref CompromisedInstanceProfile
             Region:
               !Ref "AWS::Region"
+            Account:
+              !Ref "AWS::AccountId"
             DB:
               !Ref CustDynamoDBTable
             Bucket:
@@ -1017,10 +1026,11 @@ Resources:
           Arn: !Ref GuardDutySNSTopic
           Id: "GuardDutySNSTopic-EC2-ThreatList"
           InputTransformer:
-            InputTemplate: '"GuardDuty Finding | ID:<gdid>: The EC2 instance <instanceid> may be compromised and should be investigated. Go to https://console.aws.amazon.com/guardduty"'
+            InputTemplate: '"GuardDuty Finding | ID:<gdid>: The EC2 instance <instanceid> may be compromised and should be investigated. Go to https://console.aws.amazon.com/guardduty/home?region=<region>#/findings?macros=current&fId=<gdid>"'
             InputPathsMap:
               instanceid: $.detail.resource.instanceDetails.instanceId
               gdid: "$.detail.id"
+              region: "$.detail.region"
 
   # GuardDuty CloudWatch Event - For GuardDuty Finding: UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration.OutsideAWS
   GuardDutyEventIAM:
@@ -1044,10 +1054,11 @@ Resources:
             Ref: "GuardDutySNSTopic"
           Id: "GuardDutySNSTopic-EC2-IAM"
           InputTransformer:
-            InputTemplate: '"GuardDuty Finding | ID:<gdid>: An EC2 instance IAM credentials (Role: <userName>) may be compromised and should be investigated. Go to https://console.aws.amazon.com/guardduty"'
+            InputTemplate: '"GuardDuty Finding | ID:<gdid>: An EC2 instance IAM credentials (Role: <userName>) may be compromised and should be investigated. Go to https://console.aws.amazon.com/guardduty/home?region=<region>#/findings?macros=current&fId=<gdid>"'
             InputPathsMap:
               userName: "$.detail.resource.accessKeyDetails.userName"
               gdid: "$.detail.id"
+              region: "$.detail.region"
 
   # GuardDuty CloudWatch Event - For GuardDuty Finding: UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom
   GuardDutyEventIAM2:
@@ -1069,10 +1080,11 @@ Resources:
             Ref: "GuardDutySNSTopic"
           Id: "GuardDutySNSTopic-IAM-ThreatList"
           InputTransformer:
-            InputTemplate: '"GuardDuty Finding | ID:<gdid>: An AWS API operation was invoked (userName: <userName>) from an IP address that is included on your threat list and should be investigated. Go to https://console.aws.amazon.com/guardduty"'
+            InputTemplate: '"GuardDuty Finding | ID:<gdid>: An AWS API operation was invoked (userName: <userName>) from an IP address that is included on your threat list and should be investigated. Go to https://console.aws.amazon.com/guardduty/home?region=<region>#/findings?macros=current&fId=<gdid>"'
             InputPathsMap:
               userName: "$.detail.resource.accessKeyDetails.userName"
               gdid: "$.detail.id"
+              region: "$.detail.region"
 
 
   # GuardDuty CloudWatch Event - For GuardDuty S3 findings Stealth:S3/ServerAccessLoggingDisabled & Policy:S3/BucketBlockPublicAccessDisabled
@@ -1095,10 +1107,11 @@ Resources:
             Ref: "GuardDutySNSTopic"
           Id: "GuardDutySNSTopic-IAM-ThreatList"
           InputTransformer:
-            InputTemplate: '"GuardDuty Finding | ID:<gdid>: An AWS S3 related API operation was invoked by user (userName: <userName>) in account <account> . This activity seems suspicious. Please investigate with the user to check if this was expectated behaviour. Go to https://console.aws.amazon.com/guardduty"'
+            InputTemplate: '"GuardDuty Finding | ID:<gdid>: An AWS S3 related API operation was invoked by user (userName: <userName>) in account <account> . This activity seems suspicious. Please investigate with the user to check if this was expectated behaviour. Go to https://console.aws.amazon.com/guardduty/home?region=<region>#/findings?macros=current&fId=<gdid>"'
             InputPathsMap:
               userName: "$.detail.resource.accessKeyDetails.userName"
               gdid: "$.detail.id"
               account: "$.detail.accountId"
+              region: "$.detail.region"
 
 Outputs: {}
