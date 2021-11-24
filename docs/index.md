@@ -7,7 +7,7 @@ In addition, you will look at how to view and analyze GuardDuty findings, how to
 
 The <a href="https://aws.amazon.com/cloudformation/" target="_blank">AWS CloudFormation</a> template used for this scenario builds out the resources needed to simulate attacks and auto-remediate the GuardDuty findings using a combination of <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html" target="_blank">CloudWatch Event Rules</a> and <a href="https://aws.amazon.com/lambda/" target="_blank">AWS Lambda Functions</a>.  
 
-* **Level**: 300
+* **Level**: 200
 * **Duration**: 1-2 hours
 * **<a href="https://awssecworkshops.com/getting-started/" target="_blank">Prerequisites</a>**: AWS Account, Admin IAM User, AWS CLI
 * **<a href="https://www.nist.gov/cyberframework/online-learning/components-framework" target="_blank">CSF Functions</a>**: Protect, Detect, Respond
