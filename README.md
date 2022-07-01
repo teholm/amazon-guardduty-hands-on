@@ -4,7 +4,7 @@ This repository walks you through a scenario covering threat detection and remed
 
 ## Start the workshop:
 
-Visit the site to get started: [https://hands-on-guardduty.awssecworkshops.com/](https://hands-on-guardduty.awssecworkshops.com/)
+## Please visit: <a href="https://catalog.workshops.aws/guardduty/en-US/introduction" target="_blank">Amazon GuardDuty Workshop</a> for the new version of this workshop.
 
 ## License Summary
 
