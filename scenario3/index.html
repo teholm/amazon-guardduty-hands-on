@@ -20,7 +20,7 @@
     
     
       
-        <title>IAM Role Credential Exfiltration - Getting Hands on with Amazon GuardDuty</title>
+        <title>Index - Getting Hands on with Amazon GuardDuty</title>
       
     
     
@@ -97,7 +97,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              IAM Role Credential Exfiltration
+              Index
             
           </span>
         </div>
@@ -203,230 +203,6 @@
   <li class="md-nav__item">
     <a href=".." class="md-nav__link">
       Overview
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="../setup/" class="md-nav__link">
-      Environment Setup
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="../scenario1/" class="md-nav__link">
-      Compromised EC2 Instance
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="../scenario2/" class="md-nav__link">
-      Compromised IAM Credentials
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-  
-
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        IAM Role Credential Exfiltration
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
-      IAM Role Credential Exfiltration
-    </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#generate-a-finding-manually" class="md-nav__link">
-    Generate a finding manually
-  </a>
-  
-    <nav class="md-nav" aria-label="Generate a finding manually">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#retrieve-the-iam-temporary-security-credentials-using-aws-systems-manager" class="md-nav__link">
-    Retrieve the IAM temporary security credentials using AWS Systems Manager
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#create-a-new-aws-cli-profile-on-your-laptop-to-use-the-iam-temporary-credentials" class="md-nav__link">
-    Create a new AWS CLI profile on your laptop to use the IAM temporary credentials
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#run-commands-using-the-iam-temporary-credentials" class="md-nav__link">
-    Run commands using the IAM temporary credentials
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture-overview" class="md-nav__link">
-    Architecture Overview
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#investigation" class="md-nav__link">
-    Investigation
-  </a>
-  
-    <nav class="md-nav" aria-label="Investigation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#browse-to-the-guardduty-console-to-investigate" class="md-nav__link">
-    Browse to the GuardDuty console to investigate
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#view-the-cloudwatch-event-rule" class="md-nav__link">
-    View the CloudWatch Event rule
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#view-the-remediation-lambda-function" class="md-nav__link">
-    View the remediation Lambda function
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#verify-that-the-remediation-was-successful" class="md-nav__link">
-    Verify that the remediation was successful
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#questions" class="md-nav__link">
-    Questions
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-    
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="../scenario4/" class="md-nav__link">
-      Compromised S3 Bucket
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="../summary/" class="md-nav__link">
-      Summary
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="../contribute/" class="md-nav__link">
-      Contributing
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="../license/" class="md-nav__link">
-      License
     </a>
   </li>
 
@@ -729,41 +505,6 @@ aws ssm delete-parameter --name &quot;gd_prod_dbpwd_sample&quot; --profile badbo
       
         
 <footer class="md-footer">
-  
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
-        
-          <a href="../scenario2/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-            </div>
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  Previous
-                </span>
-                Compromised IAM Credentials
-              </div>
-            </div>
-          </a>
-        
-        
-          <a href="../scenario4/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  Next
-                </span>
-                Compromised S3 Bucket
-              </div>
-            </div>
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
-    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">

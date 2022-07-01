@@ -1,39 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
      <loc>https://hands-on-guardduty.awssecworkshops.com/</loc>
-     <lastmod>2021-11-24</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://hands-on-guardduty.awssecworkshops.com/setup/</loc>
-     <lastmod>2021-11-24</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://hands-on-guardduty.awssecworkshops.com/scenario1/</loc>
-     <lastmod>2021-11-24</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://hands-on-guardduty.awssecworkshops.com/scenario2/</loc>
-     <lastmod>2021-11-24</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://hands-on-guardduty.awssecworkshops.com/scenario3/</loc>
-     <lastmod>2021-11-24</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://hands-on-guardduty.awssecworkshops.com/scenario4/</loc>
-     <lastmod>2021-11-24</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://hands-on-guardduty.awssecworkshops.com/summary/</loc>
-     <lastmod>2021-11-24</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://hands-on-guardduty.awssecworkshops.com/contribute/</loc>
-     <lastmod>2021-11-24</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://hands-on-guardduty.awssecworkshops.com/license/</loc>
-     <lastmod>2021-11-24</lastmod>
+     <lastmod>2022-07-01</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>

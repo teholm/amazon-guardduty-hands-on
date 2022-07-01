@@ -105,6 +105,10 @@ Resources:
       VpcId: !Ref VPC
   PublicRoute:
     Type: AWS::EC2::Route
+    DependsOn:
+      - VPC
+      - InternetGateway
+      - RouteTable
     Properties:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway

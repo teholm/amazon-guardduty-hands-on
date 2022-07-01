@@ -232,36 +232,15 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    Overview
+  <a href="#the-aws-workshop-studio-is-the-central-site-to-view-workshops-created-by-the-teams-at-amazon-web-services-aws-workshops-are-hands-on-events-designed-to-teach-or-introduce-practical-skills-techniques-or-concepts-which-you-can-use-to-solve-business-problems" class="md-nav__link">
+    The AWS Workshop Studio is the central site to view workshops created by the teams at Amazon Web Services (AWS). Workshops are hands-on events designed to teach or introduce practical skills, techniques, or concepts which you can use to solve business problems.
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#region" class="md-nav__link">
-    Region
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
-    Setup
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#modules" class="md-nav__link">
-    Modules
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cleanup" class="md-nav__link">
-    Cleanup
+  <a href="#please-visit-amazon-guardduty-workshop-for-the-new-version-of-this-workshop" class="md-nav__link">
+    Please visit: Amazon GuardDuty Workshop for the new version of this workshop.
   </a>
   
 </li>
@@ -270,110 +249,6 @@
   
 </nav>
     
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="setup/" class="md-nav__link">
-      Environment Setup
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="scenario1/" class="md-nav__link">
-      Compromised EC2 Instance
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="scenario2/" class="md-nav__link">
-      Compromised IAM Credentials
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="scenario3/" class="md-nav__link">
-      IAM Role Credential Exfiltration
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="scenario4/" class="md-nav__link">
-      Compromised S3 Bucket
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="summary/" class="md-nav__link">
-      Summary
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="contribute/" class="md-nav__link">
-      Contributing
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-
-  <li class="md-nav__item">
-    <a href="license/" class="md-nav__link">
-      License
-    </a>
   </li>
 
     
@@ -402,36 +277,15 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    Overview
+  <a href="#the-aws-workshop-studio-is-the-central-site-to-view-workshops-created-by-the-teams-at-amazon-web-services-aws-workshops-are-hands-on-events-designed-to-teach-or-introduce-practical-skills-techniques-or-concepts-which-you-can-use-to-solve-business-problems" class="md-nav__link">
+    The AWS Workshop Studio is the central site to view workshops created by the teams at Amazon Web Services (AWS). Workshops are hands-on events designed to teach or introduce practical skills, techniques, or concepts which you can use to solve business problems.
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#region" class="md-nav__link">
-    Region
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
-    Setup
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#modules" class="md-nav__link">
-    Modules
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cleanup" class="md-nav__link">
-    Cleanup
+  <a href="#please-visit-amazon-guardduty-workshop-for-the-new-version-of-this-workshop" class="md-nav__link">
+    Please visit: Amazon GuardDuty Workshop for the new version of this workshop.
   </a>
   
 </li>
@@ -454,52 +308,8 @@
                 
                 
                 <h1 id="getting-hands-on-with-amazon-guardduty">Getting Hands on with Amazon GuardDuty</h1>
-<h2 id="overview">Overview</h2>
-<p>This repository walks you through a scenario covering threat detection and remediation using <a href="https://aws.amazon.com/guardduty/" target="_blank">Amazon GuardDuty</a>; a managed threat detection service. The scenario simulates an attack that spans a few threat vectors, representing just a small sample of the threats that GuardDuty is able to detect.</p>
-<p>In addition, you will look at how to view and analyze GuardDuty findings, how to send alerts based on the findings, and, finally, how to remediate findings.</p>
-<p>The <a href="https://aws.amazon.com/cloudformation/" target="_blank">AWS CloudFormation</a> template used for this scenario builds out the resources needed to simulate attacks and auto-remediate the GuardDuty findings using a combination of <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html" target="_blank">CloudWatch Event Rules</a> and <a href="https://aws.amazon.com/lambda/" target="_blank">AWS Lambda Functions</a>.  </p>
-<ul>
-<li><strong>Level</strong>: 200</li>
-<li><strong>Duration</strong>: 1-2 hours</li>
-<li><strong><a href="https://awssecworkshops.com/getting-started/" target="_blank">Prerequisites</a></strong>: AWS Account, Admin IAM User, AWS CLI</li>
-<li><strong><a href="https://www.nist.gov/cyberframework/online-learning/components-framework" target="_blank">CSF Functions</a></strong>: Protect, Detect, Respond</li>
-<li><strong><a href="https://d0.awsstatic.com/whitepapers/AWS_CAF_Security_Perspective.pdf" target="_blank">CAF Components</a></strong>: Preventative, Detective, Responsive</li>
-<li><strong>AWS Services</strong>: Amazon CloudWatch, Amazon GuardDuty, AWS CloudTrail, AWS Lambda, Security Groups, Amazon SNS</li>
-</ul>
-<h2 id="region">Region</h2>
-<p>Please use the <strong>us-west-2 (Oregon)</strong> region for this workshop.</p>
-<h2 id="setup">Setup</h2>
-<p><a href="setup/">Overview and Environment Setup</a></p>
-<h2 id="modules">Modules</h2>
-<p>This workshop is broken up into the three scenarios below:</p>
-<ol>
-<li>
-<p><a href="scenario1/">Compromised EC2 Instance</a></p>
-<blockquote>
-<p>We will detect and remediate a compromised host using Amazon GuardDuty, Amazon CloudWatch Event Rules and AWS Lambda.</p>
-</blockquote>
-</li>
-<li>
-<p><a href="scenario2/">Compromised IAM Credentials</a></p>
-<blockquote>
-<p>We will identify a malicious host attempting to make API calls inside our AWS environment and remediate the host manually.</p>
-</blockquote>
-</li>
-<li>
-<p><a href="scenario3/">IAM Role Exfiltration</a></p>
-<blockquote>
-<p>We will identity that credentials have been exfiltrated from a compromised host and identify the API calls taken from an external host using those credentials. In addition we will review the automated remediation taken through AWS Lambda.</p>
-</blockquote>
-</li>
-<li>
-<p><a href="scenario4/">Compromised S3 Bucket</a></p>
-<blockquote>
-<p>We will identity a malicious host attempting to make S3 API calls inside our AWS environment and remediate the host manually.</p>
-</blockquote>
-</li>
-</ol>
-<h2 id="cleanup">Cleanup</h2>
-<p><a href="summary/">Summary and Environment Cleanup</a></p>
+<h2 id="the-aws-workshop-studio-is-the-central-site-to-view-workshops-created-by-the-teams-at-amazon-web-services-aws-workshops-are-hands-on-events-designed-to-teach-or-introduce-practical-skills-techniques-or-concepts-which-you-can-use-to-solve-business-problems">The AWS Workshop Studio is the central site to view workshops created by the teams at Amazon Web Services (AWS). Workshops are hands-on events designed to teach or introduce practical skills, techniques, or concepts which you can use to solve business problems.</h2>
+<h2 id="please-visit-amazon-guardduty-workshop-for-the-new-version-of-this-workshop">Please visit: <a href="https://catalog.workshops.aws/guardduty/en-US/introduction" target="_blank">Amazon GuardDuty Workshop</a> for the new version of this workshop.</h2>
                 
               
               
@@ -514,27 +324,6 @@
       
         
 <footer class="md-footer">
-  
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
-        
-        
-          <a href="setup/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  Next
-                </span>
-                Environment Setup
-              </div>
-            </div>
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
-    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
